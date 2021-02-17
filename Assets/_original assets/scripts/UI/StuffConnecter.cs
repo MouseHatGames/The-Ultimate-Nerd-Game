@@ -204,20 +204,26 @@ public class StuffConnecter : MonoBehaviour {
     // TODO: add overload methods for the connection classes
 
     // creates a physical connection between two inputs, then triggers the non-physical connection
-    public static void CreateIIConnection(CircuitInput input1, CircuitInput input2, bool AllowImproperConnections = false)
+    public static void CreateIIConnection(CircuitInput input1, CircuitInput input2, bool UnbreakableUnsaveableConnection = false)
     {
         GameObject wire = Instantiate(WirePrefab);
-        wire.AddComponent<SaveThisObject>().ObjectType = "Wire";
         InputInputConnection connection = wire.AddComponent<InputInputConnection>();
         connection.SetPoint1(input1);
         connection.SetPoint2(input2);
         connection.DrawWire();
-
         wire.transform.parent = AppropriateConnectionParent(connection);
         LinkInputs(connection);
 
-        if (AllowImproperConnections) { return; } // this overload is for through pegs, since their connections can be improper when the board is lying flat on terrain
+        // this overload is for through pegs. Their connections must be unbreakable
+        if (UnbreakableUnsaveableConnection)
+        {
+            connection.unbreakable = true;
+            return;
+        } 
+        
+        // non-through pegs' connections must be able to connect, and must be saved
         if (!connection.CanFindPoints()) { Debug.Log("Improper connection! Disallowing"); StuffDeleter.DestroyIIConnection(connection); } // to ensure that you can't create a connection that will be destroyed on load
+        wire.AddComponent<SaveThisObject>().ObjectType = "Wire";
     }
 
     // creates a physical connection between an input and an output, then triggers the non-physical connection

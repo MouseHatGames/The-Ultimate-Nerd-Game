@@ -517,8 +517,8 @@ MonoBehaviour:
   sourceCamera: {fileID: 160918653}
   outlineCamera: {fileID: 1325118206}
   outlineShaderMaterial: {fileID: 0}
-  renderTexture: {fileID: 1178849934}
-  extraRenderTexture: {fileID: 1295133421}
+  renderTexture: {fileID: 941494254}
+  extraRenderTexture: {fileID: 1265044651}
 --- !u!114 &160918655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5934,7 +5934,9 @@ Prefab:
         under Creative Commons: By Attribution 4.0\r\nhttps://creativecommons.org/licenses/by/4.0/\r\n\r\n======================================\r\n\r\nThird
         party assets used:\r\n\r\n* Wispy Skybox by Mundus Limited\r\n* Outline Effect
         by cakeslice\r\n* UGUI Kit: Flat by Lovatto Studios\r\n* Easy Save 3 by Moodkie
-        Interactive\r\n* AQUAS by Dogmatic Games\n\r\n======================================\r\n\r\nCHANGELOG:\r\n\nv0.1.4
+        Interactive\r\n* AQUAS by Dogmatic Games\n\r\n======================================\r\n\r\nCHANGELOG:\r\n\nv0.1.5
+        | 2018-01-23\r\n\r\n* fixed a bug where a connection between two inputs, one
+        or more of which was part of a through peg, would sometimes not be saved\n\n\nv0.1.4
         | 2018-01-12\r\n\r\n* fixed a save-corrupting bug that occured when you tried
         to make very very short wires\r\n* added \"PaintColors\" key to settings.txt
         that lets you modify what colors are available in the paint board menu\r\n*
@@ -5993,6 +5995,37 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 010cda5186e063943a5496a8f370a89c, type: 2}
   m_IsPrefabParent: 0
+--- !u!84 &941494254
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_Width: 1207
+  m_Height: 525
+  m_AntiAliasing: 1
+  m_DepthFormat: 1
+  m_ColorFormat: 0
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_BindMS: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 0
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
 --- !u!1 &974212583
 GameObject:
   m_ObjectHideFlags: 0
@@ -6930,37 +6963,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 50.000004, y: -165.88, z: 0}
---- !u!84 &1178849934
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  m_Width: 800
-  m_Height: 600
-  m_AntiAliasing: 1
-  m_DepthFormat: 1
-  m_ColorFormat: 0
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 0
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
 --- !u!1 &1219515257
 GameObject:
   m_ObjectHideFlags: 0
@@ -7278,6 +7280,37 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1263020480}
+--- !u!84 &1265044651
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_Width: 1207
+  m_Height: 525
+  m_AntiAliasing: 1
+  m_DepthFormat: 1
+  m_ColorFormat: 0
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_BindMS: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
 --- !u!1 &1270950897
 GameObject:
   m_ObjectHideFlags: 0
@@ -7314,37 +7347,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!84 &1295133421
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  m_Width: 800
-  m_Height: 600
-  m_AntiAliasing: 1
-  m_DepthFormat: 1
-  m_ColorFormat: 0
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
 --- !u!1 &1304068787
 GameObject:
   m_ObjectHideFlags: 0
@@ -7481,7 +7483,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 0
   m_RenderingPath: 1
-  m_TargetTexture: {fileID: 1178849934}
+  m_TargetTexture: {fileID: 941494254}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 0
