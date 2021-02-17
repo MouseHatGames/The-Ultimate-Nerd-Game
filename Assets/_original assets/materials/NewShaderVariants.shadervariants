@@ -1,0 +1,309 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!200 &20000000
+ShaderVariantCollection:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: NewShaderVariants
+  m_Shaders:
+  - first: {fileID: 66, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: DIRECTIONAL
+        passType: 4
+      - keywords: DIRECTIONAL SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL _ALPHATEST_ON
+        passType: 4
+      - keywords: DIRECTIONAL SHADOWS_SCREEN _ALPHATEST_ON
+        passType: 4
+      - keywords: DIRECTIONAL _ALPHABLEND_ON
+        passType: 4
+      - keywords: DIRECTIONAL _ALPHAPREMULTIPLY_ON
+        passType: 4
+      - keywords: DIRECTIONAL
+        passType: 5
+      - keywords: DIRECTIONAL _ALPHATEST_ON
+        passType: 5
+      - keywords: DIRECTIONAL _ALPHABLEND_ON
+        passType: 5
+      - keywords: DIRECTIONAL _ALPHAPREMULTIPLY_ON
+        passType: 5
+      - keywords: SHADOWS_DEPTH
+        passType: 8
+      - keywords: SHADOWS_DEPTH _ALPHATEST_ON
+        passType: 8
+      - keywords: SHADOWS_DEPTH _ALPHABLEND_ON
+        passType: 8
+      - keywords: SHADOWS_DEPTH _ALPHAPREMULTIPLY_ON
+        passType: 8
+  - first: {fileID: 64, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: SHADOWS_SPLIT_SPHERES
+        passType: 0
+      - keywords: SHADOWS_SINGLE_CASCADE SHADOWS_SPLIT_SPHERES
+        passType: 0
+  - first: {fileID: 104, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 106, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: _SUNDISK_SIMPLE
+        passType: 0
+  - first: {fileID: 10501, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: SHADOWS_DEPTH
+        passType: 8
+  - first: {fileID: 10502, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: SHADOWS_DEPTH
+        passType: 8
+  - first: {fileID: 9000, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 9001, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 9002, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 9003, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 10623, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: DIRECTIONAL
+        passType: 4
+      - keywords: DIRECTIONAL SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL DIRLIGHTMAP_COMBINED DYNAMICLIGHTMAP_ON
+        passType: 4
+      - keywords: DIRECTIONAL DIRLIGHTMAP_COMBINED DYNAMICLIGHTMAP_ON SHADOWS_SCREEN
+        passType: 4
+      - keywords: SHADOWS_DEPTH
+        passType: 8
+  - first: {fileID: 10625, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 11
+  - first: {fileID: 10750, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+  - first: {fileID: 10770, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: UNITY_UI_CLIP_RECT
+        passType: 0
+  - first: {fileID: 14000, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_FROND
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_FROND SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_FROND LOD_FADE_PERCENTAGE
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_FROND LOD_FADE_PERCENTAGE
+          SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_FROND INSTANCING_ON
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_FROND INSTANCING_ON
+          SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_FROND INSTANCING_ON
+          LOD_FADE_PERCENTAGE
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_FROND INSTANCING_ON
+          LOD_FADE_PERCENTAGE SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_FROND INSTANCING_ON
+          LOD_FADE_CROSSFADE
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_FROND INSTANCING_ON
+          LOD_FADE_CROSSFADE SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_BRANCH_DETAIL
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_BRANCH_DETAIL
+          SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_BRANCH_DETAIL
+          LOD_FADE_PERCENTAGE
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_BRANCH_DETAIL
+          LOD_FADE_PERCENTAGE SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_BRANCH_DETAIL
+          INSTANCING_ON
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_BRANCH_DETAIL
+          INSTANCING_ON SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_BRANCH_DETAIL
+          INSTANCING_ON LOD_FADE_PERCENTAGE
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_BRANCH_DETAIL
+          INSTANCING_ON LOD_FADE_PERCENTAGE SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_BRANCH_DETAIL
+          INSTANCING_ON LOD_FADE_CROSSFADE
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_BRANCH_DETAIL
+          INSTANCING_ON LOD_FADE_CROSSFADE SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_LEAF
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_LEAF SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_LEAF LOD_FADE_PERCENTAGE
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_LEAF LOD_FADE_PERCENTAGE
+          SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_LEAF INSTANCING_ON
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_LEAF INSTANCING_ON
+          SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_LEAF INSTANCING_ON
+          LOD_FADE_PERCENTAGE
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_LEAF INSTANCING_ON
+          LOD_FADE_PERCENTAGE SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_LEAF INSTANCING_ON
+          LOD_FADE_CROSSFADE
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_LEAF INSTANCING_ON
+          LOD_FADE_CROSSFADE SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_BRANCH
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_BRANCH SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_BRANCH LOD_FADE_PERCENTAGE
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_BRANCH LOD_FADE_PERCENTAGE
+          SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_BRANCH INSTANCING_ON
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_BRANCH INSTANCING_ON
+          SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_BRANCH INSTANCING_ON
+          LOD_FADE_PERCENTAGE
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_BRANCH INSTANCING_ON
+          LOD_FADE_PERCENTAGE SHADOWS_SCREEN
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_BRANCH INSTANCING_ON
+          LOD_FADE_CROSSFADE
+        passType: 4
+      - keywords: DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_BRANCH INSTANCING_ON
+          LOD_FADE_CROSSFADE SHADOWS_SCREEN
+        passType: 4
+      - keywords: GEOM_TYPE_FROND SHADOWS_DEPTH
+        passType: 8
+      - keywords: GEOM_TYPE_FROND INSTANCING_ON SHADOWS_DEPTH
+        passType: 8
+      - keywords: GEOM_TYPE_FROND INSTANCING_ON LOD_FADE_PERCENTAGE SHADOWS_DEPTH
+        passType: 8
+      - keywords: GEOM_TYPE_FROND INSTANCING_ON LOD_FADE_CROSSFADE SHADOWS_DEPTH
+        passType: 8
+      - keywords: GEOM_TYPE_BRANCH_DETAIL SHADOWS_DEPTH
+        passType: 8
+      - keywords: GEOM_TYPE_BRANCH_DETAIL INSTANCING_ON SHADOWS_DEPTH
+        passType: 8
+      - keywords: GEOM_TYPE_BRANCH_DETAIL INSTANCING_ON LOD_FADE_PERCENTAGE SHADOWS_DEPTH
+        passType: 8
+      - keywords: GEOM_TYPE_BRANCH_DETAIL INSTANCING_ON LOD_FADE_CROSSFADE SHADOWS_DEPTH
+        passType: 8
+      - keywords: GEOM_TYPE_LEAF SHADOWS_DEPTH
+        passType: 8
+      - keywords: GEOM_TYPE_LEAF INSTANCING_ON SHADOWS_DEPTH
+        passType: 8
+      - keywords: GEOM_TYPE_LEAF INSTANCING_ON LOD_FADE_PERCENTAGE SHADOWS_DEPTH
+        passType: 8
+      - keywords: GEOM_TYPE_LEAF INSTANCING_ON LOD_FADE_CROSSFADE SHADOWS_DEPTH
+        passType: 8
+      - keywords: GEOM_TYPE_BRANCH SHADOWS_DEPTH
+        passType: 8
+      - keywords: GEOM_TYPE_BRANCH INSTANCING_ON SHADOWS_DEPTH
+        passType: 8
+      - keywords: GEOM_TYPE_BRANCH INSTANCING_ON LOD_FADE_PERCENTAGE SHADOWS_DEPTH
+        passType: 8
+      - keywords: GEOM_TYPE_BRANCH INSTANCING_ON LOD_FADE_CROSSFADE SHADOWS_DEPTH
+        passType: 8
+      - keywords: EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_FROND
+        passType: 11
+      - keywords: EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_BRANCH_DETAIL
+        passType: 11
+      - keywords: EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_LEAF
+        passType: 11
+      - keywords: EFFECT_BUMP EFFECT_HUE_VARIATION GEOM_TYPE_BRANCH
+        passType: 11
+  - first: {fileID: 14001, guid: 0000000000000000f000000000000000, type: 0}
+    second:
+      variants:
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION
+        passType: 4
+      - keywords: BILLBOARD_FACE_CAMERA_POS DIRECTIONAL EFFECT_BUMP EFFECT_HUE_VARIATION
+          LOD_FADE_CROSSFADE
+        passType: 4
+      - keywords: EFFECT_BUMP EFFECT_HUE_VARIATION SHADOWS_DEPTH
+        passType: 8
+      - keywords: BILLBOARD_FACE_CAMERA_POS EFFECT_BUMP EFFECT_HUE_VARIATION SHADOWS_DEPTH
+        passType: 8
+      - keywords: BILLBOARD_FACE_CAMERA_POS EFFECT_BUMP EFFECT_HUE_VARIATION LOD_FADE_CROSSFADE
+          SHADOWS_DEPTH
+        passType: 8
+  - first: {fileID: 4800000, guid: 1cac2e0bcc34e4b3cbb4bd85982eba83, type: 3}
+    second:
+      variants:
+      - keywords: WATER_REFRACTIVE
+        passType: 0
+  - first: {fileID: 4800000, guid: cafd18099dfc0114896e0a8b277b81b6, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0
+      - keywords: OUTLINE_ON
+        passType: 0
+  - first: {fileID: 4800000, guid: 17f3e80406929b64f90154b46d4f453c, type: 3}
+    second:
+      variants:
+      - keywords: DIRECTIONAL
+        passType: 4
+  - first: {fileID: 4800000, guid: 3c30d1a2a85b9d4499dfc9ebea9ade8b, type: 3}
+    second:
+      variants:
+      - keywords: 
+        passType: 0

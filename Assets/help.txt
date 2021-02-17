@@ -1,0 +1,116 @@
+Help text
+
+=======
+
+This help screen displays the default keybindings. If you have changed them, we assume you know what you're doing :)
+You can toggle the help screen with F4.
+
+=======
+
+Default:
+
+look around with the mouse
+move using WSAD
+jump using SPACE
+scroll or use the number keys to select a board object
+hold C to keep the board object selection screen open
+press CTRL + C to pin the selection screen open
+left click to place the selected board object
+left click while looking at an interactable object to interact with it
+hold right click and drag between two pegs to connect them
+press T while looking at a board object or wire to delete it
+press Q and E while looking at a board object to rotate it. Hold CTRL to rotate in smaller increments
+hold V to open the board menu
+hold F while looking at a board to look through it
+press R while looking at a board object to lock any more objects you place to its rotation. Press R while
+not looking at a board object to remove the rotation lock.
+
+Board menu:
+
+select board action: scroll or number keys
+execute board action: release V
+
+Board placing:
+
+toggle flat/standing: right click
+rotate board: QEZX
+offset placement: scroll/CTRL + scroll
+place board: left click
+cancel: esc
+
+
+
+look around with the mouse to place the board in different positions
+right click to toggle between flat and standing board
+QEZX to rotate the board
+scroll and CTRL + scroll to change the placing offset
+left click to place board
+escape to cancel board placing
+
+Color Board menu:
+
+scroll to change selected color
+tap V while looking at a board to change its color
+
+change color: scroll
+apply color: V
+
+
+
+* look: move mouse
+* move: WSAD
+* jump: SPACE
+* select: scroll or number keys
+* selection menu: hold C
+* pin selection menu: CTRL + C
+* place: left click
+* interact: left click
+* connect two pegs: hold & drag right click
+* delete: T
+* rotate: QE
+* fine rotate: CTRL + QE
+* board menu: hold V
+* look through board: hold F
+* rotation lock: R
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

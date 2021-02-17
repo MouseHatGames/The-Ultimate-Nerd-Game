@@ -1,0 +1,419 @@
+Iamsodarncool: sorry ben I forgot I had work! compiling now
+Iamsodarncool: aaand sent
+NooNoo: Ill check it out after this raid
+NooNoo: Ddo you want it in a ddoc or something
+Iamsodarncool: thumbs up emoji
+NooNoo is now playing Rust. Click here to join.
+Iamsodarncool: just message me whenever something breaks
+NooNoo: If you jump repeadetly you bounce
+NooNoo: Like if I double jump I will bounce ocne when I hit the ground
+Iamsodarncool: you mean how pressing jump in midair makes you jump on landing?
+NooNoo: yes
+Iamsodarncool: intended behavior, part of the USA first person controller
+NooNoo: oh ok
+Iamsodarncool: its purpose is for if you press it RIGHT before landing. I agree it's weird and later I'll be adjusting it
+NooNoo: Yeah just make it only apply if the distance between the character and the groundd is whatever units
+NooNoo: The options button doesnt work
+NooNoo: in game
+NooNoo: neither does about
+Iamsodarncool: yeah I know, haven't got to that yet
+Iamsodarncool: sorry I meant to tell you
+NooNoo: Its WASD
+NooNoo: Not WSAD
+NooNoo: gosh jimmy
+Iamsodarncool: will fix thanks ben
+NooNoo: Hooking an inverter to istelf causes it to flash "current"
+NooNoo: which is maybe intendded
+Iamsodarncool: it is
+Iamsodarncool: how would you expect it to behave?
+NooNoo: Lock up?
+NooNoo: I guess logically it makes sense
+NooNoo: Im not uite sure what you want me to break considering everythingf I have said is intended
+Iamsodarncool: no I'm glad for the feedback, it's good to know what players dont expect
+Iamsodarncool: keep fucking with circuits, try to get behavior that defies logic. Save and load games and try to get it to break on load
+Iamsodarncool: mess with placing circuitboards, that's a pretty complex system
+NooNoo: The one thing i find which is odd
+NooNoo: well idk about odd but
+NooNoo: if you put buttons or inverters or whatever beside eachother
+NooNoo: you can cover the outputs
+NooNoo: with the models
+NooNoo: Jimmy how do I save
+Iamsodarncool: yeah I'm not happy about that but it's complex to fix
+Iamsodarncool: it autosaves every ten seconds and will manually trigger a save when you quit to desktop or title or if the program is forcibly quit
+Iamsodarncool: you can change the autosave interval in settings.txt if you wish
+NooNoo: you should say that or have a sort of disclaimer
+Iamsodarncool: good idea
+Iamsodarncool: I'll also make it save on pause and have text on the pause screen that says "game saved!"
+NooNoo: You can place a board off of another board into yourself
+Iamsodarncool: does that make it glitch
+NooNoo: you cant move
+NooNoo: I mean you can just delete it
+NooNoo: but you get stuck in the board
+Iamsodarncool: hm okay
+Iamsodarncool: I'll try to fix but it might be tricky
+Iamsodarncool: thank you
+NooNoo: after placing a board your cursor stays on screen
+Iamsodarncool: oh dear
+NooNoo: untill you click again
+Iamsodarncool: that's odd, I cannot reproduce this
+Iamsodarncool: you mean placing via left click right? when the board is highlighted green but the click gets rid of the highlight?
+NooNoo: Once I placed a board with negative values my curos got stuck on my screen
+NooNoo: oh yeah, you can use negative values
+NooNoo: http://prntscr.com/hgmcbb
+Iamsodarncool: oh shit I didn't consider negative values
+NooNoo: which causes some to phase through others creating weird graphical effects
+NooNoo: aswell as the "recessed" board on the bottom left
+Iamsodarncool: yeah that is fuckin weird
+Iamsodarncool: fixing now
+NooNoo: Just a ease of use thing
+NooNoo: dont close the color menu when I apply 1 color
+NooNoo: if im going to color code I probably want to color code my whole board
+Iamsodarncool: double tapping v will apply the previously applied color
+Iamsodarncool: since the first tap opens the color menu and the second tap applies it
+NooNoo: Yes, but you have to realize I am an idiot
+Iamsodarncool: haha
+NooNoo: Also I crashed your game
+Iamsodarncool: aw fuck
+Iamsodarncool: how?
+NooNoo: I made a board 10 by 100000000000000000000000000000000
+NooNoo: if you do not choose a name the file is just called "       "
+NooNoo: maybe defualt to a "newGame"
+Iamsodarncool: ah good idea
+NooNoo: Double Bufferedd setting onder vsync crops into the single buffered space
+NooNoo: Show fps doesnt show my FPS
+Iamsodarncool: show fps only works in game not the main menu, is that the issue?
+Iamsodarncool: vsync dropdown looks fine to me, can you share a screenshot?
+NooNoo: Ohhhhh my fps was over a mountain
+NooNoo: the colors match perfectly
+Iamsodarncool: ah so they do
+Iamsodarncool: I'll up the contrast
+NooNoo: http://prntscr.com/hgmdpa
+NooNoo: same with AA
+Iamsodarncool: oh that's how it looks on mine too. You're right it should be sapced out
+Iamsodarncool: spaced
+NooNoo: crashed your game
+NooNoo: If you have a very long save name
+Iamsodarncool: dammit
+NooNoo: when it goes to save it crashes
+NooNoo: i did
+NooNoo: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25
+26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50
+51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75
+76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100
+101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125
+126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143 144 145 146 147 148 149 150
+151 152 153 154 155 156 157 158 159 160 161 162 163 164 165 166 167 168 169 170 171 172 173 174 175
+176 177 178 179 180 181 182 183 184 185 186 187 188 189 190 191 192 193 194 195 196 197 198 199 200
+201 202 203 204 205 206 207 208 209 210 211 212 213 214 215 216 217 218 219 220 221 222 223 224 225
+226 227 228 229 230 231 232 233 234 235 236 237 238 239 240 241 242 243 244 245 246 247 248 249 250
+251 252 253 254 255 256 257 258 259 260 261 262 263 264 265 266 267 268 269 270 271 272 273 274 275
+276 277 278 279 280 281 282 283 284 285 286 287 288 289 290 291 292 293 294 295 296 297 298 299 300
+301 302 303 304 305 306 307 308 309 310 311 312 313 314 315 316 317 318 319 320 321 322 323 324 325
+326 327 328 329 330 331 332 333 334 335 336 337 338 339 340 341 342 343 344 345 346 347 348 349 350
+351 352 353 354 355 356 357 358 359 360 361 362 363 364 365 366 367 368 369 370 371 372 373 374 375
+376 377 378 379 380 381 382 383 384 385 386 387 388 389 390 391 392 393 394 395 396 397 398 399 400
+401 402 403 404 405 406 407 408 409 410 411 412 413 414 415 416 417 418 419 420 421 422 423 424 425
+426 427 428 429 430 431 43
+Iamsodarncool: ah, the file path will be invalid I suspect
+NooNoo: all the way to 1000
+NooNoo: andd it crashed
+NooNoo: probably just limit the length of save names
+Iamsodarncool: thank you, I'll cap it yes
+NooNoo: hitting delete game with no game selected will still bring up the "are you sure screen"
+NooNoo: Also, for friday I cant spell posistion
+Iamsodarncool: thanks
+Iamsodarncool: lol
+Iamsodarncool: we'll make do
+NooNoo: http://prntscr.com/hgmepu
+NooNoo: Is assume this is incorrect
+Iamsodarncool: what, the logo being cut off?
+NooNoo: The banner
+NooNoo: right
+NooNoo: I only see Ga
+Iamsodarncool: yeah I haven't bothered fixing it since it's just a placeholder. Brooke is working on the final logo now
+NooNoo: http://prntscr.com/hgmfda
+NooNoo: I cant place this board
+NooNoo: even though ive had other board dintersect before
+Iamsodarncool: you should not have had other board intersect. You should not be able to place a board if it's intersecting with something
+Iamsodarncool: were the other inside boards the glitchy negative ones?
+NooNoo: probably
+NooNoo: are through poles intended dto go through multiple boards
+Iamsodarncool: the through pegs?
+NooNoo: yes
+Iamsodarncool: not explicitly but I don't mind
+NooNoo: okay
+NooNoo: http://prntscr.com/hgmfsl
+Iamsodarncool: do some more testing with board intersections. If you've done it before they might be broken under specific circumstances
+Iamsodarncool: yeah that looks odd but fixin it would be as complex as the clipped outputs thing. I don't mind it for now
+NooNoo: Ok this is really weird
+NooNoo: I went to move a board
+NooNoo: and now its stuck out of place seemingly randomly
+Iamsodarncool: oh god
+NooNoo: and It wont let me deselect, cancel or place it
+Iamsodarncool: what do you mean by "stuck out of place seemingly randomly"?
+NooNoo: http://prntscr.com/hgmfsl
+NooNoo: basically
+NooNoo: the board on the left snapped to the end of the board at the bottom right of the frame
+NooNoo: and then couldnt be moved untill I reloaded the game
+Iamsodarncool: you sent the same screenshot as last time was that intentional
+NooNoo: just to show you which boards i was alking about
+Iamsodarncool: ok
+Iamsodarncool: see if you can find steps to reproduce
+Iamsodarncool: I suspect it might have something to do with placing more boards on the parent board
+NooNoo: you can move boards into the groundd
+NooNoo: http://prntscr.com/hgmgn8
+Iamsodarncool: intentional, otherwise it would be impossible to place boards on uneven terrain
+Iamsodarncool: but I agree it displeases me the extent to which they can be buried
+NooNoo: but why is there that graphical glitch extending perpendicular to the board
+Iamsodarncool: z-fighting. The board and the terrain are exactly lined up and the graphics API isn't sure which surface to render on top of the other
+NooNoo: Interesting I never knew that
+Iamsodarncool: indeed
+Iamsodarncool: it also happens if you have to crossing wires at the same altitude and have one on one off
+Iamsodarncool: *two
+NooNoo: it would be nice to be able to pain sections of a board
+NooNoo: or even components
+Iamsodarncool: re: the first one, make smaller boards and stick them together
+Iamsodarncool: for the second one I want board objects to be quickly identifiable, and part of that is consistent color
+Iamsodarncool: I'd like to have colored text on labels though that'd be nice
+NooNoo: it bothers me there is no crouch
+NooNoo: I mean you dont NEED it
+Iamsodarncool: I was gonna say haha why would you ever crouch :)
+NooNoo: For circuits near the ground
+NooNoo: Or if I prefer to work top down
+Iamsodarncool: true!
+Iamsodarncool: When I rewrite the first person controls I'll be sure to add it (in addition to the jump thing)
+NooNoo: If you tab back in
+NooNoo: the first few times you try to lock the selection menu it doesnt stay locked
+Iamsodarncool: really? that's odd
+NooNoo: I have to hold for probably 2-3 seconds
+Iamsodarncool: what causes it to unlock? it works just fine for me
+Iamsodarncool: you have to press ctrl before pressing c not the other way around, is that it?
+NooNoo: I actually cant get it to lock at all now
+Iamsodarncool: shit
+Iamsodarncool: I've been unable to become unable to lock it, do you know exactly what to do to cause it?
+NooNoo: tab out
+NooNoo: tab back in
+NooNoo: i physically can not lock the menu now
+Iamsodarncool: cannot reproduce
+NooNoo: to be fair i locked dand locked it probably 20- 30 times
+Iamsodarncool: I assume it goes away if you reload the save?
+Iamsodarncool: I'll try doing that
+Iamsodarncool: yeah cannot reproduce at all
+NooNoo: but yeah
+NooNoo: across muiltiple saves
+NooNoo: tab out and then click back in
+NooNoo: I cannot for the life of me get it to lock
+Iamsodarncool: oh CLICK back in
+Iamsodarncool: I've been tabbing back in
+Iamsodarncool: is the game paused while you do this?
+NooNoo: no
+Iamsodarncool: still cannot reproduce...
+Iamsodarncool: is your ctrl key broken
+NooNoo: no jimmy
+NooNoo: because i can copy and paste
+NooNoo: Jimmy
+NooNoo: Jimmy
+NooNoo: Jimmy
+NooNoo: Jimmy
+NooNoo: Jimmy
+NooNoo: Jimmy
+NooNoo: Jimmy
+NooNoo: Jimmy
+Jimmy
+Iamsodarncool: well heck I don't know
+Iamsodarncool: maybe it does have to do with copy pasting though? maybe some text is selected and it's copying it instead of doing the menu thing? hmm
+NooNoo: Also i cant figure out why this wont connect
+Iamsodarncool: but that wouldn't persist accross multiple saves
+NooNoo: http://prntscr.com/hgmkh0
+Iamsodarncool: I think the line of sight is JUST broken by the corner of the cube
+NooNoo: Fair
+NooNoo: ok so
+NooNoo: the power can go through the display correct
+Iamsodarncool: yes, display input acts just like any other peg
+NooNoo: so then why does this not provide power to the left most delay
+Iamsodarncool: screenshot
+NooNoo: http://prntscr.com/hgmlg6
+Iamsodarncool: the display peg is feeding into the OUTPUT of the display
+Iamsodarncool: outputs cannot recieve power
+Iamsodarncool: they are the square ones
+NooNoo: well I know that not
+NooNoo: now*
+NooNoo: xD
+Iamsodarncool: good try ben
+NooNoo: Ok i got a real thing now
+Iamsodarncool: shoot
+NooNoo: you cant link inverters to switches or buttons if theres only one tile between then
+Iamsodarncool: screenshot? I just tested and it works fine for me
+NooNoo: http://prntscr.com/hgmm9g
+Iamsodarncool: you are trying to connect two outputs ben :)
+NooNoo: by why can I not have a button dork like this
+Iamsodarncool: the only valid connections are those between an input and another input and an input and output
+Iamsodarncool: I don't know why can you not have a button dork like that
+Iamsodarncool: you can connect the button to the top of the inverter, yes?
+NooNoo: but really what if I wanted the inversion of the button while also using the button for something else
+NooNoo: and yes i can
+Iamsodarncool: you can do multiple connections to a single output, they all just have to connect to inputs
+Iamsodarncool: put a peg down next to the inverter and connect it to the button
+NooNoo: Okay
+NooNoo: im having an issue with long connections
+Iamsodarncool: there is a maximum distance, is that what you mean?
+NooNoo: tell me these things jimmy
+Iamsodarncool: haha sorry
+Iamsodarncool: there's also a maximum distance beyond which the player cannot reach
+Iamsodarncool: no 360 nohelpmenus accross the map
+NooNoo: HA I FINNALY GOT AN ACTUAL ISSUE
+NooNoo: you can place boards through wire
+Iamsodarncool: yes!!
+Iamsodarncool: screenshot?
+Iamsodarncool: thought I fixed that
+NooNoo: http://prntscr.com/hgmp1s
+Iamsodarncool: heck
+Iamsodarncool: yeah it appears at some point my DestroyIntersectingConnections method broke. You can also place board objects inside wires and they won't break
+NooNoo: Hey im useful
+NooNoo: but annoying
+Iamsodarncool: yes you are useful!!! I've been fixing and improving stuff throughout this whole conversation!
+Iamsodarncool: seriously, thank you so much for the feedback ben. this is the first time anyone but me has played the game for more than 2 minutes and it's immensely useful
+NooNoo: Why would oyu ever select none
+Iamsodarncool: in the board menu?
+NooNoo: yes
+Iamsodarncool: if you opened it by accident
+Iamsodarncool: I'll rename it to cancel
+NooNoo: but even then right
+NooNoo: when else are oyu left clicking
+Iamsodarncool: what?
+NooNoo: Why would anyone ever take the time to select none
+NooNoo: when they could just leave it and select the next thing they need
+NooNoo: like when do you ever left click
+Iamsodarncool: switches and buttons
+NooNoo: but slecting an inverter while you interact with a button doesn nothing
+NooNoo: Replace inverter with any itewm
+Iamsodarncool: it's insurance in case you misclick so you don't accidentally place anything
+NooNoo: did oyu know you can climb trees
+Iamsodarncool: yup
+Iamsodarncool: and sheer cliff faces
+NooNoo: While HOLD C makes sense
+NooNoo: click and drag sounds better for the connecting instructions
+Iamsodarncool: yes idkwtf I was thinking with that wording thank you
+NooNoo: JIMMY
+NooNoo: I broke it again
+Iamsodarncool: NOOO
+NooNoo: If you make a death spiral
+NooNoo: with displays
+Iamsodarncool: what
+NooNoo: http://prntscr.com/hgmrnv
+NooNoo: if you stand in the middle
+NooNoo: and keep turning placing them closer andd closer
+NooNoo: you either A. Pop out into the air
+NooNoo: or B. get forced through the floor
+Iamsodarncool: the second one is a problem
+NooNoo: done it 4 times now
+Iamsodarncool: shite
+NooNoo: seems to be if you place one infront of you with now room to get pushed backwards
+Iamsodarncool: honestly I'm just going to say "reload the game" for now
+Iamsodarncool: yeah, when I redo the board object placing to be more like board placing I'll make it so you can't place objects inside you
+NooNoo: yeah reloaded the game and save
+NooNoo: still possibler
+Iamsodarncool: as in reloading will make you no longer falling out of the world
+Iamsodarncool: I assume that's what you mean by forced through the floor
+NooNoo: I can still force myself through the floor
+Iamsodarncool: annoying
+Iamsodarncool: that makes you fall out of the world right?
+NooNoo: yes
+NooNoo: http://prntscr.com/hgmspb
+Iamsodarncool: ok
+Iamsodarncool: won't fix for now since you can just reload and it's not something you could ever really do by accident...
+Iamsodarncool: thank you for finding it though
+NooNoo: also
+NooNoo: similar to the delete issue
+NooNoo: you can rename a save without a save selected
+Iamsodarncool: ah
+Iamsodarncool: will fix thank you
+NooNoo: Names with ? will not save
+NooNoo: they just dont show up in the load save menu
+NooNoo: I lied
+NooNoo: they show up as ______
+NooNoo: any forbidden character is displayed as ____
+Iamsodarncool: that's intended behavior
+NooNoo: oh makes sense makes sense
+NooNoo: Also idk if intended or not but see through board mode doesnt work if you stack 3 or more
+NooNoo: I mean idk wh yyou would ever but
+Iamsodarncool: you mean boards flat against each other?
+Iamsodarncool: certainly not intended, see through board should always work
+Iamsodarncool: testing now
+NooNoo: I mean the 2 do
+NooNoo: but the 3rd is solid
+NooNoo: oh sorry
+NooNoo: I misunderstood how it worked
+Iamsodarncool: cannot reproduce
+NooNoo: I thought it made all board seethrough
+Iamsodarncool: what did you misunderstand?
+NooNoo: Also opening the pasue menu gives me a cursor
+Iamsodarncool: ...intentional, you need to be able to click on stuff
+NooNoo: when I close it with esc
+NooNoo: Meaning I still have it
+Iamsodarncool: a shite so it does
+NooNoo: after I close it
+Iamsodarncool: I thought I fixed that!!
+Iamsodarncool: oh it appears I only fixed it on other menus, the new board and text edit ones. I'll apply the fix to the pause menu too
+NooNoo: http://prntscr.com/hgmuu3
+NooNoo: Not sure how
+Iamsodarncool: CUNT
+NooNoo: but this is selected indefinitley
+Iamsodarncool: right clicking doesn't work?
+Iamsodarncool: I thought I fixed that asshole
+NooNoo: Removing it fixes it but yeah right clicking ddid not
+Iamsodarncool: right clicking the stuck peg I mean
+Iamsodarncool: and a reload would fix it... dammit. See if you can find out how to reproduce it
+NooNoo: I cant seem to get it
+Iamsodarncool: well good
+Iamsodarncool: but also bad because now it's sneaky
+NooNoo: Yeah no idea how it happened
+NooNoo: Bam replicatedd
+NooNoo: http://prntscr.com/hgmw50
+Iamsodarncool: woohoo!
+Iamsodarncool: how exactly
+NooNoo: no fucking clue i was just connecting normally
+Iamsodarncool: lol
+Iamsodarncool: damn damn damn
+NooNoo: REPLICATED AGAIN
+Iamsodarncool: that bug haunted me for DAYS and I thought I'd banished it forever
+Iamsodarncool: !!
+NooNoo: Ok so
+NooNoo: you select peg 1
+NooNoo: hover over peg two
+NooNoo: and quickly release and then reclick
+NooNoo: now its not working wtf
+Iamsodarncool: yeah cannot reproduce...
+NooNoo: Okay I got
+NooNoo: I got it
+NooNoo: ig you highlight something
+NooNoo: then hold left click of an existing object
+NooNoo: ah what no
+NooNoo: it seems so random
+NooNoo: i got it 5 times doing that and now nothing
+Iamsodarncool: fuck
+NooNoo: its ddefinitley something to do with left click
+NooNoo: cause i got it 3 more times
+Iamsodarncool: hm
+NooNoo: http://prntscr.com/hgmxfz
+Iamsodarncool: nice collection
+NooNoo: I dont think it matters what is connecting though
+NooNoo: Okay so
+NooNoo: I click and drag
+NooNoo: then hold left click on the destination
+NooNoo: then kind of roll my right mouse button
+Iamsodarncool: hahahaha
+Iamsodarncool: "I curse Buddha, I walk under a ladder 3 times..."
+Iamsodarncool: just releasing the right mouse button doesn't work?
+NooNoo: no
+NooNoo: I can only get it if I fuck with my mouse
+NooNoo: Do you know what i mean when I say roll
+Iamsodarncool: sort of
+NooNoo: so it is *kindda* pressed at some points but also pressed down really hard at other points
+NooNoo: Idk man im going to go to sleep good luck
+Iamsodarncool: thanks ben
+Iamsodarncool: I FINALLY just fixed the wire intersection bug btw
+Iamsodarncool: hooray
+NooNoo: Awesome!
+Iamsodarncool: goodnight ben
+Iamsodarncool: thank you again for all your help
