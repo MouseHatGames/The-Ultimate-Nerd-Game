@@ -215,7 +215,7 @@ InputManager:
     joyNum: 0
   - serializedVersion: 3
     m_Name: Rotate
-    descriptiveName: Rotate Clcokwise
+    descriptiveName: Rotate Clockwise
     descriptiveNegativeName: Rotate Counterclockwise
     negativeButton: q
     positiveButton: e

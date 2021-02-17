@@ -7,6 +7,8 @@ public class RunMainMenu : MonoBehaviour {
 
     public static RunMainMenu Instance;
 
+    public UnityEngine.Playables.PlayableDirector CameraMovementDirector;
+
 	// Use this for initialization
 	void Start () {
         GameObject.Find("CM vcam1").transform.localEulerAngles = new Vector3(90, 0, 0); // for some reason, you cannot set virtual camera rotation in the editor. This is my solution
@@ -15,6 +17,13 @@ public class RunMainMenu : MonoBehaviour {
         DoBoards();
 
         ES3.Save<string>("LastLoadedVersion", "0.1", "settings.txt"); // in case it's needed for future compatibility
+
+        // stuff to enable/disable the main menu pan as some people get motion sick from it
+        if (!ES3.KeyExists("EnableMainMenuCameraPan", "settings.txt"))
+        {
+            ES3.Save<bool>("EnableMainMenuCameraPan", true, "settings.txt"); // it is VERY IMPORTANT that the number here be cast as a float!
+        }
+        CameraMovementDirector.enabled = ES3.Load<bool>("EnableMainMenuCameraPan", "settings.txt", true);
     }
 
     private void Update()

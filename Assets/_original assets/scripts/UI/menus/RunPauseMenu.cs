@@ -19,7 +19,7 @@ public class RunPauseMenu : MonoBehaviour {
         // dear lord this is a mess. TODO: overhaul UI management code
         if (Input.GetButtonDown("Cancel"))
         {
-            SaveManager.SaveAll();
+            if (!PauseCanvas.enabled) { SaveManager.SaveAll(); }
 
             if (!UIManager.SomeOtherMenuIsOpen)
             {

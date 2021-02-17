@@ -191,7 +191,7 @@ public class StuffConnecter : MonoBehaviour {
             }
         }
 
-        if(CanConnect(Point1, Point2))
+        if (CanConnect(Point1, Point2) && CanConnect(Point2, Point1)) // the double check prevents a rare case where it would return true falsely
         {
             return true;
         }
