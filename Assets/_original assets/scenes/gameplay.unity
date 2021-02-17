@@ -149,37 +149,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!84 &82870778
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  m_Width: 1368
-  m_Height: 688
-  m_AntiAliasing: 1
-  m_DepthFormat: 1
-  m_ColorFormat: 0
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
 --- !u!1 &88143610
 GameObject:
   m_ObjectHideFlags: 0
@@ -548,8 +517,8 @@ MonoBehaviour:
   sourceCamera: {fileID: 160918653}
   outlineCamera: {fileID: 1325118206}
   outlineShaderMaterial: {fileID: 0}
-  renderTexture: {fileID: 876227290}
-  extraRenderTexture: {fileID: 82870778}
+  renderTexture: {fileID: 1953597322}
+  extraRenderTexture: {fileID: 1574175543}
 --- !u!114 &160918655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5620,37 +5589,6 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 869440297}
---- !u!84 &876227290
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  m_Width: 1368
-  m_Height: 688
-  m_AntiAliasing: 1
-  m_DepthFormat: 1
-  m_ColorFormat: 0
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 0
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
 --- !u!1 &899902906
 GameObject:
   m_ObjectHideFlags: 0
@@ -5996,8 +5934,15 @@ Prefab:
         under Creative Commons: By Attribution 4.0\r\nhttps://creativecommons.org/licenses/by/4.0/\r\n\r\n======================================\r\n\r\nThird
         party assets used:\r\n\r\n* Wispy Skybox by Mundus Limited\r\n* Outline Effect
         by cakeslice\r\n* UGUI Kit: Flat by Lovatto Studios\r\n* Easy Save 3 by Moodkie
-        Interactive\r\n* AQUAS by Dogmatic Games\n\r\n======================================\r\n\r\nCHANGELOG:\r\n\r\nv0.1
-        (alpha) | 2018-01-07\n\r\n* initial release"
+        Interactive\r\n* AQUAS by Dogmatic Games\n\r\n======================================\r\n\r\nCHANGELOG:\r\n\r\nv0.1.1
+        | 2018-01-07 (but later)\r\nThanks to everybody who's played the game and
+        left feedback!\r\n\r\n* fixed a bug that let you place wires in places where
+        they would be deleted when the save was loaded\r\n* the player no longer collides
+        with wires; makes it easier to navigate (messy) circuits\r\n* doubled the
+        reach distance of the player to 20 meters. This will be customizable in the
+        future\r\n* doubled the time the selection menu stays open after scrolling
+        or pressing a number key to 0.8 seconds. This will be customizable in the
+        future\n\n\nv0.1 (alpha) | 2018-01-07\n\r\n* initial release"
       objectReference: {fileID: 0}
     - target: {fileID: 114916533178775252, guid: 010cda5186e063943a5496a8f370a89c,
         type: 2}
@@ -6008,6 +5953,21 @@ Prefab:
         type: 2}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 224818335877880516, guid: 010cda5186e063943a5496a8f370a89c,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114623369580246324, guid: 010cda5186e063943a5496a8f370a89c,
+        type: 2}
+      propertyPath: m_havePropertiesChanged
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114623369580246324, guid: 010cda5186e063943a5496a8f370a89c,
+        type: 2}
+      propertyPath: m_isInputParsingRequired
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 010cda5186e063943a5496a8f370a89c, type: 2}
@@ -7438,7 +7398,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 0
   m_RenderingPath: 1
-  m_TargetTexture: {fileID: 876227290}
+  m_TargetTexture: {fileID: 1953597322}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 0
@@ -8434,6 +8394,37 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 17
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!84 &1574175543
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_Width: 1368
+  m_Height: 579
+  m_AntiAliasing: 1
+  m_DepthFormat: 1
+  m_ColorFormat: 0
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_BindMS: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
 --- !u!1 &1595277401
 GameObject:
   m_ObjectHideFlags: 0
@@ -10722,6 +10713,37 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1925132273}
+--- !u!84 &1953597322
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_Width: 1368
+  m_Height: 579
+  m_AntiAliasing: 1
+  m_DepthFormat: 1
+  m_ColorFormat: 0
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_BindMS: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 0
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
 --- !u!1 &1985417323
 GameObject:
   m_ObjectHideFlags: 0

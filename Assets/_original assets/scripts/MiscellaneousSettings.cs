@@ -7,13 +7,13 @@ using UnityEngine;
 public class MiscellaneousSettings {
 
     // the distance the player can reach
-    public static float ReachDistance = 10;
+    public static float ReachDistance = 20;
 
     // the maximum distance of a wire
     public static float WireDistance = 40;
 
     // the time the placement menu stays open for when a quick action is performed i.e. scrolling
-    public static float PlaceMenuOpenTime = 0.4f;
+    public static float PlaceMenuOpenTime = 0.8f;
 
     // some colors for common stuff
     public static Color CircuitOnColor = Color.red;
