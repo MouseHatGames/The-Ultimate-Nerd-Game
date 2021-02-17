@@ -102,12 +102,12 @@ public class InputInputConnection : MonoBehaviour {
             (transform.localScale.z / 2) + 0.045f, // half the length of the wire (transform.position is the center of the wire) plus half the width of an input, just in case
             1 << 0)) // cast against only the default layer
         {
-            if (ForwardHit.collider == null) { Destroy(gameObject); }
-            else if (ForwardHit.collider.tag == "Input")
+            if (ForwardHit.collider.tag == "Input")
             {
                 FoundPoint1 = ForwardHit.collider.GetComponent<CircuitInput>();
             }
         }
+        else { return false; } // this is done so that when the check is done to see if the two objects are the same we don't get an exception. RaycastHit is non-nullable
 
         RaycastHit BackwardHit;
         if (Physics.Raycast(
@@ -117,7 +117,6 @@ public class InputInputConnection : MonoBehaviour {
             (transform.localScale.z / 2) + 0.045f, // half the length of the wire (transform.position is the center of the wire) plus half the width of an input, just in case
             1 << 0)) // cast against only the default layer
         {
-            if (BackwardHit.collider == null) { Destroy(gameObject); }
             if (BackwardHit.collider.tag == "Input"
                 && BackwardHit.collider.gameObject
                 != ForwardHit.collider.gameObject)

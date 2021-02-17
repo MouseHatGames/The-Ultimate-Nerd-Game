@@ -517,8 +517,8 @@ MonoBehaviour:
   sourceCamera: {fileID: 160918653}
   outlineCamera: {fileID: 1325118206}
   outlineShaderMaterial: {fileID: 0}
-  renderTexture: {fileID: 338359340}
-  extraRenderTexture: {fileID: 1495523553}
+  renderTexture: {fileID: 1178849934}
+  extraRenderTexture: {fileID: 1295133421}
 --- !u!114 &160918655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1409,7 +1409,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 1
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -2107,37 +2107,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!84 &338359340
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  m_Width: 1366
-  m_Height: 631
-  m_AntiAliasing: 1
-  m_DepthFormat: 1
-  m_ColorFormat: 0
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 0
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
 --- !u!1 &365152109
 GameObject:
   m_ObjectHideFlags: 0
@@ -5965,32 +5934,36 @@ Prefab:
         under Creative Commons: By Attribution 4.0\r\nhttps://creativecommons.org/licenses/by/4.0/\r\n\r\n======================================\r\n\r\nThird
         party assets used:\r\n\r\n* Wispy Skybox by Mundus Limited\r\n* Outline Effect
         by cakeslice\r\n* UGUI Kit: Flat by Lovatto Studios\r\n* Easy Save 3 by Moodkie
-        Interactive\r\n* AQUAS by Dogmatic Games\n\r\n======================================\r\n\r\nCHANGELOG:\r\n\r\nv0.1.3
-        | 2018-01-09\r\n\r\n* wire hitboxes now extend vertically for a bit. Makes
-        it easier to delete/rotate them when viewed at shallow angles\r\n* added new
-        value editable in settings.txt, EnableMainMenuCameraPan. Setting this to false
-        disables the camera movement in the main menu for people who get motion sick
-        from it\r\n* the game no longer saves when you unpause via the escape key\r\n*
-        fixed being able to get wires into invalid positions by rotating components\r\n*
-        fixed being unable to lock rotation on panel switches, panel buttons, and
-        through blotters\r\n* fixed typo in the input configuration dialog (Rotate
-        Clcokwise -> Rotate Clockwise)\r\n* fixed me forgetting to update the in-game
-        version number :P\n\n\nv0.1.2 | 2018-01-08\r\n\r\n* properly fixed being able
-        to place wires in places where they would be deleted when the save was loaded.
-        In 0.1.1 the game limited wires to a certain length, now it actually checks
-        if the wire can be loaded successfully. Prevents some edge cases where you
-        could still place non-persistent wires.\r\n* fixed sometimes not being able
-        to delete empty boards\r\n* fixed inputs sometimes becoming invisible\r\n*
-        you can now rotate wires in the same way you rotate other game objects. Handy
-        for when the default rotation puts them at an angle that's hard to see.\n\n\nv0.1.1
-        | 2018-01-07 (but later)\r\nThanks to everybody who's played the game and
-        left feedback!\r\n\r\n* fixed a bug that let you place wires in places where
-        they would be deleted when the save was loaded\r\n* the player no longer collides
-        with wires; makes it easier to navigate (messy) circuits\r\n* doubled the
-        reach distance of the player to 20 meters. This will be customizable in the
-        future\r\n* doubled the time the selection menu stays open after scrolling
-        or pressing a number key to 0.8 seconds. This will be customizable in the
-        future\n\n\nv0.1 | 2018-01-07\n\r\n* initial release"
+        Interactive\r\n* AQUAS by Dogmatic Games\n\r\n======================================\r\n\r\nCHANGELOG:\r\n\nv0.1.4
+        | 2018-01-12\r\n\r\n* fixed a save-corrupting bug that occured when you tried
+        to make very very short wires\r\n* added \"PaintColors\" key to settings.txt
+        that lets you modify what colors are available in the paint board menu\r\n*
+        the UI scales better at small aspect ratios\n\n\r\nv0.1.3 | 2018-01-09\r\n\r\n*
+        wire hitboxes now extend vertically for a bit. Makes it easier to delete/rotate
+        them when viewed at shallow angles\r\n* added new value editable in settings.txt,
+        EnableMainMenuCameraPan. Setting this to false disables the camera movement
+        in the main menu for people who get motion sick from it\r\n* the game no longer
+        saves when you unpause via the escape key\r\n* fixed being able to get wires
+        into invalid positions by rotating components\r\n* fixed being unable to lock
+        rotation on panel switches, panel buttons, and through blotters\r\n* fixed
+        typo in the input configuration dialog (Rotate Clcokwise -> Rotate Clockwise)\r\n*
+        fixed me forgetting to update the in-game version number :P\n\n\nv0.1.2 |
+        2018-01-08\r\n\r\n* properly fixed being able to place wires in places where
+        they would be deleted when the save was loaded. In 0.1.1 the game limited
+        wires to a certain length, now it actually checks if the wire can be loaded
+        successfully. Prevents some edge cases where you could still place non-persistent
+        wires.\r\n* fixed sometimes not being able to delete empty boards\r\n* fixed
+        inputs sometimes becoming invisible\r\n* you can now rotate wires in the same
+        way you rotate other game objects. Handy for when the default rotation puts
+        them at an angle that's hard to see.\n\n\nv0.1.1 | 2018-01-07 (but later)\r\nThanks
+        to everybody who's played the game and left feedback!\r\n\r\n* fixed a bug
+        that let you place wires in places where they would be deleted when the save
+        was loaded\r\n* the player no longer collides with wires; makes it easier
+        to navigate (messy) circuits\r\n* doubled the reach distance of the player
+        to 20 meters. This will be customizable in the future\r\n* doubled the time
+        the selection menu stays open after scrolling or pressing a number key to
+        0.8 seconds. This will be customizable in the future\n\n\nv0.1 | 2018-01-07\n\r\n*
+        initial release"
       objectReference: {fileID: 0}
     - target: {fileID: 114916533178775252, guid: 010cda5186e063943a5496a8f370a89c,
         type: 2}
@@ -6957,6 +6930,37 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 15
   m_LocalEulerAnglesHint: {x: 50.000004, y: -165.88, z: 0}
+--- !u!84 &1178849934
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_Width: 800
+  m_Height: 600
+  m_AntiAliasing: 1
+  m_DepthFormat: 1
+  m_ColorFormat: 0
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_BindMS: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 0
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
 --- !u!1 &1219515257
 GameObject:
   m_ObjectHideFlags: 0
@@ -7310,6 +7314,37 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!84 &1295133421
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_Width: 800
+  m_Height: 600
+  m_AntiAliasing: 1
+  m_DepthFormat: 1
+  m_ColorFormat: 0
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 0
+  m_UseDynamicScale: 0
+  m_BindMS: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
 --- !u!1 &1304068787
 GameObject:
   m_ObjectHideFlags: 0
@@ -7446,7 +7481,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 0
   m_RenderingPath: 1
-  m_TargetTexture: {fileID: 338359340}
+  m_TargetTexture: {fileID: 1178849934}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 0
@@ -8341,37 +8376,6 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1471821024}
---- !u!84 &1495523553
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  m_Width: 1366
-  m_Height: 631
-  m_AntiAliasing: 1
-  m_DepthFormat: 1
-  m_ColorFormat: 0
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 0
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
 --- !u!1 &1526067764
 GameObject:
   m_ObjectHideFlags: 0

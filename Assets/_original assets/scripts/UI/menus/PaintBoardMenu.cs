@@ -30,7 +30,17 @@ public class PaintBoardMenu : MonoBehaviour {
 
     public void GenerateMenu()
     {
-        for (int i = 0; i < Colors.Count; i++) // we use this instead of foreach because a number is used for position
+        List<Color> menucolors = Colors;
+        if(!ES3.KeyExists("PaintColors", "settings.txt"))
+        {
+            ES3.Save<List<Color>>("PaintColors", Colors, "settings.txt");
+        }
+        else
+        {
+            menucolors = ES3.Load<List<Color>>("PaintColors", "settings.txt", Colors);
+        }
+
+        for (int i = 0; i < menucolors.Count; i++) // we use this instead of foreach because a number is used for position
         {
             // create it and make it a child of the menu
             GameObject boob = Instantiate(ColorRectangle, PaintCanvas.transform);
@@ -41,7 +51,7 @@ public class PaintBoardMenu : MonoBehaviour {
 
             // set its color
             Image image = boob.GetComponent<Image>();
-            image.color = Colors[i];
+            image.color = menucolors[i];
         }
     }
 
