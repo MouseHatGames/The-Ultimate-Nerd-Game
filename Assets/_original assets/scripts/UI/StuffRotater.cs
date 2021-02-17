@@ -19,9 +19,17 @@ public class StuffRotater : MonoBehaviour {
             return;
         }
 
-        if (RotateThis.tag == "Wire" || RotateThis.tag == "CircuitBoard") // you cannot rotate wires, and circuitboards are rotated with a different script in a special way
+        if (RotateThis.tag == "CircuitBoard") // circuitboards are rotated with a different script in a special way
         {
             return;
+        }
+
+        // everything but wires should rotate around transform.up
+        Vector3 AxisToRotateAround = RotateThis.transform.up;
+        if (RotateThis.tag == "Wire")
+        {
+            AxisToRotateAround = RotateThis.transform.forward;
+            StuffConnecter.QueueWireMeshRecalculation(RotateThis);
         }
 
         int direction = 1;
@@ -36,11 +44,11 @@ public class StuffRotater : MonoBehaviour {
 
         if (Input.GetButton("Mod")) // rotate by 22.5 degrees if the mod key is held down
         {
-            RotateThis.transform.RotateAround(RotateThis.transform.position, RotateThis.transform.up, direction * 22.5f);
+            RotateThis.transform.RotateAround(RotateThis.transform.position, AxisToRotateAround, direction * 22.5f);
         }
         else // ...but normally rotate by 90 degrees
         {
-            RotateThis.transform.RotateAround(RotateThis.transform.position, RotateThis.transform.up, direction * 90f);
+            RotateThis.transform.RotateAround(RotateThis.transform.position, AxisToRotateAround, direction * 90f);
         }
 
         DealWithConnectedWires(RotateThis);

@@ -144,18 +144,6 @@ public class StuffConnecter : MonoBehaviour {
 
         int layerMask = 1 << 0; // cast against only the default layer
 
-        // the following block of code is to prevent a bug where you could connect things that were inside of each other. Then, when the save was loaded and the connection
-        // did its FindPoints thing, the raycast would fail and the connection would be deleted
-        float PointsDistance = Vector3.Distance(peg1.transform.GetChild(0).transform.position, peg2.transform.GetChild(0).transform.position);
-        if(peg1.tag == "Output" || peg2.tag == "Output") // if it's an IO connection
-        {
-            if (PointsDistance < 0.135f) { return false; }
-        }
-        else // if it's an II connection
-        {
-            if (PointsDistance < 0.105) { return false; }
-        }
-
         RaycastHit hit;
         if (Physics.Raycast(WirePoint1, WirePoint2 - WirePoint1, out hit, MiscellaneousSettings.WireDistance, layerMask)) // raycast from wirepoint1, in the direction of wirepoint2, for WireDistance, ignoring wires
         {
@@ -216,7 +204,7 @@ public class StuffConnecter : MonoBehaviour {
     // TODO: add overload methods for the connection classes
 
     // creates a physical connection between two inputs, then triggers the non-physical connection
-    public static void CreateIIConnection(CircuitInput input1, CircuitInput input2)
+    public static void CreateIIConnection(CircuitInput input1, CircuitInput input2, bool AllowImproperConnections = false)
     {
         GameObject wire = Instantiate(WirePrefab);
         wire.AddComponent<SaveThisObject>().ObjectType = "Wire";
@@ -227,6 +215,9 @@ public class StuffConnecter : MonoBehaviour {
 
         wire.transform.parent = AppropriateConnectionParent(connection);
         LinkInputs(connection);
+
+        if (AllowImproperConnections) { return; } // this overload is for through pegs, since their connections can be improper when the board is lying flat on terrain
+        if (!connection.CanFindPoints()) { Debug.Log("Improper connection! Disallowing"); StuffDeleter.DestroyIIConnection(connection); } // to ensure that you can't create a connection that will be destroyed on load
     }
 
     // creates a physical connection between an input and an output, then triggers the non-physical connection
@@ -242,6 +233,8 @@ public class StuffConnecter : MonoBehaviour {
 
         wire.transform.parent = AppropriateConnectionParent(connection);
         LinkInputOutput(connection);
+
+        if (!connection.CanFindPoints()) { Debug.Log("Improper connection! Disallowing"); StuffDeleter.DestroyIOConnection(connection); } // to ensure that you can't create a connection that will be destroyed on load
     }
 
     // joins two inputs in the cluster code. Covers possible cases.
@@ -435,5 +428,21 @@ public class StuffConnecter : MonoBehaviour {
         int i = 0;
         while (thing.parent != null) { thing = thing.parent; i++; }
         return i;
+    }
+
+    // if the wire is a IIConnection, queue mesh recalculation in the cluster. If it's IO, queue mesh recalculation in the output.
+    // currently only used by stuffrotater for rotating wires
+    public static void QueueWireMeshRecalculation(GameObject wire)
+    {
+        if (wire.tag != "Wire") { return; }
+
+        InputInputConnection IIConnection = wire.GetComponent<InputInputConnection>();
+        if(IIConnection != null)
+        {
+            IIConnection.Point1.Cluster.QueueMeshRecalculation();
+            return;
+        }
+
+        wire.GetComponent<InputOutputConnection>().Point2.QueueMeshRecalculation();
     }
 }

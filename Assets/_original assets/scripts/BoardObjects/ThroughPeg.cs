@@ -13,7 +13,7 @@ public class ThroughPeg : MonoBehaviour {
     CircuitInput[] ChildInputs;
     private void Start()
     {
-        StuffConnecter.CreateIIConnection(ChildInputs[0], ChildInputs[1]);
+        StuffConnecter.CreateIIConnection(ChildInputs[0], ChildInputs[1], true);
         ChildInputs[0].IIConnections[0].unbreakable = true;
         Destroy(ChildInputs[0].IIConnections[0].GetComponent<SaveThisObject>());
     }

@@ -92,4 +92,50 @@ public class InputOutputConnection : MonoBehaviour {
             Point2.AddIOConnection(this);
         }
     }
+
+    // used to make sure a wire won't destroy itself on load. TODO: merge code with above method
+    public bool CanFindPoints()
+    {
+        CircuitInput FoundPoint1 = null;
+        Output FoundPoint2 = null;
+
+        RaycastHit ForwardHit;
+        if (Physics.Raycast(
+            transform.position,
+            transform.forward, // as the transform.LookAt used in drawwire points the forward vector in the direction of the thing being looked at
+            out ForwardHit,
+            (transform.localScale.z / 2) + 0.045f, // half the length of the wire (transform.position is the center of the wire) plus half the width of an input, just in case
+            1 << 0)) // cast against only the default layer
+        {
+            if (ForwardHit.collider.tag == "Input")
+            {
+                FoundPoint1 = ForwardHit.collider.GetComponent<CircuitInput>();
+            }
+            else if (ForwardHit.collider.tag == "Output")
+            {
+                FoundPoint2 = ForwardHit.collider.GetComponent<Output>();
+            }
+        }
+
+        RaycastHit BackwardHit;
+        if (Physics.Raycast(
+            transform.position,
+            -transform.forward, // as the transform.LookAt used in drawwire points the forward vector in the direction of the thing being looked at
+            out BackwardHit,
+            (transform.localScale.z / 2) + 0.045f, // half the length of the wire (transform.position is the center of the wire) plus half the width of an input, just in case
+            1 << 0)) // cast against only the default layer
+        {
+            if (BackwardHit.collider.tag == "Input")
+            {
+                FoundPoint1 = ForwardHit.collider.GetComponent<CircuitInput>();
+            }
+            else if (BackwardHit.collider.tag == "Output")
+            {
+                FoundPoint2 = BackwardHit.collider.GetComponent<Output>();
+            }
+        }
+
+        if (FoundPoint1 == Point1 && FoundPoint2 == Point2) { return true; }
+        else { return false; }
+    }
 }

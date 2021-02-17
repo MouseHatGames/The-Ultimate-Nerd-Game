@@ -9,7 +9,7 @@ public class BoardPlacer : MonoBehaviour {
     public static CircuitBoard CircuitBoardBeingPlaced;
 
     // the reference object for the board being placed, to simplify rotation/translation code
-    private GameObject ReferenceObject;
+    private static GameObject ReferenceObject;
 
     // prefab of a board object
     public GameObject BoardPrefab;
@@ -366,8 +366,10 @@ public class BoardPlacer : MonoBehaviour {
 
 
         Destroy(BoardBeingPlaced);
-
         HelpMenu.Instance.ShowDefault();
+
+        Input.ResetInputAxes(); // to prevent deleting the board underneath if it exists; stops StuffDeleter from doing its job. This is a bad solution but will be made better with 0.2's code overhaul
+        ReferenceObject.transform.parent = null; // without this line the referenceobject is left on the board and you are unable to delete it without move board
     }
 
     // sets the board being looked at to the board being placed so it can be moved/rotated/deleted without removing all its children first
@@ -667,7 +669,7 @@ public class BoardPlacer : MonoBehaviour {
         yield return new WaitForEndOfFrame();
         foreach (CircuitInput input in inputs)
         {
-            if (input.Cluster == null)
+            if (input != null && input.Cluster == null)
             {
                 input.Renderer.enabled = true;
             }
