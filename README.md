@@ -1,3 +1,5 @@
+An Amazing Project
+
 ![](header.jpg)
 
 Builds of TUNG can be downloaded from the [Itch page](https://jimmycushnie.itch.io/tung).
@@ -73,4 +75,3 @@ We are not updating TUNG anymore, and we're focusing all our development effort 
 ## Questions?
 
 As mentioned, a lot of this code is bad and hard to understand. If you are trying to read and understand it, you will probably have a lot of questions about it. As the person who wrote the code, I (Jimmy) will be happy to answer those questions. Please feel free to ask them in the [discussions tab](https://github.com/MouseHatGames/The-Ultimate-Nerd-Game/discussions).
-
