@@ -12,13 +12,13 @@ A number of TUNG fans have requested a release of TUNG's source code, for histor
 
 ## Disclaimer: the code is very bad
 
-TUNG was my first serious programming project, and I *did not* know what the hell I was doing. The code is extremely bad. I am deeply ashamed of it. I release this code with sincere apologies to the estate of Alan Turing and to God Himself. Do not take anything in here as an example of how you should do things; it's mostly an example of how *not* to do things.
+TUNG was my first serious programming project, and I *did not* know what the hell I was doing. The code is extremely bad. I am deeply ashamed of it. I release this code with sincere apologies to the estate of Alan Turing and to God Himself. Do not take anything in here as an example of how you should do things; it's mostly an example of how you should *not* do things.
 
 ## Credits
 
 A huge thank you to my collaborators on TUNG, who all graciously agreed to this open source release of their work.
 
-* Programming and Game Design by ya boi, Jimmy Cushnie (http://jimmycushnie.com/)
+* Programming and game design by ya boi, Jimmy Cushnie (http://jimmycushnie.com/)
 * Original sound effects by Emmanuel Lagumbay (https://www.lagumbayaudio.com/)
 * The Ultimate Nerd Game logo by Daniel John
 * Legacy Mouse Hat Games logo by Brooke Morgan (https://brookemorgan.ca/)
