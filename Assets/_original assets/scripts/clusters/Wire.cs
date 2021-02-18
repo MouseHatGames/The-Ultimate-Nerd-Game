@@ -38,69 +38,42 @@ abstract public class Wire : MonoBehaviour
     {
         if (unbreakable) { SetPegsBasedOnPoints(); return; }
 
-        RaycastHit ForwardHit;
-        if (Physics.Raycast(
-            transform.position,
-            transform.forward, // as the transform.LookAt used in drawwire points the forward vector in the direction of the thing being looked at
-            out ForwardHit,
-            (transform.localScale.z / 2) + 0.045f, // half the length of the wire (transform.position is the center of the wire) plus half the width of an input, just in case
-            IgnoreWiresLayermask))
-        {
-            Point1 = GetWireReference(ForwardHit.collider.transform);
-        }
-
-        RaycastHit BackwardHit;
-        if (Physics.Raycast(
-            transform.position,
-            -transform.forward, // as the transform.LookAt used in drawwire points the forward vector in the direction of the thing being looked at
-            out BackwardHit,
-            (transform.localScale.z / 2) + 0.045f, // half the length of the wire (transform.position is the center of the wire) plus half the width of an input, just in case
-            IgnoreWiresLayermask))
-        {
-            Point2 = GetWireReference(BackwardHit.collider.transform);
-        }
+        Point1 = FindPoint(true);
+        Point2 = FindPoint(false);
 
         if (Point1 == null || Point2 == null) { Debug.LogError("ERROR: failed to find a point - destroying wire"); Destroy(gameObject); return; }
 
         SetPegsBasedOnPoints();
     }
 
-    // TODO don't copy so much code
     public bool CanFindPoints()
     {
         if (unbreakable) { return true; }
 
-        Transform FoundPoint1 = null;
-        Transform FoundPoint2 = null;
-
-        // duplicated code makes me uneasy but I can't see a good way to unify it
-        RaycastHit ForwardHit;
-        if (Physics.Raycast(
-            transform.position,
-            transform.forward, // as the transform.LookAt used in drawwire points the forward vector in the direction of the thing being looked at
-            out ForwardHit,
-            (transform.localScale.z / 2) + 0.045f, // half the length of the wire (transform.position is the center of the wire) plus half the width of an input, just in case
-            IgnoreWiresLayermask))
-        {
-            FoundPoint1 = GetWireReference(ForwardHit.collider.transform);
-        }
-
-        RaycastHit BackwardHit;
-        if (Physics.Raycast(
-            transform.position,
-            -transform.forward, // as the transform.LookAt used in drawwire points the forward vector in the direction of the thing being looked at
-            out BackwardHit,
-            (transform.localScale.z / 2) + 0.045f, // half the length of the wire (transform.position is the center of the wire) plus half the width of an input, just in case
-            IgnoreWiresLayermask))
-        {
-            FoundPoint2 = GetWireReference(BackwardHit.collider.transform);
-        }
+        Transform FoundPoint1 = FindPoint(true);
+        Transform FoundPoint2 = FindPoint(false);
 
         if (Point1 == null || Point2 == null) { return false; }
         if (Point1 == FoundPoint1 && Point2 == FoundPoint2) { return true; }
         return false;
     }
 
+    Transform FindPoint(bool WhichPoint)
+    {
+        Vector3 CastDirection = WhichPoint ? transform.forward : -transform.forward; // as the transform.LookAt used in drawwire points the forward vector in the direction of the thing being looked at
+        Vector3 DifferenceToPoint = -CastDirection * (transform.localScale.z / 2);
+        Vector3 PointPosition = transform.position + DifferenceToPoint;
+
+        RaycastHit hit;
+        Physics.Raycast(
+        PointPosition,
+        CastDirection,
+        out hit,
+        transform.localScale.z + 0.045f, // the length of the wire plus half the width of an input, just in case
+        IgnoreWiresLayermask);
+        
+        return GetWireReference(hit);
+    }
 
 
     // inherited classes find their inputs/outputs based on what point1 & point2 are
@@ -111,6 +84,7 @@ abstract public class Wire : MonoBehaviour
 
     public static Transform GetWireReference(Transform peg)
     {
+        if (peg == null) { return null; }
         if (peg.childCount < 1) { return null; }
         return peg.GetChild(0);
     }

@@ -274,46 +274,6 @@ public static class WirePlacer
         RotateWireBeingPlaced(PersistentDegrees); // so if you want to place many wires in a row with custom rotation you don't have to keep giving them that custom rotation
     }
 
-    // raycasts from one peg to the other
-    private static bool CanConnectOneWay(GameObject peg1, GameObject peg2)
-    {
-        Vector3 WirePoint1 = Wire.GetWireReference(peg1).position;
-        Vector3 WirePoint2 = Wire.GetWireReference(peg2).position;
-
-        RaycastHit hit;
-        if (Physics.Raycast(WirePoint1, WirePoint2 - WirePoint1, out hit, Settings.MaxWireLength, Wire.IgnoreWiresLayermask)) // raycast from wirepoint1, in the direction of wirepoint2, for WireDistance, ignoring wires
-        {
-            if (hit.collider.gameObject == peg2) // if the raycast meets no obstacle on the way from peg1 to peg2, return true. All other paths return false.
-            {
-                return true;
-            }
-            return false;
-        }
-        return false;
-    }
-
-    public static bool CanConnect(GameObject peg1, GameObject peg2)
-    {
-        return CanConnectOneWay(peg1, peg2) && CanConnectOneWay(peg2, peg1); // the double check prevents a rare case where it would return true falsely
-    }
-
-    // overload method that uses the connection object rather than the individual pegs. Respects the unbreakable tag
-    public static bool CanConnect(GameObject wire)
-    {
-        if (wire.tag != "Wire") { return false; } // I'd rather this return null but bools can't be null :(
-
-        return CanConnect(wire.GetComponent<Wire>());
-    }
-
-    // overload method that uses the connection itself
-    public static bool CanConnect(Wire wire)
-    {
-        if (wire == null) { return false; } // I'd rather this return null but bools can't be null :(
-        if (wire.unbreakable) { return true; }
-
-        return CanConnect(wire.Peg1, wire.Peg2);
-    }
-
     // check if there is already a connection between two pegs
     public static bool ConnectionExists(GameObject peg1, GameObject peg2)
     {
@@ -371,8 +331,7 @@ public static class WirePlacer
     public static bool CurrentWirePlacementIsValid()
     {
         // below: some invalid placement conditions. We must do CanConnect as well as CanFindPoints because each can sometimes return true while the other returns false; sorry, future me, but I'm too lazy to type out exactly what those scenarios are. Figure it out yourself you ungrateful piece of shit
-        if (ConnectionExists(SelectedPeg, PegBeingLookedAt) || !CanConnect(SelectedPeg, PegBeingLookedAt) || !WireBeingPlaced.GetComponent<Wire>().CanFindPoints()
-            )//|| (SelectedPeg.GetComponent<SnappingPeg>() && PegBeingLookedAt.GetComponent<SnappingPeg>())) // you can't connect two snapping pegs
+        if (ConnectionExists(SelectedPeg, PegBeingLookedAt) || !WireBeingPlaced.GetComponent<Wire>().CanFindPoints())
         {
             return false;
         }

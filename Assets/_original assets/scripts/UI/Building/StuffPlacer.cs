@@ -312,17 +312,34 @@ public static class StuffPlacer
 
         foreach (BoxCollider box in colliders)
         {
-            if(box == null)
+            if (box == null)
             {
                 return true; // this should never happen
             }
 
             Vector3 center = box.transform.TransformPoint(box.center);
-            Vector3 halfextents = Vector3.Scale(box.size, box.transform.lossyScale) / 2;
+
+            Transform parent = box.transform.parent;
+
+            Vector3 localPosition = box.transform.localPosition;
+            Quaternion localRotation = box.transform.localRotation;
+            Vector3 localScale = box.transform.localScale;
+
+            // it is necessary to do this - transform.lossyscale is too lossy for what I need.
+            box.transform.parent = null;
+            Vector3 halfextents = Vector3.Scale(box.size, box.transform.localScale) / 2;
+
+            box.transform.SetParent(parent, false); // slightly faster to have that false overload because it avoids recalculations that will immediately be undone by the following lines
+
+            // floating point errors happen when assigning parents, so we do this to prevent them accumulating.
+            box.transform.localPosition = localPosition;
+            box.transform.localRotation = localRotation;
+            box.transform.localScale = localScale;
+
 
             // make it only go for 97%, so you can place directly next to things
             // 97% is the experimentally determined maximum value to avoid false positives. I suspect this is due to the inaccuracies in transform.localscale but I am not certain of that
-            halfextents = Vector3.Scale(halfextents, new Vector3(0.97f, 0.97f, 0.97f));
+            halfextents -= new Vector3(0.003f, 0.003f, 0.003f);
 
             Vector3 direction = box.transform.up;
             Quaternion orientation = box.transform.rotation;
@@ -340,7 +357,7 @@ public static class StuffPlacer
                     {
                         box.enabled = true; // need to enable the collider for these methods to work
                                             // manually check connections, since wires are allowed to clip a little
-                        if (!WirePlacer.CanConnect(hit.collider.gameObject) || !hit.collider.GetComponent<Wire>().CanFindPoints())
+                        if (!hit.collider.GetComponent<Wire>().CanFindPoints())
                         {
                             box.enabled = false;
                             return true;

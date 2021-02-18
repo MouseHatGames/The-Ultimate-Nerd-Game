@@ -6,19 +6,36 @@ using UnityEngine;
 
 public class BehaviorManager : MonoBehaviour
 {
-    public static string Greetings = "Hello, modder. I hope you're having a nice day :)";
+    public static string Greetings = "Hello, hacker. I hope you're having a nice day :)";
 
     private CustomFixedUpdate CircuitLogicUpdate;
     private CustomFixedUpdate MeshQueueing;
 
+    static BehaviorManager Instance;
+
     private void Awake()
     {
+        Instance = this;
+
         float CircuitUpdatesPerSecond = Settings.Get("CircuitUpdatesPerSecond", 100f);
-        CircuitLogicUpdate = new CustomFixedUpdate(OnCircuitLogicUpdate, CircuitUpdatesPerSecond);
+        SetUpdateRate(CircuitUpdatesPerSecond);
 
         float MeshGroupRecalculationsPerSecond = Settings.Get("MaxMeshGroupRecalculationsPerSecond", 20f);
         MeshQueueing = new CustomFixedUpdate(QueueRecalculationForAppropriateDynamicMegaMeshGroups, MeshGroupRecalculationsPerSecond);
+
     }
+
+
+    public static void SetUpdateRate(float ticksPerSecond)
+    {
+        Instance.CircuitLogicUpdate = new CustomFixedUpdate(OnCircuitLogicUpdate, ticksPerSecond);
+    }
+    public static void Step()
+    {
+        OnCircuitLogicUpdate(0f);
+    }
+
+
 
     public static bool AllowedToUpdate = true; // set to false and then back to true by SaveManager.LoadAll to make sure circuitry doesn't run before it's finished loading.
 
@@ -46,9 +63,6 @@ public class BehaviorManager : MonoBehaviour
 
     private static void OnCircuitLogicUpdate(float dt)
     {
-        //DebugNumerOfDuplicates(UpdatingCircuitLogicComponents, "UpdatingCircuitLogicComponents");
-        //DebugNumerOfDuplicates(UpdatingClusters, "UpdatingClusters");
-
         // for loops are much faster than foreach loops!
 
         for (int i = 0; i < UpdatingClusters.Count; i++) { UpdatingClusters[i].CircuitLogicUpdate(); } // clusters determine their state based on output states
@@ -60,9 +74,6 @@ public class BehaviorManager : MonoBehaviour
         // deal with components that update over multiple ticks. At the time of this comment, only Delayers do this
         UpdatingCircuitLogicComponents.AddRange(ContinuousUpdatingCircuitLogicComponents);
         ContinuousUpdatingCircuitLogicComponents.Clear();
-
-
-        //System.Threading.Tasks.Parallel.ForEach(UpdatingCircuitLogicComponents, component => { component.CircuitLogicUpdate(); }); // never mind turns out multithreading is really hard lol
     }
 
     private static void VisualStuffUpdate()

@@ -232,4 +232,27 @@ public static class StuffConnector
 
         wire.GetComponent<InputOutputConnection>().Output.QueueMeshRecalculation();
     }
+
+    public static bool CanConnect(GameObject peg1, GameObject peg2)
+    {
+        return CanConnectOneWay(peg1, peg2) && CanConnectOneWay(peg2, peg1); // the double check prevents a rare case where it would return true falsely
+    }
+
+    // raycasts from one peg to the other
+    private static bool CanConnectOneWay(GameObject peg1, GameObject peg2)
+    {
+        Vector3 WirePoint1 = Wire.GetWireReference(peg1).position;
+        Vector3 WirePoint2 = Wire.GetWireReference(peg2).position;
+
+        RaycastHit hit;
+        if (Physics.Raycast(WirePoint1, WirePoint2 - WirePoint1, out hit, Settings.MaxWireLength, Wire.IgnoreWiresLayermask)) // raycast from wirepoint1, in the direction of wirepoint2, for WireDistance, ignoring wires
+        {
+            if (hit.collider.gameObject == peg2) // if the raycast meets no obstacle on the way from peg1 to peg2, return true. All other paths return false.
+            {
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
 }

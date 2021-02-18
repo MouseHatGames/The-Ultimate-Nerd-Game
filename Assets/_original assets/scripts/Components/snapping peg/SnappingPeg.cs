@@ -42,7 +42,7 @@ public class SnappingPeg : CircuitInput
                 SnappingPeg OtherSnappyPeg = hit.collider.GetComponent<SnappingPeg>();
                 if (OtherSnappyPeg != null)
                 {
-                    if (WirePlacer.CanConnect(gameObject, OtherSnappyPeg.gameObject) && !WirePlacer.ConnectionExists(gameObject, OtherSnappyPeg.gameObject)
+                    if (StuffConnector.CanConnect(gameObject, OtherSnappyPeg.gameObject) && !WirePlacer.ConnectionExists(gameObject, OtherSnappyPeg.gameObject)
                     && hit.transform.InverseTransformPoint(hit.point).z < -0.49f // make sure it hits the right face of the other peg
                     &&
 
@@ -71,6 +71,7 @@ public class SnappingPeg : CircuitInput
     {
         if(SnappedConnection == null) { return; }
         StuffDeleter.DestroyWire(SnappedConnection);
+        DestroyImmediate(SnappedConnection.gameObject); // without this, rotating a snapping peg will make its wire get drawn with the new geometry for a frame
     }
 
 

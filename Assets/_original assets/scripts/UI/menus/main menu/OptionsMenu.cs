@@ -58,6 +58,9 @@ public class OptionsMenu : MonoBehaviour
     public Toggle FullscreenToggle;
     public TMP_Dropdown ResolutionDropdown;
 
+    // extra
+    public Toggle TPSHaxToggle;
+
     public static OptionsMenu Instance;
 
     // Use this for initialization
@@ -100,6 +103,8 @@ public class OptionsMenu : MonoBehaviour
         ApplyAODownsampling();
         ApplyAOHighPrecision();
         ApplyFullscreen();
+
+        ApplyTPSHax();
     }
 
     // this function works by deleting all settings keys and then re-applying all settings, which loads their default values
@@ -135,6 +140,8 @@ public class OptionsMenu : MonoBehaviour
         ES3.DeleteKey("AOHighPrecision", "settings.txt");
         ES3.DeleteKey("Fullscreen", "settings.txt");
         ES3.DeleteKey("ConnectionMode", "settings.txt");
+
+        ES3.DeleteKey("ShowTPSHax", "settings.txt");
 
 
         ApplyAllSettings();
@@ -636,6 +643,23 @@ public class OptionsMenu : MonoBehaviour
     private void ApplyFullscreen()
     {
         FullscreenToggle.isOn = Screen.fullScreen;
+    }
+
+
+    // tps hax
+    public void OnTPSHaxToggle()
+    {
+        bool value = TPSHaxToggle.isOn;
+        Settings.Save("ShowTPSHax", value);
+        ApplyTPSHax();
+    }
+    private void ApplyTPSHax()
+    {
+        bool value = Settings.Get("ShowTPSHax", false);
+        TPSHaxToggle.isOn = value;
+
+        if (TPSEditor.Instance != null)
+            TPSEditor.Instance.gameObject.SetActive(value);
     }
 }
 

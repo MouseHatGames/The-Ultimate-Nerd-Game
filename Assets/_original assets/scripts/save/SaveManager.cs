@@ -67,8 +67,15 @@ public static class SaveManager
 
     public static void SaveMiscData()
     {
-        ES3.Save<int>("SaveFormatVersion", 2, InfoPath);
-        ES3.Save<string>("WorldType", "Legacy", InfoPath);
+        try
+        {
+            ES3.Save<int>("SaveFormatVersion", 2, InfoPath);
+            ES3.Save<string>("WorldType", "Legacy", InfoPath);
+        }
+        catch
+        {
+            ES3.DeleteFile(InfoPath);
+        }
     }
 
     public static void LoadAll()
@@ -91,7 +98,15 @@ public static class SaveManager
         }
 
         RecalculateAllClustersEverywhereWithDelay();
-        LoadPlayerPosition();
+
+        try
+        {
+            LoadPlayerPosition();
+        }
+        catch
+        {
+            ES3.DeleteFile(PlayersPath + "/player");
+        }
         GameplayUIManager.UIState = UIState.None;
     }
 

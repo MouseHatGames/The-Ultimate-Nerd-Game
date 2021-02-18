@@ -290,7 +290,7 @@ ShaderVariantCollection:
       variants:
       - keywords: WATER_REFRACTIVE
         passType: 0
-  - first: {fileID: 4800000, guid: cafd18099dfc0114896e0a8b277b81b6, type: 3}
+  - first: {fileID: 4800000, guid: fe393ace9b354375a9cb14cdbbc28be4, type: 3}
     second:
       variants:
       - keywords: 

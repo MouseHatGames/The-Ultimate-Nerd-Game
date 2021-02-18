@@ -1,20 +1,11 @@
+THE ULTIMATE NERD GAME
+
 A game from Mouse Hat Games
 Programming & Game Design by Jimmy Cushnie
 Sound Design by Emmanuel Lagumbay
 Title art by Daniel John
 Additional graphic design by Ben Longley
 Quality Assurance: Ben Longley & Daniel John
-
-
-Thank you so much for playing our game! I hope you enjoy it :)
-Remember you can press F2 for a list of controls!
-
-Get emails about updates to this game:
-Join the community on reddit:
-Chat about TUNG on discord:
-Connect with us on Twitter:
-
-If you'd like to contact me, please send me an email: jimmycushnie@gmail.com
 
 ======================================
 
@@ -57,6 +48,25 @@ Third party assets used:
 ======================================
 
 Changelog:
+
+v0.2.7 | 2019-05-21
+This will almost definitely be the last update to TUNG. Development is now at Logic World: https://logicworld.net/
+My heartfelt thanks to every single person who played TUNG. Making games has been a dream of mine for years, and thanks to you, that dream has come true.
+
+* added all-new main menu to advertise Logic World
+* added buttons in the pause menu to control the simulation speed - these can be enabled in the options menu
+* updated to Unity 2019.1
+* removed the hard limit of 262143 colliders in a world
+* disabled Unity's analytics
+* updated Mouse Hat Games logo in the splash screen
+* fixed being able to clip large boards into components when placing
+* fixed sometimes not being able to place displays next to each other
+* fixed sometimes not being able to create very short wires
+* fixed snapped connections taking too long to get deleted when you rotate their snapping pegs
+* fixed being unable to interact with your world if a JSON file is corrupt
+* fixed the double input bug on Linux which could cause you to ttyyppee lliikkee tthhiiss
+
+
 
 v0.2.6 | 2018-04-09
 

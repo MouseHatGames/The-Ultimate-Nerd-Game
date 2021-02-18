@@ -235,7 +235,7 @@ public static class StuffRotater
                 if (hit.collider.tag == "Wire")
                 {
                     // manually check connections, just in case the boxcast hits a false positive
-                    if (!WirePlacer.CanConnect(hit.collider.gameObject) || !hit.collider.GetComponent<Wire>().CanFindPoints())
+                    if (!hit.collider.GetComponent<Wire>().CanFindPoints())
                     {
                         if (!WiresDestroyed.Contains(hit.collider.gameObject))
                         {
