@@ -60,11 +60,6 @@ public static class FirstPersonInteraction
         StuffRotater.RunGameplayRotation();
         SelectionMenu.Instance.RunBuildMenu();
         LookThroughBoard.Run();
-
-        if (Input.GetButtonDown("ToggleGameplayUI")) // not the best place for this to go but whatever I do what I want, also this is kind of a shitty way of doing it
-        {
-            GameplayUICanvas.Instance.gameObject.SetActive(!GameplayUICanvas.Instance.gameObject.activeInHierarchy);
-        }
     }
 
     public static void Done()

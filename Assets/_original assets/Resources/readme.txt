@@ -58,6 +58,21 @@ Third party assets used:
 
 Changelog:
 
+v0.2.3 | 2018-03-25
+
+* fixed anything that changes color not being affected by shadows for a brief period after it changes color
+* added some keyboard navigation to the Load Board menu: you can now press tab to cycle forwards and shift + tab to cycle backwards
+* the Load, Rename, and Delete buttons in the Load Board menu are no longer interactable until you select a board
+* made the first chord of a particularly startling music track a little quieter
+* the Toggle Gameplay UI key no longer hides the help menu. This is to prevent a bug that could screw up the size of the help menu text
+* you can now toggle the gameplay UI at any time
+* fixed the rotation lock text sometimes not properly updating
+* fixed snapping pegs appearing in the wrong position under specific circumstances
+* fixed placing a board under specific circumstances causing lots of crazy glitches
+* the game is now available on Linux! Sorry it took so long :)
+
+
+
 v0.2.2 | 2018-03-23
 
 * button and lever hitboxes are slightly bigger; you no longer need to look exactly at them to interact with them

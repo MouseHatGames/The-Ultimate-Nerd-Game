@@ -14,7 +14,7 @@ public class UISavedBoard : MonoBehaviour
 
     public void Pressed()
     {
-        LoadBoardMenu.Instance.ChangeSelectedSave(this);
+        LoadBoardMenu.Instance.ChangeSelectedBoard(this);
     }
 
     // after upgrading to 2017.3, LoadGame's implementation of setting the position was broken. After a lot of experimenting,

@@ -42,6 +42,8 @@ public static class GameplayUIManager
     {
         if (Input.GetButtonDown("ToggleHelp")) { HelpMenu.ToggleHelp(); }
         if (Input.GetButtonDown("ToggleFullscreen")) { OptionsMenu.Instance.FullscreenToggle.isOn = !OptionsMenu.Instance.FullscreenToggle.isOn; }
+        if (Input.GetButtonDown("ToggleGameplayUI")) { GameplayUICanvas.ToggleVisibility(); }
+
 
         switch (UIState)
         {
@@ -137,6 +139,7 @@ public static class GameplayUIManager
 
     public static void DeselectAllUIElements()
     {
+        if (UnityEngine.EventSystems.EventSystem.current == null) { return; }
         UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
     }
 

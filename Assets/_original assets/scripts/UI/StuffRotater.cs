@@ -34,10 +34,11 @@ public static class StuffRotater
                     if (hit.collider.tag == "World" || hit.collider.tag == "CircuitBoard") { SetRotationLockToFalseIfThingBeingPlacedIsNull(); return; }
                     StuffPlacer.SetRotationLockAngles(ComponentPlacer.FullComponent(hit.collider));
                     StuffPlacer.RotationLocked = true;
-                    SelectionMenu.Instance.SetRotationLockText();
                 }
             }
             else { StuffPlacer.RotationLocked = false; }
+
+            SelectionMenu.Instance.SetRotationLockText();
         }
 
         if (Input.GetButtonDown("RotateThroughBoard"))

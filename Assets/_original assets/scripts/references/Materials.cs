@@ -51,39 +51,39 @@ namespace References
         {
             Instance = this;
 
-            CircuitOn = new Material(DefaultMaterial) { color = Settings.CircuitOnColor };
-            CircuitOff = new Material(DefaultMaterial) { color = Settings.CircuitOffColor };
-
             SnappingPeg = new Material(DefaultMaterial) { color = Settings.SnappingPegColor };
 
-            DisplayOff = new Material(DefaultMaterial) { color = Settings.DisplayOffColor };
-            DisplayRed = new Material(DefaultMaterial) { color = Settings.DisplayRedColor };
-            DisplayGreen = new Material(DefaultMaterial) { color = Settings.DisplayGreenColor };
-            DisplayBlue = new Material(DefaultMaterial) { color = Settings.DisplayBlueColor };
-            DisplayYellow = new Material(DefaultMaterial) { color = Settings.DisplayYellowColor };
-            DisplayOrange = new Material(DefaultMaterial) { color = Settings.DisplayOrangeColor };
-            DisplayPurple = new Material(DefaultMaterial) { color = Settings.DisplayPurpleColor };
-            DisplayWhite = new Material(DefaultMaterial) { color = Settings.DisplayWhiteColor };
-            DisplayCyan = new Material(DefaultMaterial) { color = Settings.DisplayCyanColor };
+            CircuitOn = new Material(DefaultMaterial) { color = Settings.CircuitOnColor, renderQueue = 2000 };
+            CircuitOff = new Material(DefaultMaterial) { color = Settings.CircuitOffColor, renderQueue = 2000 };
 
-            NoisemakerOn = new Material(DefaultMaterial) { color = Settings.NoisemakerOnColor };
-            NoisemakerOff = new Material(DefaultMaterial) { color = Settings.NoisemakerOffColor };
+            DisplayOff = new Material(DefaultMaterial) { color = Settings.DisplayOffColor, renderQueue = 2000 };
+            DisplayRed = new Material(DefaultMaterial) { color = Settings.DisplayRedColor, renderQueue = 2000 };
+            DisplayGreen = new Material(DefaultMaterial) { color = Settings.DisplayGreenColor, renderQueue = 2000 };
+            DisplayBlue = new Material(DefaultMaterial) { color = Settings.DisplayBlueColor, renderQueue = 2000 };
+            DisplayYellow = new Material(DefaultMaterial) { color = Settings.DisplayYellowColor, renderQueue = 2000 };
+            DisplayOrange = new Material(DefaultMaterial) { color = Settings.DisplayOrangeColor, renderQueue = 2000 };
+            DisplayPurple = new Material(DefaultMaterial) { color = Settings.DisplayPurpleColor, renderQueue = 2000 };
+            DisplayWhite = new Material(DefaultMaterial) { color = Settings.DisplayWhiteColor, renderQueue = 2000 };
+            DisplayCyan = new Material(DefaultMaterial) { color = Settings.DisplayCyanColor, renderQueue = 2000 };
 
-            CircuitOnAlwaysOnTop= new Material(CircuitOn) { renderQueue = 5000 };
-            CircuitOffAlwaysOnTop= new Material(CircuitOff) { renderQueue = 5000 };
+            NoisemakerOn = new Material(DefaultMaterial) { color = Settings.NoisemakerOnColor, renderQueue = 2000 };
+            NoisemakerOff = new Material(DefaultMaterial) { color = Settings.NoisemakerOffColor, renderQueue = 2000 };
 
-            DisplayOffAlwaysOnTop= new Material(DisplayOff) { renderQueue = 5000 };
-            DisplayRedAlwaysOnTop= new Material(DisplayRed) { renderQueue = 5000 };
-            DisplayGreenAlwaysOnTop= new Material(DisplayGreen) { renderQueue = 5000 };
-            DisplayBlueAlwaysOnTop= new Material(DisplayBlue) { renderQueue = 5000 };
-            DisplayYellowAlwaysOnTop= new Material(DisplayYellow) { renderQueue = 5000 };
-            DisplayOrangeAlwaysOnTop= new Material(DisplayOrange) { renderQueue = 5000 };
-            DisplayPurpleAlwaysOnTop= new Material(DisplayPurple) { renderQueue = 5000 };
-            DisplayWhiteAlwaysOnTop= new Material(DisplayWhite) { renderQueue = 5000 };
-            DisplayCyanAlwaysOnTop= new Material(DisplayCyan) { renderQueue = 5000 };
+            CircuitOnAlwaysOnTop= new Material(CircuitOn) { renderQueue = 2500 };
+            CircuitOffAlwaysOnTop= new Material(CircuitOff) { renderQueue = 2500 };
 
-            NoisemakerOnAlwaysOnTop= new Material(NoisemakerOn) { renderQueue = 5000 };
-            NoisemakerOffAlwaysOnTop= new Material(NoisemakerOff) { renderQueue = 5000 };
+            DisplayOffAlwaysOnTop= new Material(DisplayOff) { renderQueue = 2500 };
+            DisplayRedAlwaysOnTop= new Material(DisplayRed) { renderQueue = 2500 };
+            DisplayGreenAlwaysOnTop= new Material(DisplayGreen) { renderQueue = 2500 };
+            DisplayBlueAlwaysOnTop= new Material(DisplayBlue) { renderQueue = 2500 };
+            DisplayYellowAlwaysOnTop= new Material(DisplayYellow) { renderQueue = 2500 };
+            DisplayOrangeAlwaysOnTop= new Material(DisplayOrange) { renderQueue = 2500 };
+            DisplayPurpleAlwaysOnTop= new Material(DisplayPurple) { renderQueue = 2500 };
+            DisplayWhiteAlwaysOnTop= new Material(DisplayWhite) { renderQueue = 2500 };
+            DisplayCyanAlwaysOnTop= new Material(DisplayCyan) { renderQueue = 2500 };
+
+            NoisemakerOnAlwaysOnTop= new Material(NoisemakerOn) { renderQueue = 2500 };
+            NoisemakerOffAlwaysOnTop= new Material(NoisemakerOff) { renderQueue = 2500 };
         }
     }
 }

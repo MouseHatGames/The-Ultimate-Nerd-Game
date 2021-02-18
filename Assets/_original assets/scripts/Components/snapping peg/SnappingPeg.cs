@@ -40,14 +40,17 @@ public class SnappingPeg : CircuitInput
             if (hit.collider.tag == "Input")
             {
                 SnappingPeg OtherSnappyPeg = hit.collider.GetComponent<SnappingPeg>();
-                if (WirePlacer.CanConnect(gameObject, OtherSnappyPeg.gameObject) && !WirePlacer.ConnectionExists(gameObject, OtherSnappyPeg.gameObject)
-                && hit.transform.InverseTransformPoint(hit.point).z < -0.49f // make sure it hits the right face of the other peg
-                &&
-                // make sure it's rotated approximately correctly
-                ((hit.transform.eulerAngles.y + 180 > transform.eulerAngles.y - 2 && hit.transform.eulerAngles.y + 180 < transform.eulerAngles.y + 2)
-                || (hit.transform.eulerAngles.y - 180 > transform.eulerAngles.y - 2 && hit.transform.eulerAngles.y - 180 < transform.eulerAngles.y + 2)))
+                if (OtherSnappyPeg != null)
                 {
-                    return OtherSnappyPeg;
+                    if (WirePlacer.CanConnect(gameObject, OtherSnappyPeg.gameObject) && !WirePlacer.ConnectionExists(gameObject, OtherSnappyPeg.gameObject)
+                    && hit.transform.InverseTransformPoint(hit.point).z < -0.49f // make sure it hits the right face of the other peg
+                    &&
+                    // make sure it's rotated approximately correctly
+                    ((hit.transform.eulerAngles.y + 180 > transform.eulerAngles.y - 2 && hit.transform.eulerAngles.y + 180 < transform.eulerAngles.y + 2)
+                    || (hit.transform.eulerAngles.y - 180 > transform.eulerAngles.y - 2 && hit.transform.eulerAngles.y - 180 < transform.eulerAngles.y + 2)))
+                    {
+                        return OtherSnappyPeg;
+                    }
                 }
             }
         }

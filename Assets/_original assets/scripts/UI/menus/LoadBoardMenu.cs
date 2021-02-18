@@ -69,6 +69,45 @@ public class LoadBoardMenu : MonoBehaviour
             if (Input.GetButtonDown("Confirm") || Input.GetButtonDown("BoardMenu")) { Load(); }
             if (Input.GetKeyDown(KeyCode.F5)) { GenerateLoadBoardsMenu(); }
         }
+
+        if (Input.GetButtonDown("tab"))
+        {
+            if (SelectedBoard == null)
+            {
+                if (UISavedBoards.Count > 0)
+                {
+                    ChangeSelectedBoard(UISavedBoards[0]);
+                }
+                else { return; }
+            }
+
+            else
+            {
+                for (int i = 0; i < UISavedBoards.Count; i++)
+                {
+                    if (SelectedBoard == UISavedBoards[i])
+                    {
+                        int Index = 0;
+                        if(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+                        {
+                            Index = i - 1;
+                        }
+                        else
+                        {
+                            Index = i + 1;
+                        }
+
+                        if (Index < 0) { Index = UISavedBoards.Count - 1; }
+                        if (Index > UISavedBoards.Count - 1) { Index = 0; }
+
+                        ChangeSelectedBoard(UISavedBoards[Index]);
+                        return;
+                    }
+                }
+            }
+        }
+
+        // todo: add up/down arrow keys, number selection keys, and make the scrollbar follow the newly selected save
     }
 
     public void GenerateLoadBoardsMenu()
@@ -131,10 +170,18 @@ public class LoadBoardMenu : MonoBehaviour
 
     public List<UISavedBoard> UISavedBoards = new List<UISavedBoard>();
 
+    public UnityEngine.UI.Button LoadButton;
+    public UnityEngine.UI.Button DeleteButton;
+    public UnityEngine.UI.Button RenameButton;
+
     Color32 deselectedcolor = new Color32(212, 212, 212, 255);
     Color32 selectedcolor = new Color32(62, 159, 255, 255);
-    public void ChangeSelectedSave(UISavedBoard selected)
+    public void ChangeSelectedBoard(UISavedBoard selected)
     {
+        LoadButton.interactable = true;
+        DeleteButton.interactable = true;
+        RenameButton.interactable = true;
+
         // double click functionality
         if (selected == SelectedBoard) { Load(); return; }
 
