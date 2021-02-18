@@ -6,14 +6,14 @@ using UnityEngine;
 
 public static class ComponentPlacer
 {
-    public static bool ShowPlacingGhost = Settings.Get("ShowPlacingGhost", true);
+    public static bool ShowPlacingGhost = true; // = Settings.Get("ShowPlacingGhost", true);
 
     public static void RunComponentPlacing()
     {
         if (Input.GetButtonDown("TogglePlacingGhost") && !Input.GetButton("Mod")) // holding mod is for toggling initial placing outline
         {
             ShowPlacingGhost = !ShowPlacingGhost;
-            Settings.Save("ShowPlacingGhost", ShowPlacingGhost);
+           // Settings.Save("ShowPlacingGhost", ShowPlacingGhost);
 
             if (!ShowPlacingGhost)
             {
@@ -38,6 +38,14 @@ public static class ComponentPlacer
             {
                 PlaceAndMoveAllInOneGo();
             }
+        }
+
+        // I have absolutely no idea why this is necessary. Sometimes when you rotate a mount it fucks up component placing by enabling the colliders. This fixes that.
+        if (StuffPlacer.MostRecentNonNullHit.collider == null) { return; }
+        if(FullComponent(StuffPlacer.MostRecentNonNullHit.collider) == StuffPlacer.GetThingBeingPlaced)
+        {
+            Debug.Log("did a terrible shitty hack");
+            StuffPlacer.DeleteThingBeingPlaced();
         }
     }
 

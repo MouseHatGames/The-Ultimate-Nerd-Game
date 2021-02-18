@@ -35,7 +35,7 @@ public class Noisemaker : VisualUpdaterWithMeshCombining
         GenerateClip(false);
 
         MegaMeshComponent.Mesh = MeshFilter.sharedMesh;
-        MegaMeshManager.ScaleMesh(MeshFilter, 1.0005f);
+        MegaMeshManager.ScaleMesh(MeshFilter, 1.002f);
     }
 
     private void Start()

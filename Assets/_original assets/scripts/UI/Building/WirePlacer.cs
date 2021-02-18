@@ -104,7 +104,7 @@ public static class WirePlacer
         if (Input.GetButtonDown("TogglePlacingGhost") && Input.GetButton("Mod"))
         {
             ShowPreWiringPegOutlines = !ShowPreWiringPegOutlines;
-            Settings.Save("ShowPreWiringPegOutlines", ShowPreWiringPegOutlines);
+           // Settings.Save("ShowPreWiringPegOutlines", ShowPreWiringPegOutlines);
             if (ShowPreWiringPegOutlines) { StuffPlacer.OutlineObject(PegBeingLookedAt); }
             else { StuffPlacer.RemoveOutlineFromObject(PegBeingLookedAt); }
         }
@@ -173,7 +173,7 @@ public static class WirePlacer
     }
 
 
-    private static bool ShowPreWiringPegOutlines = Settings.Get("ShowPreWiringPegOutlines", true);
+    private static bool ShowPreWiringPegOutlines = true; //= Settings.Get("ShowPreWiringPegOutlines", true);
     // if we're looking at a peg, set PegBeingLookedAt to that. Otherwise, set it to null.
     private static void SetPegBeingLookedAt()
     {

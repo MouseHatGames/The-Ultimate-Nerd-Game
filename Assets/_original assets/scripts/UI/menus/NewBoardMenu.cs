@@ -69,7 +69,7 @@ public class NewBoardMenu : MonoBehaviour
         CachedSizeY = SizeY;
 
         // create the menu if space or enter or V are pressed
-        if (Input.GetButtonDown("Jump") || Input.GetButtonDown("Submit") || Input.GetButtonDown("BoardMenu")) // the last check is so you can place the same new board by double tapping v
+        if (Input.GetButtonDown("Jump") || Input.GetButtonDown("Submit") || Input.GetButtonDown("BoardMenu") || Input.GetButtonDown("Confirm")) // the last check is so you can place the same new board by double tapping v
         {
             Done();
         }

@@ -39,7 +39,8 @@ public static class StuffDeleter
         DestroyThis = ComponentPlacer.FullComponent(DestroyThis);
 
         // special cases of stuff to hit
-        if(DestroyThis.GetComponent<ObjectInfo>().ComponentType == ComponentType.Mount)
+        ObjectInfo info = DestroyThis.GetComponent<ObjectInfo>();
+        if (info != null && info.ComponentType == ComponentType.Mount)
         {
             // code copied from below - don't let players destroy a mount if it has children
             Transform TheBoardBit = DestroyThis.transform.GetChild(1); // the 0th child is the blocky bit

@@ -106,7 +106,7 @@ public static class StuffPlacer
     public static BoxCollider[] BoxCollidersOfThingBeingPlaced = new BoxCollider[0]; // this is cached because every frame we need to check for intersections
     public static Outline[] OutlinesOfThingBeingPlaced = new Outline[0]; // this is cached because changing outline color happens often
 
-    private static RaycastHit MostRecentNonNullHit; // used so we can do rotation without looking at the thing
+    public static RaycastHit MostRecentNonNullHit; // used so we can do rotation without looking at the thing
     public static void RunStuffPlacing(bool AllowFineRotation = true, bool HideWhenInvalidPlacement = false, bool AllowEdgePlacement = false)
     {
         if (ThingBeingPlaced == null) { return; }

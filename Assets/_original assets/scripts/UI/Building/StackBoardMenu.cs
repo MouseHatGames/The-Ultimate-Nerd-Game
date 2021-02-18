@@ -81,13 +81,20 @@ public class StackBoardMenu : MonoBehaviour
                 TrueIterations = 1;
 
                 // Using Invoke because for some reason this MUST be done a frame later. If it is not, outputs have duplicated geometry
-                Invoke("IterationsChanged", 0.01f);
+                Invoke("ShittyHackThatShouldntExist", 0.01f);
                 return;
             }
         }
 
         SoundPlayer.PlaySoundGlobal(Sounds.FailDoSomething);
         GameplayUIManager.UIState = UIState.None;
+    }
+
+    private void ShittyHackThatShouldntExist()
+    {
+        IterationsSlider.value = 1;
+        IterationsInput.text = "1";
+        IterationsChanged();
     }
 
     private GameObject BoardBeingStacked; // the original

@@ -16,7 +16,7 @@ public class Display : VisualUpdaterWithMeshCombining
     protected override void AfterAwake()
     {
         MegaMeshComponent.Mesh = MeshFilter.sharedMesh;
-        MegaMeshManager.ScaleMesh(MeshFilter, 1.0005f);
+        MegaMeshManager.ScaleMesh(MeshFilter, 1.005f);
     }
 
     private void Start()

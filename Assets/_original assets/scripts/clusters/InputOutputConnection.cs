@@ -23,6 +23,7 @@ public class InputOutputConnection : Wire {
         get { return RealOutput; }
         set
         {
+            if(value == null) { Debug.LogError("Tried to set output to null"); Destroy(gameObject); return; }
             RealOutput = value;
             Point2 = GetWireReference(value.transform);
             value.AddIOConnection(this);

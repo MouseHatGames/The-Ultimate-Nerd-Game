@@ -58,6 +58,20 @@ Third party assets used:
 
 Changelog:
 
+v0.2.1 | 2018-03-20 (but later!)
+
+* pressing the non-numpad enter in the New Board menu now places the board you're creating
+* whether or not to show Component ghosts is no longer persistent and will be reset to true whenever a save is loaded
+* reduced visual errors on displays and color displays
+* fixed Stack Board iterations not being properly reset to 1
+* fixed the component you're placing freaking out if you rotated a Mount in a specific way
+* fixed an issue where certain saves would lock up the game
+* fixed sometimes not being able to delete snapping pegs
+* fixed the About menu being empty if accessed from the main menu
+* fixed typo in the About menu
+
+
+
 v0.2 | 2018-03-20
 1500 downloads!! Holy cow!!! Thank you SO MUCH to everyone who's been playing the game and talking about it and building cool stuff in it. This update is dedicated to you <3
 
@@ -145,7 +159,7 @@ UI
 * added a link to the official discord in the about menu
 * about menu text is smaller
 * about menu now uses Inconsolata, a much nicer font for large blocks of text
-* abot menu is now much more sensitive to scrolling
+* about menu is now much more sensitive to scrolling
 * crosshair is smaller
 * all UI now scales better to different aspect ratios
 * replaced many low resolution icons with high resolution versions made by Ben Longley. Thanks Ben!

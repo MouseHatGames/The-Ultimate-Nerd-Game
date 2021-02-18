@@ -30,7 +30,7 @@ public class ColorDisplay : VisualUpdaterWithMeshCombining
         Renderer.material.color = Settings.DisplayOffColor;
 
         MegaMeshComponent.Mesh = MeshFilter.sharedMesh;
-        MegaMeshManager.ScaleMesh(MeshFilter, 1.0005f);
+        MegaMeshManager.ScaleMesh(MeshFilter, 1.005f);
     }
 
     [SerializeField] DisplayColor PreviousInputStates; // serialized so it can be copied in cloneboard

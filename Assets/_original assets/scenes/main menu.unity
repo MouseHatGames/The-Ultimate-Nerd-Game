@@ -2859,16 +2859,6 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 114916533178775252, guid: 010cda5186e063943a5496a8f370a89c,
-        type: 2}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1467012512}
-    - target: {fileID: 114916533178775252, guid: 010cda5186e063943a5496a8f370a89c,
-        type: 2}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
-      value: 
-      objectReference: {fileID: 1983544606}
     - target: {fileID: 224891238257191116, guid: 010cda5186e063943a5496a8f370a89c,
         type: 2}
       propertyPath: m_AnchorMin.y
@@ -2883,6 +2873,41 @@ Prefab:
         type: 2}
       propertyPath: m_AnchorMax.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224409942491757520, guid: 010cda5186e063943a5496a8f370a89c,
+        type: 2}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224409942491757520, guid: 010cda5186e063943a5496a8f370a89c,
+        type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224409942491757520, guid: 010cda5186e063943a5496a8f370a89c,
+        type: 2}
+      propertyPath: m_SizeDelta.x
+      value: -17
+      objectReference: {fileID: 0}
+    - target: {fileID: 114916533178775252, guid: 010cda5186e063943a5496a8f370a89c,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1467012512}
+    - target: {fileID: 114916533178775252, guid: 010cda5186e063943a5496a8f370a89c,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowMainMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 114916533178775252, guid: 010cda5186e063943a5496a8f370a89c,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1983544606}
+    - target: {fileID: 114916533178775252, guid: 010cda5186e063943a5496a8f370a89c,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: PlayUIButtonSound
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 010cda5186e063943a5496a8f370a89c, type: 2}
