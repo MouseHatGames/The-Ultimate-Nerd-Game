@@ -30,10 +30,28 @@ public class SelectionMenu : HorizontalScrollMenuWithSelection
         SelectionMenuOpenTime = Settings.Get("SelectionMenuOpenTime", 0.8f);
     }
 
+    public static bool AllowModdedComponents = false;
+    [SerializeField] private GameObject CustomComponentButton;
+    public bool CustomComponentSelected
+    {
+        get
+        {
+            return SelectedThing == PlaceableObjectTypes.Count + 1;
+        }
+    }
+
     // create the menu with all the prefabs in PlaceableObjects
     [Button]
     public void GenerateMenu()
     {
+        if(Canvas.transform.childCount > 4)
+        {
+            for (int i = 4; i < Canvas.transform.childCount; i++)
+            {
+                Destroy(Canvas.transform.GetChild(i).gameObject);
+            }
+        }
+
         MaxSelectedThing = PlaceableObjectTypes.Count;
 
         for (int i = 0; i < PlaceableObjectTypes.Count; i++)
@@ -62,6 +80,12 @@ public class SelectionMenu : HorizontalScrollMenuWithSelection
             label.GetComponent<TMPro.TMP_Text>().text = reference.name;
         }
 
+        if (AllowModdedComponents)
+        {
+            CustomComponentButton.SetActive(true);
+            MaxSelectedThing++;
+        }
+
         // put the menu and everything in it on the UI layer so they can be seen by the UI camera
         Transform[] allChildren = Canvas.GetComponentsInChildren<Transform>();
         foreach (Transform child in allChildren)
@@ -75,11 +99,6 @@ public class SelectionMenu : HorizontalScrollMenuWithSelection
         {
             Destroy(mmc);
         }
-        //ThroughPeg[] ThroughPegs = Canvas.GetComponentsInChildren<ThroughPeg>();
-        //foreach(ThroughPeg tp in ThroughPegs)
-        //{
-        //    DestroyImmediate(tp);
-        //}
     }
 
     static float SelectionMenuOpenTime;

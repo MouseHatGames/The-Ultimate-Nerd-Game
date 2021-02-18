@@ -18,6 +18,13 @@ namespace SavedObjects
     }
 
     [Serializable]
+    public class SavedCustomObject : SavedObjectV2
+    {
+        public object[] CustomData;
+        public override bool CanHaveChildren { get { return true; } }
+    }
+
+    [Serializable]
     public class SavedCircuitBoard : SavedObjectV2
     {
         public int x;
@@ -95,6 +102,9 @@ namespace SavedObjects
 
     [Serializable]
     public class SavedSnappingPeg : SavedPeg { }
+
+    [Serializable]
+    public class SavedVerticalSnappingPeg : SavedSnappingPeg { }
 
     [Serializable]
     public class SavedBlotter : SavedObjectV2

@@ -58,6 +58,21 @@ Third party assets used:
 
 Changelog:
 
+v0.2.4 | 2018-03-28
+
+* added a hotkey to undo deleting a board. Default binding is backspace
+* backups of boards you delete are now saved in /backups/_____deletedboards. By default, the 10 most recently deleted boards are saved, but you can increase that number with MaxBoardBackups in settings.txt
+* the crosshair's color is now configurable using CrosshairColor in settings.txt
+* the crosshair's size is now configurable using CrosshairSize in settings.txt
+* added a button to disable player collision with circuitry and boards, so you can walk/fly through them and reach otherwise inaccessable positions. By default there is no key bound to this function, but you can assign it in the launcher (I recommend the ` key)
+* added some hooks in the code to allow placing and saving of custom components added by mods
+* in the The Ultimate Nerd Game directory there is now a file called TimePlayed.txt which keeps track of the total time you have spent in-game
+* added lines about how to select the root board and how to delete a non-empty board to the help menu
+* (hopefully) fixed a bug where everything would completely break when you loaded a world
+* the readme.txt file downloaded with the game now includes instructions for installation
+
+
+
 v0.2.3 | 2018-03-25
 
 * fixed anything that changes color not being affected by shadows for a brief period after it changes color

@@ -51,6 +51,12 @@ public static class ComponentPlacer
 
     private static void MakeSureThingBeingPlacedIsCorrect()
     {
+        if (SelectionMenu.Instance.CustomComponentSelected)
+        {
+            DoFancyModdedComponentThings();
+            return;
+        }
+
         // replace ThingBeingPlaced when it should be replaced - when you switch selected things or when something was just placed
         if (SelectionMenu.Instance.SelectedThing != 0 &&
            (SelectionMenu.Instance.SelectedThingJustChanged || StuffPlacer.GetThingBeingPlaced == null))
@@ -60,6 +66,11 @@ public static class ComponentPlacer
         }
 
         else if (SelectionMenu.Instance.SelectedThing == 0) { StuffPlacer.DeleteThingBeingPlaced(); } // switching to nothing selected deletes the thing being placed
+    }
+
+    private static void DoFancyModdedComponentThings()
+    {
+
     }
 
     private static void PlaceAndMoveAllInOneGo()

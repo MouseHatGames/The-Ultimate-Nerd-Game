@@ -8,9 +8,13 @@ public class GameplayUICanvas : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+
+        crosshair.color = Settings.Get("CrosshairColor", Color.black);
+        crosshair.rectTransform.sizeDelta = Settings.Get("CrosshairSize", new Vector2(6, 6));
     }
 
     [SerializeField] public Canvas CrosshairCanvas;
+    [SerializeField] public UnityEngine.UI.Image crosshair;
     [SerializeField] public Canvas FPSCanvas;
 
     // this is a bad way to do it. Should just disable the UI camera.

@@ -1,3 +1,5 @@
+// todo: add async methods for saving here
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,8 +7,8 @@ using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-public static class FileUtilities {
-
+public static class FileUtilities
+{
 	public static string CurrentTimestamp
     {
         get
@@ -86,7 +88,12 @@ public static class FileUtilities {
         File.WriteAllBytes(filepath + "/" + filename, bytes);
     }
 
-    // copied from the C# documentation - https://docs.microsoft.com/en-us/dotnet/standard/io/how-to-copy-directories
+    public static byte[] LoadBytesFromFile(string filepath, string filename)
+    {
+        return File.ReadAllBytes(filepath + "/" + filename);
+    }
+
+    // no idea how this works. Copied from the C# documentation: https://docs.microsoft.com/en-us/dotnet/standard/io/how-to-copy-directories
     public static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
     {
         // Get the subdirectories for the specified directory.

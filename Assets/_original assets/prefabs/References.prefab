@@ -130,6 +130,8 @@ MonoBehaviour:
     type: 2}
   MountPrefab: {fileID: 1366494415108508, guid: 479292292a28a0942a7e419a237f21e1,
     type: 2}
+  VerticalSnappingPegPrefab: {fileID: 1825673747408182, guid: f5037c4d12f4431448259f8ebc2b2568,
+    type: 2}
 --- !u!114 &114927748067575584
 MonoBehaviour:
   m_ObjectHideFlags: 1

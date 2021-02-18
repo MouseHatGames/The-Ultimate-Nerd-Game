@@ -53,6 +53,11 @@ public static class FirstPersonInteraction
             PauseMenu.Instance.PauseGame();
         }
 
+        if (Input.GetButtonDown("UndoBoardDelete"))
+        {
+            BoardFunctions.RestoreMostRecentlyDeletedBoard();
+            return;
+        }
 
         ComponentPlacer.RunComponentPlacing();
         WirePlacer.RunWirePlacing();

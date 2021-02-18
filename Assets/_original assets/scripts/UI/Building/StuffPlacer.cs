@@ -308,8 +308,15 @@ public static class StuffPlacer
 
     public static bool BoxCollidersIntersectingStuffOrWouldDestroyWires(BoxCollider[] colliders, bool IgnoreWorld = true, bool IgnoreWires = false)
     {
+        if (colliders == null) { return true; } // this should never happen
+
         foreach (BoxCollider box in colliders)
         {
+            if(box == null)
+            {
+                return true; // this should never happen
+            }
+
             Vector3 center = box.transform.TransformPoint(box.center);
             Vector3 halfextents = Vector3.Scale(box.size, box.transform.lossyScale) / 2;
 

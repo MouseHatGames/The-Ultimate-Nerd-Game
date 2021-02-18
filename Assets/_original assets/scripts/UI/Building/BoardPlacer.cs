@@ -367,6 +367,9 @@ public static class BoardPlacer
     public static void CancelPlacement()
     {
         SoundPlayer.PlaySoundAt(Sounds.DeleteSomething, BoardBeingPlaced);
+
+        BoardFunctions.SetMostRecentlyDeletedBoard(BoardBeingPlaced);
+
         DestroyBoardBeingPlaced();
 
         GameplayUIManager.UIState = UIState.None;
@@ -376,6 +379,7 @@ public static class BoardPlacer
     {
         ReferenceObject.transform.parent = null; // without this line the referenceobject is left on the board and you are unable to delete it without move board
         if (BoardBeingPlaced == null) { return; }
+
         // so that we don't end up with empty clusters when deleting boards.
         // this code is from stuffdeleter.cs. TODO: merge in a nice way
         CircuitInput[] inputs = BoardBeingPlaced.GetComponentsInChildren<CircuitInput>();

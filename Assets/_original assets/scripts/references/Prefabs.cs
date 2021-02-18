@@ -49,6 +49,7 @@ namespace References // my first time using a custom namespace!!!
         [SerializeField] private GameObject NoisemakerPrefab;
         [SerializeField] private GameObject SnappingPegPrefab;
         [SerializeField] private GameObject MountPrefab;
+        [SerializeField] private GameObject VerticalSnappingPegPrefab;
 
         public static GameObject Cluster { get { return Instance.ClusterPrefab; } }
         public static GameObject CombinedMeshGroup { get { return Instance.CombinedMeshGroupPrefab; } }
@@ -75,12 +76,19 @@ namespace References // my first time using a custom namespace!!!
         public static GameObject Noisemaker { get { return Instance.NoisemakerPrefab; } }
         public static GameObject SnappingPeg { get { return Instance.SnappingPegPrefab; } }
         public static GameObject Mount { get { return Instance.MountPrefab; } }
+        public static GameObject VerticalSnappingPeg { get { return Instance.VerticalSnappingPegPrefab; } }
 
 
         public static GameObject ComponentTypeToPrefab(ComponentType objectType)
         {
             switch (objectType)
             {
+                // this shouldn't ever be called for CustomComponent, but if it is, we good
+                case ComponentType.CustomObject:
+                    return WhiteCube;
+                case ComponentType.none:
+                    return null;
+
                 case ComponentType.CircuitBoard:
                     return CircuitBoard;
                 case ComponentType.Wire:
@@ -123,8 +131,8 @@ namespace References // my first time using a custom namespace!!!
                     return SnappingPeg;
                 case ComponentType.Mount:
                     return Mount;
-                case ComponentType.none:
-                    return null;
+                case ComponentType.VerticalSnappingPeg:
+                    return VerticalSnappingPeg;
             }
 
             return null;

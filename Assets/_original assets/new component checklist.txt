@@ -5,7 +5,7 @@ add to SavedObjectTypeToObjectType dictionary
 if appropriate, add to LoadSavedObject and add method for it 
 add to CreateSaveObjectFrom
 
-add to Prefabs
+add to Prefabs.cs
 add to ComponentTypeToPrefab
 add to prefabs in inspector
 

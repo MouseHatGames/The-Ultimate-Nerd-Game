@@ -105,7 +105,7 @@ abstract public class Wire : MonoBehaviour
     abstract public void SetPegsBasedOnPoints();
 
     // static properties
-    public static LayerMask IgnoreWiresLayermask = 1 << 0; // not actually a layermask that ignores wires, just one that only hits stuff on the default layer
+    public static LayerMask IgnoreWiresLayermask = (1 << 0) | (1 << 9); // not actually a layermask that ignores wires, just one that only hits stuff on the default layer and the world layer
 
     public static Transform GetWireReference(Transform peg)
     {
@@ -116,5 +116,10 @@ abstract public class Wire : MonoBehaviour
     public static Transform GetWireReference(GameObject peg)
     {
         return GetWireReference(peg.transform);
+    }
+
+    public static Transform GetWireReference(RaycastHit hit)
+    {
+        return GetWireReference(hit.transform);
     }
 }

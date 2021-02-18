@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+using CielaSpike;
+using SavedObjects;
 
 public static class BoardFunctions
 {
@@ -150,5 +153,56 @@ public static class BoardFunctions
         }
 
         StuffDeleter.RecalculateClustersFromInputs(inputs); // todo: since we've already gotten the lists of wires, it would be more efficient to pass them to this function instead of letting it re-find them
+    }
+
+    private static int MaxBoardBackups = Settings.Get("MaxBoardBackups", 10);
+
+    public static void SetMostRecentlyDeletedBoard(GameObject board)
+    {
+        if (!Directory.Exists(Application.persistentDataPath + "/backups"))
+        {
+            Directory.CreateDirectory(Application.persistentDataPath + "/backups");
+        }
+        if (!Directory.Exists(Application.persistentDataPath + "/backups/_____deletedboards"))
+        {
+            Directory.CreateDirectory(Application.persistentDataPath + "/backups/_____deletedboards");
+        }
+
+        // delete excess board backups
+        string[] Backups = Directory.GetFiles(Application.persistentDataPath + "/backups/_____deletedboards");
+        System.Array.Sort(Backups); // get it in alphabetical order, so oldest backups are at the start of the array
+        int ExcessBackups = Backups.Length - MaxBoardBackups;
+        for (int i = ExcessBackups - 2; i >= 0; i--)
+        {
+            File.Delete(Backups[i]);
+        }
+
+        SavedObjectV2 MostRecentlyDeletedBoard = SavedObjectUtilities.CreateSavedObjectFrom(board); // only use the main thread for what's absolutely necessary
+
+        LoadBoardMenu.Instance.StartCoroutineAsync(SaveMostRecentlyDeletedBoardAsync(MostRecentlyDeletedBoard)); // because it has to start on a monobehavior...
+    }
+
+    private static IEnumerator SaveMostRecentlyDeletedBoardAsync(SavedObjectV2 MostRecentlyDeletedBoard)
+    {
+        yield return Ninja.JumpToUnity;
+        string path = Application.persistentDataPath + "/backups/_____deletedboards";
+        yield return Ninja.JumpBack;
+
+        FileUtilities.SaveToFile(path, FileUtilities.CurrentTimestamp + ".tungboard", MostRecentlyDeletedBoard);
+    }
+
+    public static void RestoreMostRecentlyDeletedBoard()
+    {
+        string[] BoardBackups = Directory.GetFiles(Application.persistentDataPath + "/backups/_____deletedboards");
+        System.Array.Sort(BoardBackups);
+
+        SavedObjectV2 save = (SavedObjectV2)FileUtilities.LoadFromFile(BoardBackups[BoardBackups.Length - 1]);
+        GameObject LoadedBoard = SavedObjectUtilities.LoadSavedObject(save);
+
+        LoadedBoard.transform.position = new Vector3(0, -2000, 0);
+        RecalculateClustersOfBoard(LoadedBoard);
+
+        BoardPlacer.NewBoardBeingPlaced(LoadedBoard);
+        GameplayUIManager.UIState = UIState.BoardBeingPlaced;
     }
 }

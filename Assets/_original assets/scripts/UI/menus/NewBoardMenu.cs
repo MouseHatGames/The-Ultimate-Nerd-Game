@@ -44,7 +44,7 @@ public class NewBoardMenu : MonoBehaviour
     {
         RaycastHit hit;
         Physics.Raycast(FirstPersonInteraction.Ray(), out hit, Settings.ReachDistance, Wire.IgnoreWiresLayermask);
-        if(hit.collider == null || (hit.collider.tag != "CircuitBoard" && hit.collider.tag != "World" && hit.collider.tag != "PlaceOnlyBoard"))
+        if(hit.collider == null || (hit.collider.tag != "CircuitBoard" && hit.collider.tag != "World" && hit.collider.tag != "PlaceOnlyBoard")) // all valid tags of things to place on 
         {
             SoundPlayer.PlaySoundGlobal(References.Sounds.FailDoSomething);
             GameplayUIManager.UIState = UIState.None;

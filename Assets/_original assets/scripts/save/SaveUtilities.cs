@@ -15,6 +15,11 @@ public static class SavedObjectUtilities
         return CreateSavedObjectFrom(worldobjectinfo);
     }
 
+    private static void CreateCustomSavedObject(SavedCustomObject save, ObjectInfo CreateFromThis)
+    {
+
+    }
+
     public static SavedObjectV2 CreateSavedObjectFrom(ObjectInfo worldsave)
     {
         //SavedObjectV2 newsavedobject = SaveManager.ObjectTypeToSavedObjectType(save.ObjectType);
@@ -23,6 +28,11 @@ public static class SavedObjectUtilities
 
         switch (worldsave.ComponentType)
         {
+            case ComponentType.CustomObject:
+                newsavedobject = new SavedCustomObject();
+                CreateCustomSavedObject((SavedCustomObject)newsavedobject, worldsave);
+                break;
+
             case ComponentType.CircuitBoard:
                 CircuitBoard board = worldsave.GetComponent<CircuitBoard>();
                 newsavedobject = new SavedCircuitBoard
@@ -165,6 +175,10 @@ public static class SavedObjectUtilities
                 newsavedobject = new SavedMount();
                 break;
 
+            case ComponentType.VerticalSnappingPeg:
+                newsavedobject = new SavedVerticalSnappingPeg();
+                break;
+
             case ComponentType.none:
                 Debug.LogError("BIG ERROR tried to save a component with no type!");
                 break;
@@ -199,7 +213,16 @@ public static class SavedObjectUtilities
     {
         ComponentType componenttype = SavedObjectTypeToObjectType[save.GetType()];
 
-        GameObject LoadedObject = UnityEngine.Object.Instantiate(Prefabs.ComponentTypeToPrefab(componenttype), parent);
+        GameObject LoadedObject = null;
+        if (componenttype == ComponentType.CustomObject)
+        {
+            LoadedObject = GetCustomPrefab((SavedCustomObject)save);
+        }
+        else
+        {
+            LoadedObject = UnityEngine.Object.Instantiate(Prefabs.ComponentTypeToPrefab(componenttype), parent);
+        }
+
         LoadedObject.transform.localPosition = save.LocalPosition;
         LoadedObject.transform.localEulerAngles = save.LocalEulerAngles;
 
@@ -208,6 +231,11 @@ public static class SavedObjectUtilities
         switch (componenttype)
         {
             // there is no case for objects with no special data to load
+
+            case ComponentType.CustomObject:
+                LoadCustomObject(LoadedObject, (SavedCustomObject)save);
+                break;
+
 
             case ComponentType.CircuitBoard:
                 LoadCircuitBoard(LoadedObject, (SavedCircuitBoard)save);
@@ -263,6 +291,16 @@ public static class SavedObjectUtilities
         }
 
         return LoadedObject;
+    }
+
+    private static GameObject GetCustomPrefab(SavedCustomObject save)
+    {
+        return Prefabs.WhiteCube;
+    }
+
+    private static void LoadCustomObject(GameObject LoadedObject, SavedCustomObject save)
+    {
+
     }
 
     private static void LoadCircuitBoard(GameObject LoadedObject, SavedCircuitBoard save)
@@ -350,6 +388,8 @@ public static class SavedObjectUtilities
 
     public static Dictionary<Type, ComponentType> SavedObjectTypeToObjectType = new Dictionary<Type, ComponentType>
     {
+        {typeof(SavedCustomObject), ComponentType.CustomObject },
+
         { typeof(SavedCircuitBoard), ComponentType.CircuitBoard },
         { typeof(SavedWire), ComponentType.Wire },
         { typeof(SavedInverter), ComponentType.Inverter },
@@ -371,6 +411,7 @@ public static class SavedObjectUtilities
         { typeof(SavedNoisemaker), ComponentType.Noisemaker },
         { typeof(SavedSnappingPeg), ComponentType.SnappingPeg },
         { typeof(SavedMount), ComponentType.Mount },
+        {typeof(SavedVerticalSnappingPeg), ComponentType.VerticalSnappingPeg },
     };
 }
 
@@ -378,6 +419,8 @@ public static class SavedObjectUtilities
 public enum ComponentType
 {
     none,
+    CustomObject,
+
     CircuitBoard,
     Wire,
     Inverter,
@@ -399,4 +442,5 @@ public enum ComponentType
     Noisemaker,
     SnappingPeg,
     Mount,
+    VerticalSnappingPeg,
 }

@@ -138,7 +138,11 @@ public class BehaviorManager : MonoBehaviour
         ClearAllLists();
     }
 
-
+    private void OnApplicationQuit()
+    {
+        float PreviousSecondsPlayed = ES3.Load("SecondsPlayed", "TimePlayed.txt", 0f);
+        ES3.Save<float>("SecondsPlayed", PreviousSecondsPlayed + Time.unscaledTime, "TimePlayed.txt");
+    }
 
 #if UNITY_EDITOR
 
