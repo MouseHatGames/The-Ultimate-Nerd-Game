@@ -3,33 +3,90 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using References;
 
-public class StuffRotater : MonoBehaviour {
+public static class StuffRotater
+{
+    public static bool AllowedToDoRotation = true; // for when you're placing wires
+    public static void RunGameplayRotation()
+    {
+        if (!AllowedToDoRotation) { return; }
+        if (StuffPlacer.OkayToPlace) { return; }
+
+        if (Input.GetButtonDown("Rotate"))
+        {
+            RaycastHit hit;
+            if(Physics.Raycast(FirstPersonInteraction.Ray(), out hit, Settings.ReachDistance))
+            {
+                RotateThing(hit.collider.gameObject);
+            }
+            else { SoundPlayer.PlaySoundGlobal(Sounds.FailDoSomething); }
+        }
+
+        // kind of awkward that both this class and StuffPlacer are fucking with RotationLocked. TODO do it better
+        if (Input.GetButtonDown("RotationLock"))
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(FirstPersonInteraction.Ray(), out hit, Settings.ReachDistance, Wire.IgnoreWiresLayermask))
+            {
+                if (StuffPlacer.GetThingBeingPlaced == null || !StuffPlacer.OkayToPlace) // so that if there's something we're placing we can lock rotation to that and not what's under it
+                {
+                    if (hit.collider.tag == "World" || hit.collider.tag == "CircuitBoard") { SetRotationLockToFalseIfThingBeingPlacedIsNull(); return; }
+                    StuffPlacer.SetRotationLockAngles(ComponentPlacer.FullComponent(hit.collider));
+                    StuffPlacer.RotationLocked = true;
+                    SelectionMenu.Instance.SetRotationLockText();
+                }
+            }
+            else { StuffPlacer.RotationLocked = false; }
+        }
+
+        if (Input.GetButtonDown("RotateThroughBoard"))
+        {
+            RotateThroughBoard();
+        }
+    }
 
     public static void RotateThing(GameObject RotateThis)
     {
         // determines which direction to rotate
         // TODO: use camera.main.transform to rotate stuff left and right rather than clockwise & ccw
 
+        if (RotateThis.tag == "World")
+        {
+            SoundPlayer.PlaySoundGlobal(Sounds.FailDoSomething);
+            return;
+        }
+
+        if (RotateThis.tag == "CircuitBoard" || RotateThis.tag == "PlaceOnlyCircuitBoard")
+        {
+            SoundPlayer.PlaySoundGlobal(Sounds.FailDoSomething);
+            return;
+        }
+
         // rotate the full object, not part of it
         // the last check is so that rotating child boards doesn't rotate their parent
-        if (RotateThis.transform.parent != null && RotateThis.transform.parent.tag != "CircuitBoard" && RotateThis.tag != "CircuitBoard")
-        {
-            RotateThing(RotateThis.transform.parent.gameObject);
-            return;
-        }
+        RotateThis = ComponentPlacer.FullComponent(RotateThis);
 
-        if (RotateThis.tag == "CircuitBoard") // circuitboards are rotated with a different script in a special way
-        {
-            return;
-        }
+        Quaternion BeforeRotation = Quaternion.identity;
+        Vector3 AxisToRotateAround = RotateThis.transform.up;
 
         // everything but wires should rotate around transform.up
-        Vector3 AxisToRotateAround = RotateThis.transform.up;
         if (RotateThis.tag == "Wire")
         {
+            if (RotateThis.GetComponent<SnappedConnection>()) // you cannot rotate snapped connections
+            {
+                SoundPlayer.PlaySoundGlobal(Sounds.FailDoSomething);
+                return;
+            }
+
             AxisToRotateAround = RotateThis.transform.forward;
-            StuffConnecter.QueueWireMeshRecalculation(RotateThis);
+            StuffConnector.QueueWireMeshRecalculation(RotateThis);
+
+            SoundPlayer.PlaySoundAt(Sounds.RotateSomething, RotateThis);
+        }
+        else
+        {
+            BeforeRotation = RotateThis.transform.rotation; // non-wires might be rotated into invalid positions, in which case they should be reverted to their original rotations
         }
 
         int direction = 1;
@@ -51,37 +108,104 @@ public class StuffRotater : MonoBehaviour {
             RotateThis.transform.RotateAround(RotateThis.transform.position, AxisToRotateAround, direction * 90f);
         }
 
-        DealWithConnectedWires(RotateThis);
-        StuffPlacer.DestroyIntersectingConnections(RotateThis);
+        // the validity of wire placement is never affected when rotating them, but if it's an object, check if it can actually be placed there. If not, revert to original rotation
+        if (RotateThis.tag != "Wire")
+        {
+            BoxCollider[] colliders = RotateThis.GetComponentsInChildren<BoxCollider>();
+            StuffPlacer.SetStateOfBoxColliders(colliders, false);
 
-        QueueClusterMeshRecalculationOn(RotateThis);
+            if (StuffPlacer.GameObjectIntersectingStuffOrWouldDestroyWires(RotateThis, true, true)) // ignore wires
+            {
+                RotateThis.transform.rotation = BeforeRotation;
+                StuffPlacer.SetStateOfBoxColliders(colliders, true);
 
-        // since the thing we're rotating in all likelihood is part of the MegaMesh, we recalculate that mesh
-        MegaMesh.RecalculateMegaMesh();
+                SoundPlayer.PlaySoundGlobal(Sounds.FailDoSomething);
+                return;
+            }
+
+            SoundPlayer.PlaySoundAt(Sounds.RotateSomething, RotateThis);
+            StuffPlacer.SetStateOfBoxColliders(colliders, true);
+        }
+
+        FloatingPointRounder.RoundIn(RotateThis);
+
+        RedrawCircuitGeometryOf(RotateThis);
+        DestroyIntersectingConnections(RotateThis);
+
+        SnappingPeg.TryToSnapIn(RotateThis);
+
+        MegaMeshManager.RecalculateGroupsOf(RotateThis);
     }
 
-    // takes an object and checks all its connections and redraws those wires
-    // this function should probably be in a different class... not sure where to put it though...
-    // this function has a lot of repeated code. Could be tidied up a bit. TODO: do that
-    public static void DealWithConnectedWires(GameObject RotatedObject)
+    private static bool AllowFlippingOneSidedComponents = Settings.Get("AllowFlippingOneSidedComponents", false);
+
+    private static void RotateThroughBoard()
+    {
+        RaycastHit hit;
+        if(Physics.Raycast(FirstPersonInteraction.Ray(), out hit, Settings.ReachDistance, Wire.IgnoreWiresLayermask))
+        {
+            if (hit.collider.tag == "World" || hit.collider.tag == "CircuitBoard") { SoundPlayer.PlaySoundGlobal(Sounds.FailDoSomething); return; }
+            GameObject component = ComponentPlacer.FullComponent(hit.collider);
+            if (component.transform.parent == null) { return; }
+            if (!AllowFlippingOneSidedComponents)
+            {
+                if (!component.GetComponent<IsThroughComponent>()) { SoundPlayer.PlaySoundGlobal(Sounds.FailDoSomething); return; }
+            }
+
+            component.transform.localEulerAngles += new Vector3(0, 0, 180);
+            component.transform.Translate(Vector3.up * 0.15f, Space.Self);
+
+            BoxCollider[] colliders = component.GetComponentsInChildren<BoxCollider>();
+            StuffPlacer.SetStateOfBoxColliders(colliders, false);
+
+            if (StuffPlacer.GameObjectIntersectingStuffOrWouldDestroyWires(component, true))
+            {
+                component.transform.localEulerAngles += new Vector3(0, 0, 180);
+                component.transform.Translate(Vector3.up * 0.15f, Space.Self);
+                StuffPlacer.SetStateOfBoxColliders(colliders, true);
+                SoundPlayer.PlaySoundGlobal(Sounds.FailDoSomething);
+                return;
+            }
+
+            FloatingPointRounder.RoundIn(component);
+
+            StuffPlacer.SetStateOfBoxColliders(colliders, true);
+
+            RedrawCircuitGeometryOf(component);
+            DestroyIntersectingConnections(component);
+            MegaMeshManager.RecalculateGroupsOf(component);
+
+            SoundPlayer.PlaySoundAt(Sounds.RotateSomething, component);
+        }
+        else
+        {
+            SoundPlayer.PlaySoundGlobal(Sounds.FailDoSomething);
+        }
+    }
+
+    // takes an object and checks all its connections and redraws those wires, or destroys them if necessary
+    // this function should probably be in a different class, especially since it's now being used by BoardPlacer... not sure where to put it though...
+    public static void RedrawCircuitGeometryOf(GameObject RotatedObject)
     {
         CircuitInput[] inputs = RotatedObject.GetComponentsInChildren<CircuitInput>();
-        Output[] outputs = RotatedObject.GetComponentsInChildren<Output>();
+        CircuitOutput[] outputs = RotatedObject.GetComponentsInChildren<CircuitOutput>();
 
         foreach (CircuitInput input in inputs)
         {
             foreach (InputOutputConnection connection in input.IOConnections)
             {
                 connection.DrawWire();
-                connection.Point2.QueueMeshRecalculation();
+                connection.Output.QueueMeshRecalculation();
             }
-            foreach(InputInputConnection connection in input.IIConnections)
+            foreach (InputInputConnection connection in input.IIConnections)
             {
                 connection.DrawWire();
             }
+
+            if (input.Cluster != null) { input.Cluster.QueueMeshRecalculation(); }
         }
 
-        foreach (Output output in outputs)
+        foreach (CircuitOutput output in outputs)
         {
             foreach (InputOutputConnection connection in output.GetIOConnections())
             {
@@ -90,20 +214,41 @@ public class StuffRotater : MonoBehaviour {
 
             output.QueueMeshRecalculation();
         }
-
-        BoardPlacer.Instance.ValidateInputRendererStateAndStuff(inputs); // in rare cases the inputs become invisible. Fixes that
     }
 
-    // quick shitty fix for a bug
-    public static void QueueClusterMeshRecalculationOn(GameObject go)
+    public static void DestroyIntersectingConnections(GameObject PlacedObject)
     {
-        CircuitInput[] inputs = go.GetComponentsInChildren<CircuitInput>();
-        foreach(CircuitInput input in inputs)
+        BoxCollider[] boxes = PlacedObject.GetComponentsInChildren<BoxCollider>();
+        List<GameObject> WiresDestroyed = new List<GameObject>();
+
+        foreach (BoxCollider box in boxes)
         {
-            if(input.Cluster != null)
+            Vector3 center = box.transform.TransformPoint(box.center);
+            Vector3 halfextents = Vector3.Scale(box.size, box.transform.lossyScale) / 2;
+            Vector3 direction = box.transform.up;
+            Quaternion orientation = box.transform.rotation;
+
+            RaycastHit[] hits = Physics.BoxCastAll(center, halfextents, direction, orientation, 1); // not sure why maxdistance needs to be 1 here but 0 doesn't register ANY wire collisions. Possibly something to do with how thin their colliders are?
+            foreach (RaycastHit hit in hits)
             {
-                input.Cluster.QueueMeshRecalculation();
+                if (hit.collider.tag == "Wire")
+                {
+                    // manually check connections, just in case the boxcast hits a false positive
+                    if (!WirePlacer.CanConnect(hit.collider.gameObject) || !hit.collider.GetComponent<Wire>().CanFindPoints())
+                    {
+                        if (!WiresDestroyed.Contains(hit.collider.gameObject))
+                        {
+                            WiresDestroyed.Add(hit.collider.gameObject);
+                            StuffDeleter.DestroyWire(hit.collider.gameObject);
+                        }
+                    }
+                }
             }
         }
+    }
+
+    private static void SetRotationLockToFalseIfThingBeingPlacedIsNull()
+    {
+        if(StuffPlacer.GetThingBeingPlaced == null) { StuffPlacer.RotationLocked = false; }
     }
 }

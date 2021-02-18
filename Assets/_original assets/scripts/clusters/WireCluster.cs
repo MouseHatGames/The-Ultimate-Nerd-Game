@@ -2,122 +2,117 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq; // for the fancy list.distinct stuff
+using References;
 
-public class WireCluster : MonoBehaviour {
+public class WireCluster : VisualUpdaterWithMeshCombining
+{
+    private List<CircuitInput> ConnectedInputs = new List<CircuitInput>(); // inputs connected to the group
+    private List<CircuitOutput> ConnectedOutputs = new List<CircuitOutput>(); // outputs connected to the group
 
-    [SerializeField] private List<CircuitInput> ConnectedInputs; // inputs connected to the group
-    [SerializeField] private List<Output> ConnectedOutputs; // outputs connected to the group
+    private List<CircuitLogicComponent> ConnectedCircuitLogicComponents = new List<CircuitLogicComponent>(); // of all the inputs in the group, this is all the circuit logic components they're part of
 
     public bool On; // whether the whole cluster is on or off
 
-    public MeshFilter Mesh;
-    public Renderer Renderer;
-    private void Awake()
+    protected override void AfterAwake()
     {
-        Renderer = GetComponent<Renderer>();
-        Mesh = GetComponent<MeshFilter>();
-
-        BehaviorManager.UpdatedClusters.Add(this);
+        QueueCircuitLogicUpdate();
     }
 
-    private void OnDestroy()
+    protected override void WhenDestroyed()
     {
-        BehaviorManager.UpdatedClusters.Remove(this);
-        MegaCircuitMesh.RemoveCluster(this);
+        // just make sure it's not in any list
+        FinishedUpdating = true;
+        BehaviorManager.UpdatingClusters.Remove(this);
+        BehaviorManager.ClustersQueuedForMeshRecalculation.Remove(this);
     }
 
-    private void Start()
+    bool PreviouslyOnVisual;
+    public override void VisualUpdate()
     {
-        // a bug can sometimes duplicate connected outputs in the list when creating new clusters. This is my hacky fix.
-        ConnectedInputs = ConnectedInputs.Distinct().ToList();
-        ConnectedOutputs = ConnectedOutputs.Distinct().ToList();
-
-        // to prevent things going off for a tick when clusters are recalculated
-        UpdateClusterState(); // TODO should go in awake???????????????????????
-    }
-
-    bool PreviouslyOn; // this kind of caching is used because setting material colors every frame is expensive
-    public bool PartOfMegaCircuitMesh;
-    float StableTime;
-    private bool MeshRecalculationQueued;
-    public bool AutoCombineOnStableAllowed = true;
-    public void VisualUpdate()
-    {
-        // queueing is so that the expensive RecalculateCombinedMesh is only run a max of once per frame
-        if (MeshRecalculationQueued)
+        if (On != PreviouslyOnVisual)
         {
-            RecalculateCombinedMesh();
-            MeshRecalculationQueued = false;
-        }
-
-        if (On != PreviouslyOn)
-        {
-            Renderer.material.color = AppropriateColor();
-            PreviouslyOn = On;
-
-            MegaCircuitMesh.RemoveCluster(this);
-            StableTime = 0;
+            VisualsChanged();
+            PreviouslyOnVisual = On;
         }
         else
         {
-            // this whole thing is for circuits that don't change state often to be added to a mega mesh
-            StableTime += Time.deltaTime;
-
-            if(StableTime > MegaCircuitMesh.MinStableCircuitTime 
-                && MegaCircuitMesh.ValidMeshCalculationFrame 
-                && !PartOfMegaCircuitMesh
-                && AutoCombineOnStableAllowed)
-            {
-                MegaCircuitMesh.AddCluster(this);
-            }
+            VisualsHaventChanged();
         }
     }
 
-    private Color AppropriateColor()
+    protected override void SetProperMaterialAndMegaMeshComponentMaterialType()
     {
-        if (On) { return MiscellaneousSettings.CircuitOnColor; }
-        else { return MiscellaneousSettings.CircuitOffColor; }
-    }
-
-    public void QueueMeshRecalculation()
-    {
-        MeshRecalculationQueued = true;
-    }
-
-    public void CircuitLogicUpdate()
-    {
-        UpdateClusterState();
+        if (On) { MegaMeshComponent.MaterialType = MaterialType.CircuitOn; Renderer.material = Materials.CircuitOn; }
+        else { MegaMeshComponent.MaterialType = MaterialType.CircuitOff; Renderer.material = Materials.CircuitOff; }
     }
 
     // if any connected output is on, every input in the whole cluster should turn on as well
-    void UpdateClusterState()
+    private bool PreviouslyOnCircuit;
+    public void CircuitLogicUpdate()
     {
-        foreach (Output output in ConnectedOutputs)
+        On = false;
+        CircuitLogicUpdateQueued = false;
+
+        foreach (CircuitOutput output in ConnectedOutputs)
         {
             if (output.On)
             {
                 On = true;
-                return; // this should stop the function as soon as it finds an output that's on
+                break;
             }
         }
-        // if no on output was found, everything should turn off
-        On = false;
+
+        if (On == PreviouslyOnCircuit) { return; }
+
+        PreviouslyOnCircuit = On;
+        foreach (CircuitInput input in ConnectedInputs)
+        {
+            input.On = On;
+        }
+        QueueVisualUpdate();
+        UpdateConnectedComponents();
+    }
+
+    private void UpdateConnectedComponents()
+    {
+        foreach(CircuitLogicComponent component in ConnectedCircuitLogicComponents)
+        {
+            component.QueueCircuitLogicUpdate();
+        }
     }
 
     // connectedinputs list management
     public void ConnectInput(CircuitInput penis)
     {
+        if (penis.On != On) { QueueCircuitLogicUpdate(); }
+
         ConnectedInputs.Add(penis);
         penis.Cluster = this;
         QueueMeshRecalculation();
+
+        if (penis.CircuitLogicComponent != null)
+        {
+            ConnectedCircuitLogicComponents.Add(penis.CircuitLogicComponent);
+
+            // the following two lines are so that if you connect a component to the cluster it accurately checks for an update
+            penis.On = On;
+            penis.CircuitLogicComponent.QueueCircuitLogicUpdate();
+        }
     }
 
     public void RemoveInput(CircuitInput penis)
     {
         ConnectedInputs.Remove(penis);
         penis.Cluster = null;
-        penis.Renderer.enabled = true;
+        if (!penis.IsSnappingPeg) { penis.Renderer.enabled = true; }
+        penis.On = false; // it makes me nervous to set the state of this outside of the circuit update cycle, but this only really happens when the player deletes something so it should be okay... plus, if it gets reconnected to a cluster in the same frame, that cluster will set it to its proper state during the next update cycle before it has any effect on anything
         QueueMeshRecalculation();
+
+        if (penis.CircuitLogicComponent != null)
+        {
+            ConnectedCircuitLogicComponents.Remove(penis.CircuitLogicComponent);
+            penis.CircuitLogicComponent.QueueCircuitLogicUpdate();
+        }
     }
 
     public CircuitInput[] GetConnectedInputs()
@@ -126,80 +121,75 @@ public class WireCluster : MonoBehaviour {
     }
 
     // connectedoutputs list management
-    public void ConnectOutput(Output penis)
+    public void ConnectOutput(CircuitOutput penis)
     {
         ConnectedOutputs.Add(penis);
+        if (penis.On != On) { QueueCircuitLogicUpdate(); }
     }
 
-    public void RemoveOutput(Output penis)
+    public void RemoveOutput(CircuitOutput penis)
     {
         ConnectedOutputs.Remove(penis);
     }
 
-    public Output[] GetConnectedOutputs()
+    public CircuitOutput[] GetConnectedOutputs()
     {
         return ConnectedOutputs.ToArray();
     }
 
     // Recalculate combined mesh
     // mesh is of all the inputs and all the IIConnections in the cluster, since that's all that can be guaranteed to change color together
-    private void RecalculateCombinedMesh()
+    public void RecalculateCombinedMesh()
     {
-        List<MeshFilter> CombineMeshes = new List<MeshFilter>();
+        MegaMeshManager.RemoveComponentImmediately(MegaMeshComponent);
+
+        List<MeshFilter> MeshFilters = new List<MeshFilter>();
         foreach(CircuitInput input in ConnectedInputs)
         {
-            CombineMeshes.Add(input.Mesh);
-            input.Renderer.enabled = false;
-
-            foreach(InputInputConnection IIConnection in input.IIConnections)
+            if (!input.IsSnappingPeg)
             {
-                if (!CombineMeshes.Contains(IIConnection.Mesh)) { CombineMeshes.Add(IIConnection.Mesh); } // check is so we don't get duplicates
-                IIConnection.Renderer.enabled = false;
+                MeshFilters.Add(input.MeshFilter);
+                input.Renderer.enabled = false;
+
+                foreach (InputInputConnection IIConnection in input.IIConnections)
+                {
+                    if (!MeshFilters.Contains(IIConnection.MeshFilter)) { MeshFilters.Add(IIConnection.MeshFilter); } // check so we don't get duplicates
+                    IIConnection.Renderer.enabled = false;
+                }
             }
-        }
-
-
-        CombineInstance[] combine = new CombineInstance[CombineMeshes.Count];
-        for(int i = 0; i < CombineMeshes.Count; i++)
-        {
-            combine[i].mesh = CombineMeshes[i].sharedMesh;
-            combine[i].transform = CombineMeshes[i].transform.localToWorldMatrix;
         }
 
         transform.parent = null;
         transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
-        Mesh.mesh = new Mesh();
-        Mesh.mesh.CombineMeshes(combine);
-        transform.parent = ProperClusterParent();
 
-        if (On)
-        {
-            Renderer.material.color = MiscellaneousSettings.CircuitOnColor;
-            PreviouslyOn = true;
-        }
-        else
-        {
-            Renderer.material.color = MiscellaneousSettings.CircuitOffColor;
-            PreviouslyOn = false;
-        }
+        MeshFilter.mesh = new Mesh();
+        MeshFilter.mesh.CombineMeshes(MegaMeshManager.GetScaledCombineInstances(MeshFilters, 1.002f)); // the minimum viable value for extremely large clusters
+        transform.parent = StuffConnector.ProperClusterParent(this);
 
-        MegaCircuitMesh.RemoveCluster(this);
+        VisualsChanged();
+        QueueVisualUpdate();
+
+        MegaMeshComponent.Mesh = new Mesh();
+        MegaMeshComponent.Mesh.CombineMeshes(MegaMeshManager.GetCombineInstances(MeshFilters));
+
+        MeshRecalculationQueued = false;
     }
 
-    private Transform ProperClusterParent()
+    bool MeshRecalculationQueued = false; // to avoid duplicate additions to the list over a single frame
+    public void QueueMeshRecalculation()
     {
-        int ShallowestDepthInHeirarchy = 1000000000;
-        Transform ProperParent = transform;
-        foreach(CircuitInput input in ConnectedInputs)
-        {
-            int DepthInHeirarchy = StuffConnecter.DepthInHeirarchy(input.transform);
-            if (ShallowestDepthInHeirarchy > DepthInHeirarchy)
-            {
-                ProperParent = input.transform.parent;
-                ShallowestDepthInHeirarchy = DepthInHeirarchy;
-            }
-        }
+        if (MeshRecalculationQueued) { return; }
 
-        return ProperParent;
+        BehaviorManager.ClustersQueuedForMeshRecalculation.Add(this);
+        MeshRecalculationQueued = true;
+    }
+
+    bool CircuitLogicUpdateQueued = false;
+    public void QueueCircuitLogicUpdate()
+    {
+        if (CircuitLogicUpdateQueued) { return; }
+
+        BehaviorManager.UpdatingClusters.Add(this);
+        CircuitLogicUpdateQueued = true;
     }
 }

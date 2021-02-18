@@ -1,330 +1,300 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class CustomData {
-
-	public static object[] SaveObjectData(SaveThisObject save) // updates a SaveThisObject to have its current relevant CustomData[] values
-    {
-        if (save.ObjectType == "CircuitBoard") { return CircuitBoardData(save); }
-        if (save.ObjectType == "Wire") { return WireData(save); }
-        if (save.ObjectType == "Inverter") { return InverterData(save); }
-        if (save.ObjectType == "Peg") { return PegData(save); }
-        if (save.ObjectType == "Delayer") { return DelayerData(save); }
-        if (save.ObjectType == "Through Peg") { return ThroughPegData(save); }
-        if (save.ObjectType == "Switch" || save.ObjectType == "Panel Switch") { return SwitchData(save); }
-        if (save.ObjectType == "Button" || save.ObjectType == "Panel Button") { return ButtonData(save); }
-        if (save.ObjectType == "Display" || save.ObjectType == "Panel Display") { return DisplayData(save); }
-        if (save.ObjectType == "Label" || save.ObjectType == "Panel Label") { return LabelData(save); }
-        if (save.ObjectType == "Blotter" || save.ObjectType == "Through Blotter") { return BlotterData(save); }
-
-        else
-        {
-            Debug.LogError("ObjectType not found. ObjectType was " + save.ObjectType);
-            return null;
-        }
-    }
-
-    public static void LoadData(SaveThisObject save)
-    {
-        if (save.ObjectType == "CircuitBoard") { LoadCircuitBoard(save); }
-        else if (save.ObjectType == "Wire") { LoadWire(save); }
-        else if (save.ObjectType == "Inverter") { LoadInverter(save); }
-        else if (save.ObjectType == "Peg") { LoadPeg(save); }
-        else if (save.ObjectType == "Delayer") { LoadDelayer(save); }
-        else if (save.ObjectType == "Through Peg") { LoadThroughPeg(save); }
-        else if (save.ObjectType == "Switch" || save.ObjectType == "Panel Switch") { LoadSwitch(save); }
-        else if (save.ObjectType == "Button" || save.ObjectType == "Panel Button") { LoadButton(save); }
-        else if (save.ObjectType == "Display" || save.ObjectType == "Panel Display") { LoadDisplay(save); }
-        else if (save.ObjectType == "Label" || save.ObjectType == "Panel Label") { LoadLabel(save); }
-        else if (save.ObjectType == "Blotter" || save.ObjectType == "Through Blotter") { LoadBlotter(save); }
-    }
-
-
-    public static object[] CircuitBoardData(SaveThisObject save)
-    {
-        CircuitBoard board = save.GetComponent<CircuitBoard>();
-
-        // data saved in boards: board size x, board size z, color
-        object[] data = {
-            board.x,
-            board.z,
-            save.GetComponent<Renderer>().material.color
-        };
-
-        return data;
-    }
-
-    public static void LoadCircuitBoard(SaveThisObject save)
-    {
-        object[] data = save.CustomDataArray;
-        CircuitBoard board = save.GetComponent<CircuitBoard>();
-
-        board.x = (int)data[0];
-        board.z = (int)data[1];
-        board.BoardColor = (Color)data[2];
-        save.GetComponent<Renderer>().material.color = (Color)data[2];
-
-        board.CreateCuboid();
-    }
-
-    public static object[] WireData(SaveThisObject save)
-    {
-        object[] data = new object[2];
-
-        InputInputConnection IIConnection = save.GetComponent<InputInputConnection>();
-        if(IIConnection != null)
-        {
-            data[0] = true; // bool of the array is set to true if IIConnection, false if IOConnection
-        }
-        else
-        {
-            data[0] = false;
-        }
-
-        data[1] = save.transform.localScale;
-       
-        return data;
-    }
-
-    public static void LoadWire(SaveThisObject save)
-    {
-        if((bool)save.CustomDataArray[0] == true)
-        {
-            save.gameObject.AddComponent<InputInputConnection>();
-        }
-        else
-        {
-            save.gameObject.AddComponent<InputOutputConnection>();
-        }
-
-        save.transform.localScale = (Vector3)save.CustomDataArray[1];
-    }
-
-    public static object[] ButtonData(SaveThisObject save)
-    {
-        Button button = save.GetComponent<Button>();
-
-        object[] data = {
-            button.output.On,
-            button.ButtonDownTime // we save gritty details like this because people can build carefully timed circuits that would get fucked up if the number was reset each time
-        };
-
-        return data;
-    }
-
-    public static void LoadButton(SaveThisObject save)
-    {
-        object[] data = save.CustomDataArray;
-        Button button = save.GetComponent<Button>();
-
-        button.output.On = (bool)data[0];
-        button.ButtonDownTime = (int)data[1];
-    }
-
-    public static object[] DelayerData(SaveThisObject save)
-    {
-        Delayer delayer = save.GetComponent<Delayer>();
-
-        object[] data = {
-            delayer.Input.On,
-            delayer.Output.On,
-            delayer.DelayCount
-        };
-
-        return data;
-    }
-
-    public static void LoadDelayer(SaveThisObject save)
-    {
-        object[] data = save.CustomDataArray;
-        Delayer delayer = save.GetComponent<Delayer>();
-
-        delayer.Input.On = (bool)data[0];
-        delayer.Output.On = (bool)data[1];
-        delayer.DelayCount = (int)data[2];
-    }
-
-    public static object[] DisplayData(SaveThisObject save)
-    {
-        Display display = save.GetComponent<Display>();
-
-        object[] data = {
-            display.Input.On
-        };
-
-        return data;
-    }
-
-    public static void LoadDisplay(SaveThisObject save)
-    {
-        object[] data = save.CustomDataArray;
-        Display display = save.GetComponent<Display>();
-
-        display.Input.On = (bool)data[0];
-    }
-
-    public static object[] InverterData(SaveThisObject save)
-    {
-        NotGate notgate = save.GetComponent<NotGate>();
-
-        object[] data = {
-            notgate.Input.On,
-            notgate.Output.On
-        };
-
-        return data;
-    }
-
-    public static void LoadInverter(SaveThisObject save)
-    {
-        object[] data = save.CustomDataArray;
-        NotGate notgate = save.GetComponent<NotGate>();
-
-        notgate.Input.On = (bool)data[0];
-        notgate.Output.On = (bool)data[1];
-    }
-
-    public static object[] LabelData(SaveThisObject save)
-    {
-        Label label = save.GetComponent<Label>();
-
-        object[] data = {
-            label.text.text,
-            label.text.fontSize
-        };
-
-        return data;
-    }
-
-    public static void LoadLabel(SaveThisObject save)
-    {
-        object[] data = save.CustomDataArray;
-        Label label = save.GetComponent<Label>();
-
-        label.text.text = (string)data[0];
-        label.text.fontSize = (float)data[1];
-    }
-
-    public static object[] SwitchData(SaveThisObject save)
-    {
-        Switch circuitswitch = save.GetComponent<Switch>();
-
-        object[] data = {
-            circuitswitch.On
-        };
-
-        return data;
-    }
-
-    public static void LoadSwitch(SaveThisObject save)
-    {
-        object[] data = save.CustomDataArray;
-        Switch circuitswitch = save.GetComponent<Switch>();
-
-        circuitswitch.On = (bool)data[0];
-        circuitswitch.UpdateLeverNoSound(); // apply the effects of the bool we just loaded
-    }
-
-    public static object[] PegData(SaveThisObject save)
-    {
-        CircuitInput input = save.GetComponent<CircuitInput>();
-
-        object[] data = {
-            input.On
-        };
-
-        return data;
-    }
-
-    public static void LoadPeg(SaveThisObject save)
-    {
-        object[] data = save.CustomDataArray;
-        CircuitInput input = save.GetComponent<CircuitInput>();
-
-        input.On = (bool)data[0];
-    }
-
-    public static object[] ThroughPegData(SaveThisObject save)
-    {
-        CircuitInput[] inputs = save.GetComponentsInChildren<CircuitInput>();
-
-        object[] data = {
-            inputs[0].On
-        };
-
-        return data;
-    }
-
-    public static void LoadThroughPeg(SaveThisObject save)
-    {
-        object[] data = save.CustomDataArray;
-        CircuitInput[] inputs = save.GetComponentsInChildren<CircuitInput>();
-
-        inputs[0].On = (bool)data[0];
-        inputs[1].On = (bool)data[0];
-    }
-
-    public static object[] BlotterData(SaveThisObject save)
-    {
-        Blotter blotter = save.GetComponent<Blotter>();
-
-        object[] data = {
-            blotter.Input.On,
-            blotter.Output.On
-        };
-
-        return data;
-    }
-
-    public static void LoadBlotter(SaveThisObject save)
-    {
-        object[] data = save.CustomDataArray;
-        Blotter blotter = save.GetComponent<Blotter>();
-
-        blotter.Input.On = (bool)data[0];
-        blotter.Output.On = (bool)data[1];
-    }
-}
-
-public class SaveObjectsList
-{
-    public static GameObject CircuitBoard;
-    public static GameObject Wire;
-    public static GameObject Inverter;
-    public static GameObject Peg;
-    public static GameObject Delayer;
-    public static GameObject ThroughPeg;
-    public static GameObject Switch;
-    public static GameObject Button;
-    public static GameObject Display;
-    public static GameObject Label;
-    public static GameObject PanelSwitch;
-    public static GameObject PanelButton;
-    public static GameObject PanelDisplay;
-    public static GameObject PanelLabel;
-    public static GameObject Blotter;
-    public static GameObject ThroughBlotter;
-
-    public static GameObject ObjectTypeToPrefab(string ObjectType)
-    {
-        if (ObjectType == "CircuitBoard") { return CircuitBoard; }
-        if (ObjectType == "Wire") { return Wire; }
-        if (ObjectType == "Inverter") { return Inverter; }
-        if (ObjectType == "Peg") { return Peg; }
-        if (ObjectType == "Delayer") { return Delayer; }
-        if (ObjectType == "Through Peg") { return ThroughPeg; }
-        if (ObjectType == "Switch") { return Switch; }
-        if (ObjectType == "Button") { return Button; }
-        if (ObjectType == "Display") { return Display; }
-        if (ObjectType == "Label") { return Label; }
-        if (ObjectType == "Panel Switch") { return PanelSwitch; }
-        if (ObjectType == "Panel Button") { return PanelButton; }
-        if (ObjectType == "Panel Display") { return PanelDisplay; }
-        if (ObjectType == "Panel Label") { return PanelLabel; }
-        if (ObjectType == "Blotter") { return Blotter; }
-        if (ObjectType == "Through Blotter") { return ThroughBlotter; }
-
-        else { Debug.Log("Error: unkonwn object type. Type was " + ObjectType.ToString()); return null; }
-    }
-}
+﻿//using System.Collections;
+//using System.Collections.Generic;
+//using UnityEngine;
+//using References;
+//using SavedObjects;
+
+//public class CustomData {
+
+//	public static void SetCustomData(SavedObjectV2 save, Transform WorldObject) // updates a SaveThisObject to have its current relevant CustomData[] values
+//    {
+//        if (save.GetType() == typeof(SavedCircuitBoard)) { SetCircuitBoardData((SavedCircuitBoard)save, WorldObject); }
+//        if (save is SavedWire) { return WireData(save); }
+//        if (save is SavedInverter) { return InverterData(save); }
+//        if (save is SavedPeg) { return PegData(save); }
+//        if (save is SavedDelayer) { return DelayerData(save); }
+//        if (save is SavedThroughPeg) { return ThroughPegData(save); }
+//        if (save is SavedSwitch || save.ObjectType == "Panel Switch") { return SwitchData(save); }
+//        if (save is SavedButton || save.ObjectType == "Panel Button") { return ButtonData(save); }
+//        if (save is SavedDisplay || save.ObjectType == "Panel Display") { return DisplayData(save); }
+//        if (save is SavedLabel || save.ObjectType == "Panel Label") { return LabelData(save); }
+//        if (save is SavedBlotter || save.ObjectType == "Through Blotter") { return BlotterData(save); }
+
+//        else
+//        {
+//            Debug.LogError("ObjectType not found. ObjectType was " + save.ObjectType);
+//            return null;
+//        }
+//    }
+
+//    public static void LoadData(GameObject LoadedObject, SavedObjectV2 save)
+//    {
+//        if (save.ObjectType == "CircuitBoard") { LoadCircuitBoard(LoadedObject, save); }
+//        else if (save.ObjectType == "Wire") { LoadWire(LoadedObject, save); }
+//        else if (save.ObjectType == "Inverter") { LoadInverter(LoadedObject, save); }
+//        else if (save.ObjectType == "Peg") { LoadPeg(LoadedObject, save); }
+//        else if (save.ObjectType == "Delayer") { LoadDelayer(LoadedObject, save); }
+//        else if (save.ObjectType == "Through Peg") { LoadThroughPeg(LoadedObject, save); }
+//        else if (save.ObjectType == "Switch" || save.ObjectType == "Panel Switch") { LoadSwitch(LoadedObject, save); }
+//        else if (save.ObjectType == "Button" || save.ObjectType == "Panel Button") { LoadButton(LoadedObject, save); }
+//        else if (save.ObjectType == "Display" || save.ObjectType == "Panel Display") { LoadDisplay(LoadedObject, save); }
+//        else if (save.ObjectType == "Label" || save.ObjectType == "Panel Label") { LoadLabel(LoadedObject, save); }
+//        else if (save.ObjectType == "Blotter" || save.ObjectType == "Through Blotter") { LoadBlotter(LoadedObject, save); }
+
+//        else
+//        {
+//            Debug.LogError("ObjectType not found. ObjectType was " + save.ObjectType);
+//        }
+//    }
+
+
+//    private static void SetCircuitBoardData(SavedCircuitBoard save, Transform worldobject)
+//    {
+//        CircuitBoard board = worldobject.GetComponent<CircuitBoard>();
+
+//        save.x = board.x;
+//        save.z = board.z;
+//        save.color = worldobject.GetComponent<Renderer>().material.color;
+//    }
+
+//    private static void LoadCircuitBoard(GameObject LoadedObject, SavedCircuitBoard save)
+//    {
+//        CircuitBoard board = LoadedObject.GetComponent<CircuitBoard>();
+
+//        board.x = save.x;
+//        board.z = save.z;
+//        board.SetBoardColor(save.color);
+
+//        board.CreateCuboid();
+//    }
+
+//    private static void SetWireData(SavedWire save, Transform worldobject)
+//    {
+//        InputInputConnection IIConnection = worldobject.GetComponent<InputInputConnection>();
+//        if(IIConnection != null)
+//        {
+//            save.InputInput = true; // bool of the array is set to true if IIConnection, false if IOConnection
+//        }
+//        else
+//        {
+//            save.InputInput = false;
+//        }
+
+//        save.length = worldobject.localScale.z;
+//    }
+
+//    private static void LoadWire(GameObject LoadedObject, SavedWire save)
+//    {
+//        if(save.InputInput)
+//        {
+//            LoadedObject.AddComponent<InputInputConnection>();
+//        }
+//        else
+//        {
+//            LoadedObject.AddComponent<InputOutputConnection>();
+//        }
+
+//        LoadedObject.transform.localScale = new Vector3(0.05f, 0.02f, save.length); // todo: merge this in some way with Wire.DrawWire
+//    }
+
+//    private static void SetButtonData(SavedButton save)
+//    {
+//        return; // buttons have no important data!
+//    }
+
+//    private static void LoadButton(GameObject LoadedObject, SavedObjectV2 save)
+//    {
+//        return; // buttons still have no important data!
+//    }
+
+//    private static object[] DelayerData(SaveThisObject save)
+//    {
+//        Delayer delayer = save.GetComponent<Delayer>();
+
+//        object[] data = {
+//            delayer.Input.On,
+//            delayer.Output.On,
+//            delayer.DelayCount
+//        };
+
+//        return data;
+//    }
+
+//    private static void LoadDelayer(GameObject LoadedObject, SavedObjectV2 save)
+//    {
+//        object[] data = save.CustomDataArray;
+//        Delayer delayer = LoadedObject.GetComponent<Delayer>();
+
+//        delayer.Input.On = (bool)data[0];
+//        delayer.Output.On = (bool)data[1];
+//        delayer.DelayCount = (int)data[2];
+//    }
+
+//    private static object[] DisplayData(SaveThisObject save)
+//    {
+//        Display display = save.GetComponentInChildren<Display>();
+
+//        object[] data = {
+//            display.Input.On,
+//            display.DisplayColor
+//        };
+
+//        return data;
+//    }
+
+//    private static void LoadDisplay(GameObject LoadedObject, SavedObjectV2 save)
+//    {
+//        object[] data = save.CustomDataArray;
+//        Display display = LoadedObject.GetComponentInChildren<Display>();
+
+//        display.Input.On = (bool)data[0];
+//        display.DisplayColor = (DisplayColor)data[1];
+//    }
+
+//    private static object[] InverterData(SaveThisObject save)
+//    {
+//        Inverter notgate = save.GetComponent<Inverter>();
+
+//        object[] data = {
+//            notgate.Input.On,
+//            notgate.Output.On
+//        };
+
+//        return data;
+//    }
+
+//    private static void LoadInverter(GameObject LoadedObject, SavedObjectV2 save)
+//    {
+//        object[] data = save.CustomDataArray;
+//        Inverter notgate = LoadedObject.GetComponent<Inverter>();
+
+//        notgate.Input.On = (bool)data[0];
+//        notgate.Output.On = (bool)data[1];
+//    }
+
+//    private static object[] LabelData(SaveThisObject save)
+//    {
+//        Label label = save.GetComponent<Label>();
+
+//        object[] data = {
+//            label.text.text,
+//            label.text.fontSize
+//        };
+
+//        return data;
+//    }
+
+//    private static void LoadLabel(GameObject LoadedObject, SavedObjectV2 save)
+//    {
+//        object[] data = save.CustomDataArray;
+//        Label label = LoadedObject.GetComponent<Label>();
+
+//        label.text.text = (string)data[0];
+//        label.text.fontSize = (float)data[1];
+//    }
+
+//    private static object[] SwitchData(SaveThisObject save)
+//    {
+//        Switch circuitswitch = save.GetComponentInChildren<Switch>();
+
+//        object[] data = {
+//            circuitswitch.On
+//        };
+
+//        return data;
+//    }
+
+//    private static void LoadSwitch(GameObject LoadedObject, SavedObjectV2 save)
+//    {
+//        object[] data = save.CustomDataArray;
+//        Switch circuitswitch = LoadedObject.GetComponentInChildren<Switch>();
+
+//        circuitswitch.On = (bool)data[0];
+//        circuitswitch.UpdateLever(false); // apply the effects of the bool we just loaded, don't play sound
+//    }
+
+//    private static object[] PegData(SaveThisObject save)
+//    {
+//        CircuitInput input = save.GetComponent<CircuitInput>();
+
+//        object[] data = {
+//            input.On
+//        };
+
+//        return data;
+//    }
+
+//    private static void LoadPeg(GameObject LoadedObject, SavedObjectV2 save)
+//    {
+//        object[] data = save.CustomDataArray;
+//        CircuitInput input = LoadedObject.GetComponent<CircuitInput>();
+
+//        input.On = (bool)data[0];
+//    }
+
+//    private static object[] ThroughPegData(SaveThisObject save)
+//    {
+//        CircuitInput[] inputs = save.GetComponentsInChildren<CircuitInput>();
+
+//        object[] data = {
+//            inputs[0].On
+//        };
+
+//        return data;
+//    }
+
+//    private static void LoadThroughPeg(GameObject LoadedObject, SavedObjectV2 save)
+//    {
+//        object[] data = save.CustomDataArray;
+//        CircuitInput[] inputs = LoadedObject.GetComponentsInChildren<CircuitInput>();
+
+//        inputs[0].On = (bool)data[0];
+//        inputs[1].On = (bool)data[0];
+//    }
+
+//    private static object[] BlotterData(SaveThisObject save)
+//    {
+//        Blotter blotter = save.GetComponent<Blotter>();
+
+//        object[] data = {
+//            blotter.Input.On,
+//            blotter.Output.On
+//        };
+
+//        return data;
+//    }
+
+//    private static void LoadBlotter(GameObject LoadedObject, SavedObjectV2 save)
+//    {
+//        object[] data = save.CustomDataArray;
+//        Blotter blotter = LoadedObject.GetComponent<Blotter>();
+
+//        blotter.Input.On = (bool)data[0];
+//        blotter.Output.On = (bool)data[1];
+//    }
+//}
+
+//public class SaveObjectsList
+//{
+//    public static GameObject ObjectTypeToPrefab(string ObjectType)
+//    {
+//        if (ObjectType == "CircuitBoard") { return Prefabs.CircuitBoard; }
+//        if (ObjectType == "Wire") { return Prefabs.Wire; }
+//        if (ObjectType == "Inverter") { return Prefabs.Inverter; }
+//        if (ObjectType == "Peg") { return Prefabs.Peg; }
+//        if (ObjectType == "Delayer") { return Prefabs.Delayer; }
+//        if (ObjectType == "Through Peg") { return Prefabs.ThroughPeg; }
+//        if (ObjectType == "Switch") { return Prefabs.Switch; }
+//        if (ObjectType == "Button") { return Prefabs.Button; }
+//        if (ObjectType == "Display") { return Prefabs.Display; }
+//        if (ObjectType == "Label") { return Prefabs.Label; }
+//        if (ObjectType == "Panel Switch") { return Prefabs.PanelSwitch; }
+//        if (ObjectType == "Panel Button") { return Prefabs.PanelButton; }
+//        if (ObjectType == "Panel Display") { return Prefabs.PanelDisplay; }
+//        if (ObjectType == "Panel Label") { return Prefabs.PanelLabel; }
+//        if (ObjectType == "Blotter") { return Prefabs.Blotter; }
+//        if (ObjectType == "Through Blotter") { return Prefabs.ThroughBlotter; }
+
+//        else { Debug.LogError("Unkonwn object type. Type was " + ObjectType.ToString()); return null; }
+//    }
+//}

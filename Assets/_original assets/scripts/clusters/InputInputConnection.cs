@@ -3,131 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using NaughtyAttributes;
 
-public class InputInputConnection : MonoBehaviour {
-
-    public CircuitInput Point1;
-    public CircuitInput Point2;
-
-    public void SetPoint1(CircuitInput input)
+public class InputInputConnection : Wire
+{
+    private CircuitInput RealInput1;
+    private CircuitInput RealInput2;
+    public CircuitInput Input1
     {
-        Point1 = input;
-        input.IIConnections.Add(this);
-    }
-    public void SetPoint2(CircuitInput input)
-    {
-        Point2 = input;
-        input.IIConnections.Add(this);
-    }
-
-    public Renderer Renderer;
-    public MeshFilter Mesh;
-
-    private void Awake()
-    {
-        Mesh = GetComponent<MeshFilter>();
-        Renderer = GetComponent<Renderer>();
-        Renderer.material.color = MiscellaneousSettings.CircuitOffColor; // so that when not connected to a cluster, it's off
-    }
-
-    public bool unbreakable; // currently only used by through pegs
-
-    // sets the transforms of the gameobject, and by extension the plane, to look like it's a wire
-    public void DrawWire()
-    {
-        // TODO: make wire have rotation relative to the first point
-        transform.position = (Point1.WireReference.position + Point2.WireReference.position) / 2; // set the position to the center between the two vectors
-        transform.LookAt(Point1.WireReference.position, Point1.transform.up); // set the rotation to point from one pin to the other
-        transform.localScale = new Vector3(0.05f, 1, Vector3.Distance(Point1.WireReference.position, Point2.WireReference.position)); // set the scale so it looks like a wire and not a square
-    }
-
-    // uses its transform (position, rotation, scale) as set in DrawWire to determine what its two points should be. Used when duplicating a board (as duplicating clusters gets messy) and loading a savegame.
-    [Button]
-    public void FindPoints()
-    {
-        RaycastHit ForwardHit;
-        if (Physics.Raycast(
-            transform.position,
-            transform.forward, // as the transform.LookAt used in drawwire points the forward vector in the direction of the thing being looked at
-            out ForwardHit,
-            (transform.localScale.z / 2) + 0.045f, // half the length of the wire (transform.position is the center of the wire) plus half the width of an input, just in case
-            1 << 0)) // cast against only the default layer
+        get { return RealInput1; }
+        set
         {
-            if (ForwardHit.collider == null) { Destroy(gameObject); }
-            else if (ForwardHit.collider.tag == "Input")
-            {
-                Point1 = ForwardHit.collider.GetComponent<CircuitInput>();
-            }
+            RealInput1 = value;
+            Point1 = GetWireReference(value.transform);
+            value.IIConnections.Add(this);
         }
-
-        RaycastHit BackwardHit;
-        if (Physics.Raycast(
-            transform.position,
-            -transform.forward, // as the transform.LookAt used in drawwire points the forward vector in the direction of the thing being looked at
-            out BackwardHit,
-            (transform.localScale.z / 2) + 0.045f, // half the length of the wire (transform.position is the center of the wire) plus half the width of an input, just in case
-            1 << 0)) // cast against only the default layer
+    }
+    public CircuitInput Input2
+    {
+        get { return RealInput2; }
+        set
         {
-            if (BackwardHit.collider == null) { Destroy(gameObject); }
-            if (BackwardHit.collider.tag == "Input" 
-                && BackwardHit.collider.gameObject 
-                != ForwardHit.collider.gameObject)
-            {
-                Point2 = BackwardHit.collider.GetComponent<CircuitInput>();
-            }
-        }
-
-        if (Point1 == null || Point2 == null) { Debug.Log("destroying wire"); Destroy(gameObject); return; }
-
-        if (!Point1.IIConnections.Contains(this))
-        {
-            Point1.IIConnections.Add(this);
-        }
-        if (!Point2.IIConnections.Contains(this))
-        {
-            Point2.IIConnections.Add(this);
+            RealInput2 = value;
+            Point2 = GetWireReference(value.transform);
+            value.IIConnections.Add(this);
         }
     }
 
-    // used to make sure a wire won't destroy itself on load. TODO: merge code with above method
-    public bool CanFindPoints()
+    public override void SetPegsBasedOnPoints()
     {
-        CircuitInput FoundPoint1 = null;
-        CircuitInput FoundPoint2 = null;
-
-        RaycastHit ForwardHit;
-        if (Physics.Raycast(
-            transform.position,
-            transform.forward, // as the transform.LookAt used in drawwire points the forward vector in the direction of the thing being looked at
-            out ForwardHit,
-            (transform.localScale.z / 2) + 0.045f, // half the length of the wire (transform.position is the center of the wire) plus half the width of an input, just in case
-            1 << 0)) // cast against only the default layer
-        {
-            if (ForwardHit.collider.tag == "Input")
-            {
-                FoundPoint1 = ForwardHit.collider.GetComponent<CircuitInput>();
-            }
-        }
-        else { return false; } // this is done so that when the check is done to see if the two objects are the same we don't get an exception. RaycastHit is non-nullable
-
-        RaycastHit BackwardHit;
-        if (Physics.Raycast(
-            transform.position,
-            -transform.forward, // as the transform.LookAt used in drawwire points the forward vector in the direction of the thing being looked at
-            out BackwardHit,
-            (transform.localScale.z / 2) + 0.045f, // half the length of the wire (transform.position is the center of the wire) plus half the width of an input, just in case
-            1 << 0)) // cast against only the default layer
-        {
-            if (BackwardHit.collider.tag == "Input"
-                && BackwardHit.collider.gameObject
-                != ForwardHit.collider.gameObject)
-            {
-                FoundPoint2 = BackwardHit.collider.GetComponent<CircuitInput>();
-            }
-        }
-
-        if (FoundPoint1 == Point1 && FoundPoint2 == Point2) { return true; }
-        if (FoundPoint1 == Point2 && FoundPoint2 == Point1) { return true; }
-
-        return false;
+        Input1 = Point1.parent.GetComponent<CircuitInput>();
+        Input2 = Point2.parent.GetComponent<CircuitInput>();
     }
 }

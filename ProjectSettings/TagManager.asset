@@ -12,6 +12,7 @@ TagManager:
   - BoardObject
   - NotGate
   - Interactable
+  - PlaceOnlyCircuitBoard
   layers:
   - Default
   - TransparentFX

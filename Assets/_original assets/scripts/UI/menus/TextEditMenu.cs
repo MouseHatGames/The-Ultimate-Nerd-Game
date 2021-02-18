@@ -4,17 +4,20 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class TextEditMenu : MonoBehaviour {
+public class TextEditMenu : MonoBehaviour
+{
+    public static TextEditMenu Instance;
+    private void Awake() { Instance = this; MostRecentFontSize = 1.75f; }
 
     public TMP_InputField TextInput;
     public Slider SizeSlider;
-    public Canvas TextEditCanvas;
+    public Canvas Canvas;
 
-    public static TextMeshPro TextBeingEdited;
+    private static TextMeshPro TextBeingEdited;
 
-    private void Update()
+    public void RunTextMenu()
     {
-        if (Input.GetAxis("Mouse ScrollWheel") < 0) // scroll down
+        if (GameplayUIManager.ScrollDown())
         {
             if (SizeSlider.value > 1)
             {
@@ -22,7 +25,7 @@ public class TextEditMenu : MonoBehaviour {
             }
         }
 
-        if (Input.GetAxis("Mouse ScrollWheel") > 0) // scroll up
+        if (GameplayUIManager.ScrollUp())
         {
             if (SizeSlider.value < SizeSlider.maxValue)
             {
@@ -37,12 +40,12 @@ public class TextEditMenu : MonoBehaviour {
     }
 
     // turn the menu on, prevent other menus from opening
-    private void OnEnable()
+    public void Initialize(TextMeshPro newtextbeingedited)
     {
-        TextEditCanvas.enabled = true;
-        UIManager.SomeOtherMenuIsOpen = true;
-        UIManager.UnlockMouseAndDisableFirstPersonLooking();
+        Canvas.enabled = true;
+        GameplayUIManager.UIState = UIState.TextEditMenu;
 
+        TextBeingEdited = newtextbeingedited;
         TextInput.text = TextBeingEdited.text;
         SizeSlider.value = TextBeingEdited.fontSize * 4;
         TextInput.ActivateInputField();
@@ -56,17 +59,22 @@ public class TextEditMenu : MonoBehaviour {
     public void OnSizeSliderChange()
     {
         TextBeingEdited.fontSize = SizeSlider.value / 4;
+        MostRecentFontSize = TextBeingEdited.fontSize;
     }
+
+    public static float MostRecentFontSize { get; private set; }
 
     public void Done()
     {
-        TextEditCanvas.enabled = false;
+        Canvas.enabled = false;
         TextInput.DeactivateInputField();
         UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
         TextBeingEdited = null;
-        UIManager.SomeOtherMenuIsOpen = false;
-        UIManager.LockMouseAndEnableFirstPersonLooking();
-        Input.ResetInputAxes(); // so that clicking done doesn't place something
-        enabled = false;
+
+        GameplayUIManager.UIState = UIState.None;
+
+        // this is so that if you change the size of the label text and you're in the middle of placing a label, it gets set to the new size
+        if (StuffPlacer.GetThingBeingPlaced == null) { return; }
+        if (StuffPlacer.GetThingBeingPlaced.GetComponent<Label>()) { StuffPlacer.DeleteThingBeingPlaced(); }
     }
 }

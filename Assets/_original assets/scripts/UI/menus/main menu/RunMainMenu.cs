@@ -2,29 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using SavedObjects;
 
-public class RunMainMenu : MonoBehaviour {
-
+public class RunMainMenu : MonoBehaviour
+{
     public static RunMainMenu Instance;
 
     public UnityEngine.Playables.PlayableDirector CameraMovementDirector;
-
-	// Use this for initialization
-	void Start () {
-        GameObject.Find("CM vcam1").transform.localEulerAngles = new Vector3(90, 0, 0); // for some reason, you cannot set virtual camera rotation in the editor. This is my solution
-        ShowMainMenu();
-        Instance = this;
-        DoBoards();
-
-        ES3.Save<string>("LastLoadedVersion", "0.1", "settings.txt"); // in case it's needed for future compatibility
-
-        // stuff to enable/disable the main menu pan as some people get motion sick from it
-        if (!ES3.KeyExists("EnableMainMenuCameraPan", "settings.txt"))
-        {
-            ES3.Save<bool>("EnableMainMenuCameraPan", true, "settings.txt"); // it is VERY IMPORTANT that the number here be cast as a float!
-        }
-        CameraMovementDirector.enabled = ES3.Load<bool>("EnableMainMenuCameraPan", "settings.txt", true);
-    }
 
     private void Update()
     {
@@ -42,7 +29,9 @@ public class RunMainMenu : MonoBehaviour {
     public Canvas OptionsCanvas;
     public Canvas AboutCanvas;
 
-    private void DisableAllCanvases()
+    public AudioSource MainMenuMusic;
+
+    public void HideAll()
     {
         MainMenuCanvas.enabled = false;
         NewGameCanvas.enabled = false;
@@ -55,43 +44,43 @@ public class RunMainMenu : MonoBehaviour {
 
     public void ShowMainMenu()
     {
-        DisableAllCanvases();
+        HideAll();
         MainMenuCanvas.enabled = true;
     }
 
     public void ShowNewGame()
     {
-        DisableAllCanvases();
+        HideAll();
         NewGameCanvas.enabled = true;
     }
 
     public void ShowLoadGame()
     {
-        DisableAllCanvases();
+        HideAll();
         LoadGameCanvas.enabled = true;
     }
 
     public void ShowRenameGame()
     {
-        DisableAllCanvases();
+        HideAll();
         RenameGameCanvas.enabled = true;
     }
 
     public void ShowDeleteGame()
     {
-        DisableAllCanvases();
+        HideAll();
         DeleteGameCanvas.enabled = true;
     }
 
     public void ShowOptions()
     {
-        DisableAllCanvases();
+        HideAll();
         OptionsCanvas.enabled = true;
     }
 
     public void ShowAbout()
     {
-        DisableAllCanvases();
+        HideAll();
         AboutCanvas.enabled = true;
     }
 
@@ -101,31 +90,69 @@ public class RunMainMenu : MonoBehaviour {
     }
 
     // some shitty hacks to fix boards on the main menu
-    public List<CircuitBoard> Boards = new List<CircuitBoard>();
-    public List<Color> BoardColor = new List<Color>();
-    public Material BoardMaterial;
+    //public List<CircuitBoard> Boards = new List<CircuitBoard>();
+    public CircuitBoard[] Boards;
+    [NaughtyAttributes.ReorderableList] public List<Color> BoardColor = new List<Color>();
     [NaughtyAttributes.Button]
     public void DoBoards()
     {
-        foreach(CircuitBoard board in Boards)
-        {
-            board.CreateCuboid();
-            board.Renderer.material = BoardMaterial;
-            board.Renderer.material.color = board.BoardColor;
-        }
-        for(int i = 0; i < Boards.Count; i++)
+        for(int i = 0; i < Boards.Length; i++)
         {
             Boards[i].CreateCuboid();
-            Boards[i].Renderer.material = BoardMaterial;
             Boards[i].Renderer.material.color = BoardColor[i];
         }
     }
-    public GameObject SharedOutputMeshPrefab;
-    public GameObject ClusterPrefab;
     private void Awake()
     {
-        Output.SharedOutputMeshPrefab = SharedOutputMeshPrefab;
-        StuffConnecter.ClusterPrefab = ClusterPrefab;
-        SaveManager.RecalculateAllClustersEverywhere();
+        GameplayUIManager.UIState = UIState.MainMenu;
+        Instance = this;
+
+        LoadBackground();       
+
+        GameObject.Find("CM vcam1").transform.localEulerAngles = new Vector3(90, 0, 0); // for some reason, you cannot set virtual camera rotation in the editor. Which is bullshit. This is my solution
+        ShowMainMenu();
+
+        string CurrentVersion = "0.2.0";
+        string LastLoadedVersion = Settings.Get("LastLoadedVersion", CurrentVersion);
+        if (LastLoadedVersion != CurrentVersion) { ES3.DeleteFile("settings.txt"); } // some settings are obsolete and must be reset
+
+        // stuff to enable/disable the main menu pan as some people get motion sick from it
+        CameraMovementDirector.enabled = Settings.Get("EnableMainMenuCameraPan", true);
+
+        EverythingHider.HideEverything();
+    }
+
+    // this is a horrible shitty mess and I cannot wait to unify things in 0.3
+    private void LoadBackground()
+    {
+        MegaMeshManager.ClearReferences();
+        BehaviorManager.AllowedToUpdate = false; // don't let circuitry updates fuck us up while we're loading the game
+        BehaviorManager.ClearAllLists();
+
+        BinaryFormatter br = new BinaryFormatter();
+        MemoryStream stream = new MemoryStream(Resources.Load<TextAsset>("mainmenubackground").bytes);
+        SavedObjectV2 loadedobject = (SavedObjectV2)br.Deserialize(stream);
+        stream.Close();
+        SavedObjectUtilities.LoadSavedObject(loadedobject);
+
+        SaveManager.RecalculateAllClustersEverywhereWithDelay();
+        MegaMeshManager.AddComponentsEverywhere();
+    }
+
+
+
+    private void Start()
+    {
+        StartCoroutine(ShowStuffAfterOneFrame());
+
+        // this should go somewhere better...
+        Application.runInBackground = !Settings.Get("PauseOnDefocus", false);
+    }
+    private IEnumerator ShowStuffAfterOneFrame()
+    {
+        yield return new WaitForEndOfFrame();
+
+        EverythingHider.UnHideEverything(); // the purpose of this is to hide the background during the first frame, before most meshes exist
+        if(Settings.Get("SeenEpilepsyWarning", false)) MainMenuMusic.Play(); // don't play the music until the visuals have loaded
     }
 }

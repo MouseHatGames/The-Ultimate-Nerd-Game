@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class FPSShower : MonoBehaviour {
-
+public class FPSShower : MonoBehaviour
+{
     public Canvas FPSCanvas;
     public TextMeshProUGUI FPStext;
     public static FPSShower Instance;
@@ -24,9 +24,27 @@ public class FPSShower : MonoBehaviour {
         FPSCanvas.enabled = false;
     }
 
-    // Update is called once per frame
-    void Update () {
-        int FPS = (int)(1.0f / Time.unscaledDeltaTime);
-        FPStext.text = FPS.ToString(); // this produces a lot of garbage...
+    float TimeSinceLastTextUpdate;
+    int FramesSinceLastTextUpdate;
+    void Update ()
+    {
+        if(TimeSinceLastTextUpdate > 0.2f)
+        {
+            int FPS = (int)(FramesSinceLastTextUpdate / TimeSinceLastTextUpdate);
+            FPStext.text = FPS.ToString(); // this produces a lot of garbage...
+
+            TimeSinceLastTextUpdate = 0;
+            FramesSinceLastTextUpdate = 0;
+        }
+        else
+        {
+            TimeSinceLastTextUpdate += Time.unscaledDeltaTime;
+            FramesSinceLastTextUpdate++;
+        }
+
+
+
+        //int FPS = (int)(1.0f / Time.unscaledDeltaTime);
+        //FPStext.text = FPS.ToString(); // this produces a lot of garbage...
 	}
 }

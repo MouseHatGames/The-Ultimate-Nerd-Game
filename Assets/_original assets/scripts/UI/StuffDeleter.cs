@@ -3,64 +3,113 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using References;
 
-public class StuffDeleter : MonoBehaviour {
+public static class StuffDeleter
+{
+    public static bool AllowedToDoDeleting = true; // for wire placing
+    public static void RunGameplayDeleting()
+    {
+        if (Input.GetButtonDown("Delete"))
+        {
+            RaycastHit hit;
+            if(Physics.Raycast(FirstPersonInteraction.Ray(), out hit, Settings.ReachDistance) && AllowedToDoDeleting)
+            {
+                DeleteThing(hit.collider.gameObject);
+            }
+            else
+            {
+                SoundPlayer.PlaySoundGlobal(Sounds.FailDoSomething);
+            }
+        }
+    }
 
 	public static void DeleteThing(GameObject DestroyThis)
     {
+        if (DestroyThis == null) { return; }
+
         // don't let players destroy the world lol
         if (DestroyThis.tag == "World")
         {
+            SoundPlayer.PlaySoundGlobal(Sounds.FailDoSomething);
             return;
         }
 
         // destroy the full object, not part of it
-        // the last check is so that destroying child boards doesn't destroy their parent
-        // TODO: change to a while loop
-        if (DestroyThis.transform.parent != null && DestroyThis.transform.parent.tag != "CircuitBoard" && DestroyThis.tag != "CircuitBoard")
+        DestroyThis = ComponentPlacer.FullComponent(DestroyThis);
+
+        // special cases of stuff to hit
+        if(DestroyThis.GetComponent<ObjectInfo>().ComponentType == ComponentType.Mount)
         {
-            DeleteThing(DestroyThis.transform.parent.gameObject);
-            return;
+            // code copied from below - don't let players destroy a mount if it has children
+            Transform TheBoardBit = DestroyThis.transform.GetChild(1); // the 0th child is the blocky bit
+            if(TheBoardBit.childCount > 0)
+            {
+                if (TheBoardBit.childCount == 1)
+                {
+                    if (!TheBoardBit.GetChild(0).gameObject == StuffPlacer.GetThingBeingPlaced) { SoundPlayer.PlaySoundGlobal(Sounds.FailDoSomething); return; } // just a check so that you can destroy a board when looking at it with a component ghost
+                }
+                else
+                {
+                    SoundPlayer.PlaySoundGlobal(Sounds.FailDoSomething);
+                    return;
+                }
+            }
         }
 
-        // delink all inputs and outputs in the object - unless, of course, it's a circuitboard
-        if (DestroyThis.transform.tag != "CircuitBoard")
+        if (DestroyThis.tag == "CircuitBoard") // only let players destroy a circuit board if it is empty, to prevent losing lots and lots of work
+        {
+            if (DestroyThis.transform.childCount > 0)
+            {
+                if(DestroyThis.transform.childCount == 1)
+                {
+                    if (!DestroyThis.transform.GetChild(0).gameObject == StuffPlacer.GetThingBeingPlaced) { SoundPlayer.PlaySoundGlobal(Sounds.FailDoSomething); return; } // just a check so that you can destroy a board when looking at it with a component ghost
+                }
+                else
+                {
+                    SoundPlayer.PlaySoundGlobal(Sounds.FailDoSomething);
+                    return;
+                }
+            }
+            // if no occupied slots are found, continue to destroy the board
+        }
+
+        // delink all inputs and outputs in the object if it's not a circuitboard
+        else
         {
             CircuitInput[] inputs = DestroyThis.GetComponentsInChildren<CircuitInput>();
-            Output[] outputs = DestroyThis.GetComponentsInChildren<Output>();
+            CircuitOutput[] outputs = DestroyThis.GetComponentsInChildren<CircuitOutput>();
             foreach (CircuitInput input in inputs)
             {
                 DestroyInput(input);
             }
-            foreach (Output output in outputs)
+            foreach (CircuitOutput output in outputs)
             {
                 DestroyOutput(output);
             }
         }
 
-        // special cases of stuff to hit
-        if (DestroyThis.tag == "CircuitBoard") // only let players destroy a circuit board if it is empty, to prevent losing lots and lots of work
+        if (DestroyThis.tag == "Wire") // if it's a wire, determine which type of connection it is and destroy that connection
         {
-            if(DestroyThis.transform.childCount > 0)
+            if (DestroyThis.GetComponent<SnappedConnection>()) // you cannot delete snapped connections
             {
-                return; // stop the function if the board has anything on it (i. e. boardobjects, wires)
+                SoundPlayer.PlaySoundGlobal(Sounds.FailDoSomething);
+                return;
             }
 
-            MegaBoardMeshManager.RemoveBoardsFrom(DestroyThis);
-            Destroy(DestroyThis); // if no occupied slots are found, destroy the board
-        }
-
-        else if(DestroyThis.tag == "Wire") // if it's a wire, determine which type of connection it is and destroy that connection
-        {
             DestroyWire(DestroyThis);
+            SoundPlayer.PlaySoundAt(Sounds.DeleteSomething, DestroyThis);
         }
-
-        else // if it's not one of the special cases just destroy it
+        else if(DestroyThis.tag == "CircuitBoard")
         {
-            Destroy(DestroyThis);
+            SoundPlayer.PlaySoundAt(Sounds.DeleteSomething, DestroyThis);
+        }
+        else
+        {
+            SoundPlayer.PlaySoundAt(Sounds.DeleteSomething, DestroyThis);
         }
 
-        MegaMesh.RemoveMeshesFrom(DestroyThis);
+        Object.Destroy(DestroyThis);
     }
 
     // determines which type of connection a wire is and passes it off to the appropriate destroyer
@@ -78,6 +127,12 @@ public class StuffDeleter : MonoBehaviour {
         {
             DestroyIOConnection(IOConnection);
         }
+    }
+
+    public static void DestroyWire(Wire wire)
+    {
+        if (wire is InputInputConnection) { DestroyIIConnection((InputInputConnection)wire); }
+        else { DestroyIOConnection((InputOutputConnection)wire); }
     }
 
     // destroys a circuitinput
@@ -103,11 +158,11 @@ public class StuffDeleter : MonoBehaviour {
         }
 
         // destroy the physical object now that all the behind the scenes circuitry stuff is out of the way
-        Destroy(input.gameObject);
+        Object.Destroy(input.gameObject);
     }
 
     // destroys an output
-    public static void DestroyOutput(Output output)
+    public static void DestroyOutput(CircuitOutput output)
     {
         InputOutputConnection[] DestroyTheseIOs = output.GetIOConnections().ToArray();
         foreach(InputOutputConnection connection in DestroyTheseIOs)
@@ -116,81 +171,65 @@ public class StuffDeleter : MonoBehaviour {
         }
 
         // destroy the physical object now that all the behind the scenes circuitry stuff is out of the way
-        Destroy(output.gameObject);
+        Object.Destroy(output.gameObject);
     }
 
     // destroys an input-input connection
     public static void DestroyIIConnection(InputInputConnection connection)
     {
-        connection.Point1.IIConnections.Remove(connection);
-        connection.Point2.IIConnections.Remove(connection);
-        RecalculateCluster(connection.Point1.Cluster, true); // recalculate the clusters, since they might (probably, in fact) need changing now
-        Destroy(connection.gameObject); // destroy the physical connection
+        connection.Input1.IIConnections.Remove(connection);
+        connection.Input2.IIConnections.Remove(connection);
+        RecalculateCluster(connection.Input1.Cluster); // recalculate the clusters, since they might (probably, in fact) need changing now
+        Object.Destroy(connection.gameObject); // destroy the physical connection
     }
 
     // destroys an input-output connection
     public static void DestroyIOConnection(InputOutputConnection connection)
     {
-        connection.Point1.IOConnections.Remove(connection);
-        connection.Point2.RemoveIOConnection(connection);
-        RecalculateCluster(connection.Point1.Cluster, true); // remove the output from the cluster, and destroy the cluster in a lot of cases - whatever, who cares, some other shitty function will deal with it
-        Destroy(connection.gameObject); // destroy the physical connection
+        connection.Input.IOConnections.Remove(connection);
+        connection.Output.RemoveIOConnection(connection);
+        RecalculateCluster(connection.Input.Cluster); // remove the output from the cluster, and destroy the cluster in a lot of cases - whatever, who cares, some other shitty function will deal with it
+        Object.Destroy(connection.gameObject); // destroy the physical connection
     }
 
     // recalculates the clusters for each input and output in the cluster, based on all the connections in the cluster
-    public static void RecalculateCluster(WireCluster cluster, bool CheckInputRendererState = false)
+    public static void RecalculateCluster(WireCluster cluster)
     {
         if (cluster == null) { return; }
-        // grab the connections from the cluster before we FUCKING MURDER IT
-        List<InputInputConnection> IIConnections = new List<InputInputConnection>(); // declare the new lists
-        List<InputOutputConnection> IOConnections = new List<InputOutputConnection>();
-        CircuitInput[] inputs = cluster.GetConnectedInputs();
+
+        RecalculateClustersFromInputs(cluster.GetConnectedInputs());
+
+        Object.Destroy(cluster.gameObject);
+    }
+
+    public static void RecalculateClustersFromInputs(CircuitInput[] inputs)
+    {
+        HashSet<InputInputConnection> IIConnections = new HashSet<InputInputConnection>();
+        HashSet<InputOutputConnection> IOConnections = new HashSet<InputOutputConnection>();
+
         foreach (CircuitInput input in inputs) // the connections of the inputs of the cluster are the same as all the connections in the cluster
         {
-            input.Renderer.enabled = true;
+            if (input.Cluster != null) { input.Cluster.RemoveInput(input); } // a lot of important stuff happens here!
 
-            foreach(InputInputConnection connection in input.IIConnections)
+            foreach (InputInputConnection connection in input.IIConnections)
             {
                 connection.Renderer.enabled = true;
 
-                if (!IIConnections.Contains(connection)) // each IIconnection will appear twice, once in each of its inputs. This is to prevent duplicates
-                {
-                    IIConnections.Add(connection);
-                }
+                IIConnections.Add(connection);
             }
-            foreach(InputOutputConnection connection in input.IOConnections)
+            foreach (InputOutputConnection connection in input.IOConnections)
             {
-                if (!IOConnections.Contains(connection)) // probably not necessary but #YOLO
-                {
-                    IOConnections.Add(connection);
-                }
+                IOConnections.Add(connection);
             }
         }
-
-        // assign every connected input and output to have no cluster so that StuffConnecter works properly
-        foreach(CircuitInput input in inputs)
-        {
-            input.Cluster = null;
-        }
-
-        // FUCKING MURDER IT
-        Destroy(cluster.gameObject);
 
         foreach (InputInputConnection connection in IIConnections)
         {
-            StuffConnecter.LinkInputs(connection); // LinkInputs is used because we already have the physical object, we just need the connection codeside
+            StuffConnector.LinkInputs(connection); // LinkInputs is used because we already have the physical object, we just need the connection codeside
         }
         foreach (InputOutputConnection connection in IOConnections)
         {
-            StuffConnecter.LinkInputOutput(connection);
-        }
-
-        // this fixes a bug where if you hooked up an inverter to itself via an input and then destroyed the
-        // inverter, the input would become invisible. God damn this code has become so MESSY and SHITTY and I can't wait to refractor it all!!!
-        // the reason it's only done in specific circumstances and not all the time is because it breaks the main menu for some reason
-        if (CheckInputRendererState)
-        {
-            BoardPlacer.Instance.ValidateInputRendererStateAndStuff(inputs);
+            StuffConnector.LinkInputOutput(connection);
         }
     }
 }

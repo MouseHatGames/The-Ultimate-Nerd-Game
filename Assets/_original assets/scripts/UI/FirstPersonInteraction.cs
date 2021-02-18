@@ -1,131 +1,92 @@
-﻿// handles raycasts from the camera and stuff. Triggers methods in StuffPlacer, StuffConnector and StuffDeleter.
+﻿// everything being done in the default UI state
 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.Characters.FirstPerson;
 
-public class FirstPersonInteraction : MonoBehaviour {
-
-    // the camera used to cast rays
-    public static Camera FirstPersonCamera;
-    public Camera PublicFirstPersonCamera; // because unity is bullshit and won't let me directly assign static variables
-
-    public static ConnectionMode ConnectionMode;
-    public static bool MultiPhaseConnectionInProgress;
-
-    // Use this for initialization
-    void Start () {
-        FirstPersonCamera = PublicFirstPersonCamera;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-
-        if (UIManager.SomeOtherMenuIsOpen) { return; } // don't do any of this stuff while new board menu/text edit menu is open
-
-        // hopefully declaring these every frame instead of just when a button is pushed doesn't impact performance
-        RaycastHit hit;
-        Transform cam = FirstPersonCamera.transform;
-
-        // placing
-        if (Input.GetButtonDown("Place") && BoardPlacer.BoardBeingPlaced == null) // the second check is so that it can't mess up board placing by placing a boardobject
+public static class FirstPersonInteraction
+{
+	// called once per frame
+	public static void DoInteraction ()
+    {
+        if (Input.GetButtonDown("BoardMenu"))
         {
-            if(Physics.Raycast(cam.position, cam.forward, out hit, MiscellaneousSettings.ReachDistance))
-            {
-                if(hit.collider.tag == "Interactable") // if the cast hits an interactable such as a button or lever, interact with it
-                {
-                    hit.collider.GetComponent<Interactable>().Interacted = true;
-                }
-
-                else // if none of the special conditions are found, actually place the thing lol
-                {
-                    StuffPlacer.PlaceOnSomething(hit);
-                }
-            }
-
+            BoardMenu.Instance.InitializeBoardMenu();
+            Done();
+            return;
         }
 
-        // rotation
-        if (Input.GetButtonDown("Rotate"))
+        if (Input.GetButtonDown("PickComponent"))
         {
-            if (Physics.Raycast(cam.position, cam.forward, out hit, MiscellaneousSettings.ReachDistance)) // send a raycast out from the camera in the direction it's facing. The player is set to IgnoreRaycast so the cast goes through that.
-            {
-                StuffRotater.RotateThing(hit.collider.gameObject);
-            }
+            SelectionMenu.Instance.PickComponent();
         }
 
-        // rotation lock
-        if (Input.GetButtonDown("RotationLock"))
+        if (Input.GetButtonDown("Interact"))
         {
-            StuffPlacer.ToggleRotationLock();
-        }
-
-        // deleting
-        if (Input.GetButtonDown("Delete"))
-        {
-            if (Physics.Raycast(cam.position, cam.forward, out hit, MiscellaneousSettings.ReachDistance))
+            RaycastHit hit;
+            if (Physics.Raycast(Ray(), out hit, Settings.ReachDistance))
             {
-                StuffDeleter.DeleteThing(hit.collider.gameObject);
-            }
-        }
-
-        // connection creation
-        if(ConnectionMode == ConnectionMode.HoldDown)
-        {
-            if (Input.GetButtonDown("Connect"))
-            {
-                if (Physics.Raycast(cam.position, cam.forward, out hit, MiscellaneousSettings.ReachDistance))
+                if (hit.collider.tag == "Interactable") // if the cast hits an interactable such as a button or lever, interact with it
                 {
-                    StuffConnecter.ConnectionInitial(hit);
-                }
-            }
-
-            if (Input.GetButtonUp("Connect"))
-            {
-                Physics.Raycast(cam.position, cam.forward, out hit, MiscellaneousSettings.ReachDistance);
-
-                if (hit.transform != null) // if it hits stuff, connect stuff
-                {
-                    StuffConnecter.ConnectionFinal(hit);
-                }
-                else // otherwise, just deselect the selected thing
-                {
-                    StuffConnecter.ConnectionFinal();
-                }
-            }
-        }
-        else if(ConnectionMode == ConnectionMode.MultiPhase)
-        {
-            if (Input.GetButtonDown("Connect"))
-            {
-                if (Physics.Raycast(cam.position, cam.forward, out hit, MiscellaneousSettings.ReachDistance))
-                {
-                    if (!MultiPhaseConnectionInProgress) { StuffConnecter.ConnectionInitial(hit); MultiPhaseConnectionInProgress = true; }
-                    else { StuffConnecter.ConnectionFinal(hit); MultiPhaseConnectionInProgress = false; }
+                    hit.collider.GetComponent<Interactable>().Interact();
                 }
             }
         }
 
-
-        // look through board
-        if (Input.GetButtonDown("LookThroughBoard"))
+        if (Input.GetButtonDown("Zoom"))
         {
-            if (Physics.Raycast(cam.position, cam.forward, out hit, MiscellaneousSettings.ReachDistance))
-            {
-                LookThroughBoard.Initial(hit);
-            }
+            FirstPersonCamera.fieldOfView = 10;
+            FirstPersonController.Instance.m_MouseLook.XSensitivity /= 3;
+            FirstPersonController.Instance.m_MouseLook.YSensitivity /= 3;
+        }
+        if (Input.GetButtonUp("Zoom"))
+        {
+            SettingsApplier.Instance.LoadFOV();
+            SettingsApplier.Instance.LoadXSensitivity();
+            SettingsApplier.Instance.LoadYSensitivity();
         }
 
-        if (Input.GetButtonUp("LookThroughBoard"))
+        if (Input.GetButtonDown("Cancel"))
         {
-            LookThroughBoard.Final();
+            PauseMenu.Instance.PauseGame();
+        }
+
+
+        ComponentPlacer.RunComponentPlacing();
+        WirePlacer.RunWirePlacing();
+        StuffDeleter.RunGameplayDeleting();
+        StuffRotater.RunGameplayRotation();
+        SelectionMenu.Instance.RunBuildMenu();
+        LookThroughBoard.Run();
+
+        if (Input.GetButtonDown("ToggleGameplayUI")) // not the best place for this to go but whatever I do what I want, also this is kind of a shitty way of doing it
+        {
+            GameplayUICanvas.Instance.gameObject.SetActive(!GameplayUICanvas.Instance.gameObject.activeInHierarchy);
         }
     }
-}
 
+    public static void Done()
+    {
+        StuffPlacer.DeleteThingBeingPlaced();
+        WirePlacer.DoneConnecting();
+        SelectionMenu.Instance.FuckOff();
+    }
 
-public enum ConnectionMode
-{
-    MultiPhase,
-    HoldDown
+    // because Camera.main is actually unbelieveably slow
+    private static Camera CachedFPSCam;
+    public static Camera FirstPersonCamera
+    {
+        get
+        {
+            if (CachedFPSCam == null) { CachedFPSCam = FirstPersonController.Instance.m_Camera; }
+            return CachedFPSCam;
+        }
+    }
+
+    // Handy way to save code in lots of places that need it
+    public static Ray Ray()
+    {
+        return new Ray(FirstPersonCamera.transform.position, FirstPersonCamera.transform.forward);
+    }
 }

@@ -1,10 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿// runs the new board menu, though not the functions for actually creating a new board
+
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class NewBoardMenu : MonoBehaviour {
+public class NewBoardMenu : MonoBehaviour
+{
+    public static NewBoardMenu Instance;
+    private void Awake() { Instance = this; }
 
     // all the components of the new board menu
     public Slider SizeXSlider;
@@ -14,55 +17,67 @@ public class NewBoardMenu : MonoBehaviour {
 
     public Canvas NewBoardCanvas;
 
-    public int SizeX;
-    public int SizeY;
+    public int TrueSizeX;
+    public int TrueSizeY;
+    public int SizeX
+    {
+        get { return TrueSizeX; }
+        set
+        {
+            TrueSizeX = value;
+            SizeXInput.text = value.ToString();
+            if (value <= SizeXSlider.maxValue) { SizeXSlider.value = value; } // this check is so that you can manually enter numbers bigger than the slider's max
+        }
+    }
+    public int SizeY
+    {
+        get { return TrueSizeY; }
+        set
+        {
+            TrueSizeY = value;
+            SizeYInput.text = value.ToString();
+            if (value <= SizeYSlider.maxValue) { SizeYSlider.value = value; }
+        }
+    }
 
-    public BoardPlacer boardplacer;
+    public void Initialize()
+    {
+        GameplayUIManager.UIState = UIState.NewBoardMenu;
 
-	// Use this for initialization
-	void Start () {
-        // to make sure the UI doesn't have any errors or whatever at startup
+        // to make sure there's no disconnect between the UI and the what it represents
         SizeXSlider.value = SizeX;
         SizeYSlider.value = SizeY;
-
         SizeXInput.text = SizeX.ToString();
         SizeYInput.text = SizeY.ToString();
-	}
 
-    // turn the menu on, prevent other menus from opening
-    private void OnEnable()
-    {
         NewBoardCanvas.enabled = true;
-        UIManager.SomeOtherMenuIsOpen = true;
-        UIManager.UnlockMouseAndDisableFirstPersonLooking();
 
-        // select the size x input field so that the user can immediately begin typing, if they so choose
+        // select the size x input field so that the user can immediately begin typing
         SizeXInput.ActivateInputField();
     }
 
-    int CachedSizeX;
+    int PreviousSizeX;
     int CachedSizeY;
-    private void Update()
+    public void RunNewBoardMenu()
     {
         // caching system makes sure a new board is only generated on frames where it matters
-        if(CachedSizeX != SizeX || CachedSizeY != SizeY)
+        if (PreviousSizeX != SizeX || CachedSizeY != SizeY)
         {
-            boardplacer.CreateNewBoard(SizeX, SizeY);
+            BoardFunctions.CreateNewBoard(SizeX, SizeY);
         }
-        CachedSizeX = SizeX;
+        PreviousSizeX = SizeX;
         CachedSizeY = SizeY;
 
-        // create the menu if space or enter are pressed
+        // create the menu if space or enter or V are pressed
         if (Input.GetButtonDown("Jump") || Input.GetButtonDown("Submit") || Input.GetButtonDown("BoardMenu")) // the last check is so you can place the same new board by double tapping v
         {
-            OnPlaceBoardButtonPress();
+            Done();
         }
 
         // cancel if esc is pressed
         if (Input.GetButtonDown("Cancel"))
         {
-            BoardPlacer.CancelPlacement();
-            OnPlaceBoardButtonPress();
+            Done(true);
         }
 
         // tab between input fields
@@ -78,7 +93,7 @@ public class NewBoardMenu : MonoBehaviour {
             }
         }
 
-        if (Input.GetAxis("Mouse ScrollWheel") > 0 || BuildMenu.KeyboardScrollUp()) // scroll up
+        if (GameplayUIManager.ScrollUp(false))
         {
             if (Input.GetButton("Mod"))
             {
@@ -90,7 +105,7 @@ public class NewBoardMenu : MonoBehaviour {
             }
         }
 
-        if (Input.GetAxis("Mouse ScrollWheel") < 0 || BuildMenu.KeyboardScrollDown()) // scroll down
+        if (GameplayUIManager.ScrollDown(false))
         {
             if (Input.GetButton("Mod"))
             {
@@ -101,58 +116,70 @@ public class NewBoardMenu : MonoBehaviour {
                 SizeYSlider.value -= 1;
             }
         }
+
+        // lets you rotate in the new board menu
+        StuffPlacer.PollRotationInput();
+        BoardPlacer.PollForBoardRotation();
+        BoardPlacer.PollForBoardFlatness();
+
+        RaycastHit hit;
+        if(Physics.Raycast(FirstPersonInteraction.Ray(), out hit, Settings.ReachDistance))
+        {
+            StuffPlacer.MoveThingBeingPlaced(hit, false, true);
+        }
     }
 
     public void OnXSliderUpdate()
     {
-        SizeX = (int)SizeXSlider.value; // because the slider works in multiples of 5, but you can only assign it to snap to the nearest 1
-        SizeXInput.text = SizeX.ToString();
+        SizeX = (int)SizeXSlider.value;
     }
 
     public void OnYSliderUpdate()
     {
-        SizeY = (int)SizeYSlider.value; // because the slider works in multiples of 5, but you can only assign it to snap to the nearest 1
-        SizeYInput.text = SizeY.ToString();
+        SizeY = (int)SizeYSlider.value;
     }
 
     // ok the enxt to methods are getting really messy. TODO: clean up
     public void OnXTextUpdate()
     {
-        int NewSizeX;
-        if (SizeXInput.text == "") { NewSizeX = 1; } else { NewSizeX = int.Parse(SizeXInput.text); }
-        if (NewSizeX < 0) { NewSizeX = Mathf.Abs(NewSizeX); SizeXInput.text = NewSizeX.ToString(); } // negative value boards are terrible don't let them exist
-        if (NewSizeX > 1000) { SizeXInput.text = "1000"; } // bigger boards crash the game and are glitchy in general
-        if (NewSizeX < 1) { SizeXInput.text = "1"; NewSizeX = 1; }
-        SizeX = NewSizeX;
-        if (SizeX <= SizeXSlider.maxValue) { SizeXSlider.value = SizeX; } // this check is so that you can manually enter numbers bigger than the slider's max
+        if (SizeXInput.text == "") { return; } // so you can backspace and type in your own value
+        SizeX = TextToValidBoardDimension(SizeXInput.text);
     }
 
     public void OnYTextUpdate()
     {
-        int NewSizeY;
-        if (SizeYInput.text == "") { NewSizeY = 1; } else { NewSizeY = int.Parse(SizeYInput.text); }
-        if (NewSizeY < 0) { NewSizeY = Mathf.Abs(NewSizeY); SizeXInput.text = NewSizeY.ToString(); } // negative value boards are terrible don't let them exist
-        NewSizeY = Mathf.Abs(NewSizeY); // negative value boards are terrible don't let them exist
-        if (NewSizeY > 1000) { SizeYInput.text = "1000"; } // bigger boards crash the game and are glitchy in general
-        if (NewSizeY < 1) { SizeYInput.text = "1"; NewSizeY = 1; }
-        SizeY = NewSizeY;
-        if (SizeY <= SizeYSlider.maxValue) { SizeYSlider.value = SizeY; } // this check is so that you can manually enter numbers bigger than the slider's max
+        if (SizeYInput.text == "") { return; }
+        SizeY = TextToValidBoardDimension(SizeYInput.text);
     }
 
-    public void OnPlaceBoardButtonPress()
+    private static int TextToValidBoardDimension(string text)
+    {
+        int size = 1;
+        if (text == "" || text == "-") { return 1; } else { size = int.Parse(text); }
+        size = Mathf.Abs(size); // negative value boards are terrible don't let them exist
+        if (size > 1000) { size = 1000; } // bigger boards crash the game and are glitchy in general
+        if (size < 1) { size = 1; }
+        return size;
+    }
+
+    public void Done(bool CancelPlacement = false)
     {
         // shitty hack to make sure a new board is generated on the next new board menu open. Works by tricking the caching system into thinking SizeX has changed
-        CachedSizeX = -69696969;
+        PreviousSizeX = -69696969;
 
         // close the menu and disable the script
         NewBoardCanvas.enabled = false;
-        UIManager.SomeOtherMenuIsOpen = false;
-        UIManager.LockMouseAndEnableFirstPersonLooking();
-        enabled = false;
 
-        Input.ResetInputAxes(); // so that if V is used to place the board (a double tap), the board menu is not opened again
+        if (CancelPlacement)
+        {
+            GameplayUIManager.UIState = UIState.None;
+            BoardPlacer.CancelPlacement();
+        }
+        else
+        {
+            GameplayUIManager.UIState = UIState.BoardBeingPlaced;
+        }
 
-        HelpMenu.LockOpenMenu = false;
-        HelpMenu.Instance.ShowBoardPlacing();
+        //Input.ResetInputAxes(); // so that if V is used to place the board (a double tap), the board menu is not opened again // unnecessary now that we have UI states?
     }
 }

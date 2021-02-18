@@ -1,95 +1,152 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿// runs the board menu
+
 using UnityEngine;
 
-public class BoardMenu : MonoBehaviour {
+public class BoardMenu : HorizontalScrollMenuWithSelection
+{
+    public static BoardMenu Instance;
+    private void Awake() { Instance = this; }
 
-    public RectTransform Selection;
+    public static BoardMenuMode MenuMode = BoardMenuMode.HoldThenRelease;
 
-    public int SelectedThing;
-    public int MaxSelectedThing;
+    // run on the frame when V is pressed
+    public void InitializeBoardMenu()
+    {
+        GameplayUIManager.UIState = UIState.BoardMenu;
+        Canvas.enabled = true;
+    }
 
-    public Canvas BoardMenuCanvas;
-
+    // run every frame that the board menu is active
     public void RunBoardMenu()
     {
-        // move selected thing
-        if (Input.GetAxis("Mouse ScrollWheel") > 0 || BuildMenu.KeyboardScrollUp()) // scroll up
+        ScrollThroughMenu();
+        OutlineLookedAtBoardIfAppropriate();
+
+        if (MenuMode == BoardMenuMode.HoldThenRelease)
         {
-            if (SelectedThing > 0) // so you can't scroll past None
+            if (Input.GetButtonUp("BoardMenu")) // when you release V which was being held down
             {
-                SelectedThing--; // go to the previous thing
-                UpdateSelectedThing();
+                ExecuteSelectedAction();
+            }
+        }
+        else if (MenuMode == BoardMenuMode.TapTwice)
+        {
+            if (Input.GetButtonDown("BoardMenu")) // when you tap V for the second time
+            {
+                ExecuteSelectedAction();
             }
         }
 
-        if (Input.GetAxis("Mouse ScrollWheel") < 0 || BuildMenu.KeyboardScrollDown()) // scroll down
-        {
-            if (SelectedThing < MaxSelectedThing) // so you can't scroll beyond the end
-            {
-                SelectedThing++; // go to the next thing
-                UpdateSelectedThing();
-            }
-        }
-
-        // checks for number key selection
-        // I hope this method isn't super laggy but something tells me that it is. In the short term, however, fuck it, because I hate copy-paste coding.
-        for (int i = 0; i < 10; i++)
-        {
-            if (Input.GetButtonDown("Selection" + (i + 1).ToString()))
-            {
-                if (i < MaxSelectedThing + 1)
-                {
-                    SelectedThing = i;
-                    UpdateSelectedThing();
-                }
-            }
-        }
+        if (Input.GetButtonDown("Place")) { ExecuteSelectedAction(); }
+        if (Input.GetButtonDown("Cancel")) { Done(); GameplayUIManager.UIState = UIState.None; }
     }
 
-    public void UpdateSelectedThing()
+    private void OutlineLookedAtBoardIfAppropriate()
     {
-        float PositionX = 40;
-        PositionX = 40 + 160 * SelectedThing;
-        Selection.anchoredPosition = new Vector2(PositionX, 40);
-    }
-
-    public NewBoardMenu newboardmenu;
-    public BoardPlacer boardplacer;
-    public PaintBoardMenu paintboardmenu;
-    // triggered when the board menu key is released by UImanager
-    public void ExecuteSelectedAction()
-    {
-        if(SelectedThing == 0) // cancel
+        if (SelectedThing == 0 || SelectedThing == 1 || SelectedThing == 5 || SelectedThing == 7) // canccel, new board, paint board, load board
         {
-            HelpMenu.Instance.ShowDefault();
-
+            RemoveOutlineFromLookedAtBoard();
             return;
         }
-        else if(SelectedThing == 1) // new board
-        {
-            newboardmenu.enabled = true;
 
-            HelpMenu.Instance.ShowNewBoard();
-            HelpMenu.LockOpenMenu = true; // so that BoardPlacer.NewBoardBeingPlaced doesn't fuck the help menu up
-        }
-        else if(SelectedThing == 2) // move board
-        {
-            boardplacer.MoveExistingBoard();
-        }
-        else if(SelectedThing == 3) // clone board
-        {
-            boardplacer.CloneBoard();
-        }
-        else if(SelectedThing == 4) // paint board
-        {
-            paintboardmenu.enabled = true;
+        HighlightLookedAtBoard();
+    }
 
-            HelpMenu.Instance.ShowColorBoard();
+    private GameObject highlightedboard;
+    private void HighlightLookedAtBoard()
+    {
+        RaycastHit hit;
+        if(Physics.Raycast(FirstPersonInteraction.Ray(), out hit, Settings.ReachDistance, Wire.IgnoreWiresLayermask))
+        {
+            if (hit.collider.tag == "CircuitBoard")
+            {
+                GameObject highlightthis = hit.collider.gameObject;
+                if (Input.GetButton("Mod"))
+                {
+                    GameObject RootObject = hit.collider.transform.root.gameObject;
+                    if(RootObject.tag == "CircuitBoard") // protection from mounts
+                    {
+                        highlightthis = hit.collider.transform.root.gameObject;
+                    }
+                }
+                if(highlightthis != highlightedboard)
+                {
+                    RemoveOutlineFromLookedAtBoard();
+                    highlightedboard = highlightthis;
+                    StuffPlacer.OutlineObject(highlightedboard, OutlineColor.blue);
+                }
+            }
+            else
+            {
+                RemoveOutlineFromLookedAtBoard();
+            }
         }
         else
         {
-            Debug.Log("tried to execute an invalid action ID");
+            RemoveOutlineFromLookedAtBoard();
         }
     }
+
+    private void RemoveOutlineFromLookedAtBoard()
+    {
+        if (highlightedboard == null) { return; }
+        StuffPlacer.RemoveOutlineFromObject(highlightedboard, true);
+        highlightedboard = null;
+    }
+
+    // triggered when the board menu key is released by GameplayUIManager
+    private void ExecuteSelectedAction()
+    {
+        Done();
+
+        if (SelectedThing == 0) // cancel
+        {
+            GameplayUIManager.UIState = UIState.None;
+        }
+        else if (SelectedThing == 1) // new board
+        {
+            NewBoardMenu.Instance.Initialize();
+        }
+        else if (SelectedThing == 2) // move board
+        {
+            BoardFunctions.MoveExistingBoard();
+        }
+        else if (SelectedThing == 3) // clone board
+        {
+            BoardFunctions.CloneBoard();
+        }
+        else if (SelectedThing == 4) // stack board
+        {
+            StackBoardMenu.Instance.Initialize();
+        }
+        else if (SelectedThing == 5) // paint board
+        {
+            PaintBoardMenu.Instance.Initialize();
+        }
+        else if (SelectedThing == 6) // save board
+        {
+            SaveBoardMenu.SaveBoard();
+        }
+        else if (SelectedThing == 7) // load board
+        {
+            LoadBoardMenu.Instance.Initialize();
+        }
+        else
+        {
+            Debug.LogError("tried to execute invalid action ID: " + SelectedThing);
+            GameplayUIManager.UIState = UIState.None;
+        }
+    }
+
+    private void Done()
+    {
+        Canvas.enabled = false;
+        RemoveOutlineFromLookedAtBoard();
+    }
+}
+
+public enum BoardMenuMode
+{
+    HoldThenRelease,
+    TapTwice
 }

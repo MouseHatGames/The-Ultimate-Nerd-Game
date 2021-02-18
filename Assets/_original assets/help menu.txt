@@ -1,0 +1,75 @@
+None
+* look: move mouse
+* move: WASD
+* jump: space
+* toggle flight: B
+* toggle fast flight: CTRL + B
+* fly up: space
+* fly down: shift
+* select: scroll or number keys
+* selection menu: hold C
+* pin selection menu: CTRL + C
+* place: left click
+* toggle placing ghost: caps lock
+* interact: left click
+* connect two pegs: click & drag right click
+* delete: T
+* rotate: QE
+* fine rotate: CTRL + QE
+* rotation lock: R
+* rotate through board: F
+* board menu: V
+* look through board: hold G
+
+Board Menu
+* select board action: scroll or number keys
+* execute board action: V or left click
+
+Board Placing
+* mirror board: m or n (board must have no child boards)
+* toggle flat/standing: right click
+* rotate board: QEZX
+* offset placement: scroll/CTRL + scroll
+* place board: left click
+* destroy board: esc or T
+
+Color Board
+* change color: scroll
+* apply color: V or left click
+* cancel: esc
+
+New Board
+* change size: scroll/CTRL + scroll
+* confirm: space or V
+
+* cancel: esc
+
+Text Edit Menu
+* change text size: scroll
+* done: esc
+
+Choose Display Color
+* choose color: click on button or number keys
+
+Noisemaker Menu
+* select note: number keys or scroll
+* change octave: ctrl + scroll
+* confirm: space or enter
+* revert: esc
+
+Stack Board Menu
+* change iterations: scroll or type number
+* change direction: ZX
+* confirm: enter or V or left click
+* cancel: esc or T
+
+
+
+
+
+State Not Found
+oh shit, there's no text for this UI state!
+
+Sorry about that.
+
+Please report it on the bug tracker!

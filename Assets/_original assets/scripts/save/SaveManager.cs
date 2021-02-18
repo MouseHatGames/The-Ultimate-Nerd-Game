@@ -4,74 +4,95 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityStandardAssets.Characters.FirstPerson;
+using References;
+using SavedObjects;
+using CielaSpike;
 
-public class SaveManager {
-    public static string SaveName = "error: save name was not set!";
-
-    public static List<SaveThisObject> SaveObjects = new List<SaveThisObject>();
-
-    public static void SaveAll()
+public static class SaveManager
+{
+    private static string TrueSaveName = "error_ save name was not set!";
+    public static string SaveName
     {
-        //SaveThisObject[] saveobjects = Object.FindObjectsOfType<SaveThisObject>(); // all active instances of SaveThisObject
-        List<SavedObject> TopLevelObjects = new List<SavedObject>();
+        get { return TrueSaveName; }
+        set { TrueSaveName = FileUtilities.ValidatedFileName(value); }
+    }
+    public static string SavePath { get { return Application.persistentDataPath + "/saves/" + SaveName; } }
+    public static string InfoPath { get { return SavePath + "/worldinfo.txt"; } }
+    public static string PlayersPath { get { return SavePath + "/players"; } } // 👌
+    public static string RegionsPath { get { return SavePath + "/regions"; } }
 
-        foreach(SaveThisObject save in SaveObjects)
+    public static List<ObjectInfo> ActiveSaveObjects = new List<ObjectInfo>();
+
+    public static void SaveAllSynchronously()
+    {
+        SavePlayerPosition();
+        SaveMiscData();
+
+        List<SavedObjectV2> TopLevelObjects = GetTopLevelObjects();
+        FileUtilities.SaveToFile(RegionsPath, "world.tung", TopLevelObjects);
+
+        Debug.Log("saved game synchronously");
+    }
+
+    public static IEnumerator SaveAllAsynchronously()
+    {
+        yield return Ninja.JumpToUnity;
+        SavePlayerPosition();
+        SaveMiscData();
+        string path = RegionsPath;
+
+        List<SavedObjectV2> TopLevelObjects = GetTopLevelObjects();
+
+        yield return Ninja.JumpBack;
+        FileUtilities.SaveToFile(path, "world.tung", TopLevelObjects);
+
+        Debug.Log("saved game asynchronously");
+    }
+
+    public static List<SavedObjectV2> GetTopLevelObjects()
+    {
+        List<SavedObjectV2> TopLevelObjects = new List<SavedObjectV2>();
+
+        foreach (ObjectInfo save in ActiveSaveObjects)
         {
-            if (save.transform.parent == null) { TopLevelObjects.Add(save.Persistent()); } // all the actual work to save data - including children - is done in save.Persistent
+            if (save.transform.parent == null) { TopLevelObjects.Add(SavedObjectUtilities.CreateSavedObjectFrom(save)); }
         }
 
-        ES3.Save<List<SavedObject>>("TopLevelObjects", TopLevelObjects, "saves/"+SaveName+".tung");
-        SavePlayerPosition();
+        return TopLevelObjects;
+    }
 
-        ES3.Save<int>("SaveFormatVersion", 1, "saves/" + SaveName + ".tung");
-
-        Debug.Log("saved game");        
+    public static void SaveMiscData()
+    {
+        ES3.Save<int>("SaveFormatVersion", 2, InfoPath);
+        ES3.Save<string>("WorldType", "Legacy", InfoPath);
     }
 
     public static void LoadAll()
     {
+        MegaMeshManager.ClearReferences();
         BehaviorManager.AllowedToUpdate = false; // don't let circuitry updates fuck us up while we're loading the game
+        BehaviorManager.ClearAllLists();
 
         // remove all existing stuff in the world before loading the new stuff
-        SaveThisObject[] saveobjects = Object.FindObjectsOfType<SaveThisObject>(); // all active instances of SaveObject
-        foreach(SaveThisObject save in saveobjects) { Object.Destroy(save.gameObject); }
+        ObjectInfo[] saveobjects = UnityEngine.Object.FindObjectsOfType<ObjectInfo>(); // all active instances of SaveObject
+        foreach (ObjectInfo save in saveobjects) { UnityEngine.Object.Destroy(save.gameObject); }
 
-        // also need to clear this dictionary, since it's static
-        MegaBoardMeshManager.MegaBoardMeshesOfColor.Clear();
-
-        List<SavedObject> loadobjects = ES3.Load<List<SavedObject>>("TopLevelObjects", "saves/" + SaveName + ".tung");
-        foreach(SavedObject save in loadobjects)
+        List<SavedObjectV2> TopLevelObjects = (List<SavedObjectV2>)FileUtilities.LoadFromFile(RegionsPath, "world.tung");
+        if (TopLevelObjects != null)
         {
-            LoadSaveObject(save, null);
+            foreach (SavedObjectV2 save in TopLevelObjects)
+            {
+                SavedObjectUtilities.LoadSavedObject(save);
+            }
         }
 
         RecalculateAllClustersEverywhereWithDelay();
         LoadPlayerPosition();
-
-        MegaMesh.GenerateNewMegaMesh();
-        MegaBoardMeshManager.GenerateAllMegaBoardMeshes();
-    }
-
-    public static void LoadSaveObject(SavedObject save, Transform parent)
-    {
-        GameObject LoadedObject = Object.Instantiate(SaveObjectsList.ObjectTypeToPrefab(save.ObjectType), parent);
-
-        // copy the save stuff into dis goi
-        SaveThisObject newsave = LoadedObject.AddComponent<SaveThisObject>();
-        newsave.ObjectType = save.ObjectType;
-        newsave.CustomDataArray = save.CustomDataArray;
-        newsave.LocalPosition = save.LocalPosition;
-        newsave.LocalEulerAngles = save.LocalEulerAngles;
-
-        // apply properties
-        newsave.LoadSaveData();
-
-        // load children
-        foreach(SavedObject child in save.Children)
-        {
-            LoadSaveObject(child, LoadedObject.transform);
-        }
+        GameplayUIManager.UIState = UIState.None;
     }
 
     public static void RecalculateAllClustersEverywhereWithDelay()
@@ -83,53 +104,20 @@ public class SaveManager {
 
     public static void RecalculateAllClustersEverywhere()
     {
-        WireCluster[] existingclusters = Object.FindObjectsOfType<WireCluster>();
-        foreach (WireCluster oldcluster in existingclusters) { Object.Destroy(oldcluster.gameObject); } // TODO: make clusters not all individual game objects. Would clean up a lot of code, not to mention the heirarchy...
+        // we used to destroy all existing clusters, but I took this out to make through pegs work in 0.2. I sure hope this wasn't necessary!
+        //WireCluster[] existingclusters = UnityEngine.Object.FindObjectsOfType<WireCluster>();
+        //foreach (WireCluster oldcluster in existingclusters) { UnityEngine.Object.Destroy(oldcluster.gameObject); }
 
-        // much code copied from BoardPlacer.RecalculateClustersOfCurrentBoard
-        // create a new cluster for RecalculateCluster to use
-        WireCluster cluster = Object.Instantiate(StuffConnecter.ClusterPrefab).GetComponent<WireCluster>();
+        Wire[] wires = UnityEngine.Object.FindObjectsOfType<Wire>();
 
-        // get all the stuff that needs to have its clusters recalculated
-        CircuitInput[] inputs = Object.FindObjectsOfType<CircuitInput>();
-        Output[] outputs = Object.FindObjectsOfType<Output>();
-        InputInputConnection[] IIConnections = Object.FindObjectsOfType<InputInputConnection>();
-        InputOutputConnection[] IOConnections = Object.FindObjectsOfType<InputOutputConnection>();
-
-        // clear the connections of each input and output
-        // likely this isn't strictly necessary... possibly through pegs will need it though. Idk. Can't hurt.
-        foreach (CircuitInput input in inputs)
+        foreach (Wire wire in wires)
         {
-            input.IIConnections.Clear();
-            input.IOConnections.Clear();
-        }
-        foreach (Output output in outputs)
-        {
-            output.ClearIOConnections();
+            wire.FindPoints();
+            StuffConnector.LinkConnection(wire);
         }
 
-        // have the connections find their points
-        foreach (InputInputConnection connection in IIConnections)
-        {
-            connection.FindPoints();
-        }
-        foreach (InputOutputConnection connection in IOConnections)
-        {
-            connection.FindPoints();
-        }
-
-        // add everything to the new cluster
-        foreach (CircuitInput input in inputs)
-        {
-            cluster.ConnectInput(input);
-        }
-        foreach (Output output in outputs)
-        {
-            cluster.ConnectOutput(output);
-        }
-
-        // finally, recalculate that cluster
-        StuffDeleter.RecalculateCluster(cluster);
+        SnappingPeg.SnapEverywhere();
+        MegaMeshManager.AddComponentsEverywhere();
 
         // and FINALLY, allow circuitry updates again
         BehaviorManager.AllowedToUpdate = true;
@@ -138,30 +126,32 @@ public class SaveManager {
     public static void SavePlayerPosition()
     {
         Transform PlayerTransform = FirstPersonController.Instance.transform;
-
-        ES3.Save<Vector3>("PlayerPosition", PlayerTransform.position, "saves/" + SaveName + ".tung");
+        ES3.Save<Vector3>("PlayerPosition", PlayerTransform.position, PlayersPath + "/player");
 
         Vector2 PlayerRotation = new Vector2(PlayerTransform.GetChild(0).transform.localEulerAngles.x, PlayerTransform.localEulerAngles.y);
-        ES3.Save<Vector2>("PlayerRotation", PlayerRotation, "saves/" + SaveName + ".tung");
+        ES3.Save<Vector2>("PlayerRotation", PlayerRotation, PlayersPath + "/player");
+
+        ES3.Save<bool>("Flying", FirstPersonController.Instance.Flying, PlayersPath + "/player");
     }
 
     public static void LoadPlayerPosition()
     {
+        if (!File.Exists(PlayersPath + "/player")) { return; }
+
         Transform PlayerTransform = FirstPersonController.Instance.transform;
-
-        Vector2 PlayerRotation = ES3.Load<Vector2>("PlayerRotation", "saves/" + SaveName + ".tung");
-        FirstPersonController.Instance.m_MouseLook.m_CharacterTargetRot = Quaternion.Euler(0, PlayerRotation.y, 0);
-        FirstPersonController.Instance.m_MouseLook.m_CameraTargetRot = Quaternion.Euler(PlayerRotation.x, 0, 0);
-
+        Vector2 PlayerRotation = ES3.Load("PlayerRotation", PlayersPath + "/player", Vector2.zero);
 
         // check if we're falling out of world - if so, reject the new position
-        Vector3 PlayerPosition = ES3.Load<Vector3>("PlayerPosition", "saves/" + SaveName + ".tung");
-        if(PlayerPosition.y < -10)
+        Vector3 PlayerPosition = ES3.Load("PlayerPosition", PlayersPath + "/player", PlayerTransform.position);
+        if (PlayerPosition.y < -10)
         {
             return;
         }
 
         PlayerTransform.position = PlayerPosition;
-    }
+        FirstPersonController.Instance.m_MouseLook.m_CharacterTargetRot = Quaternion.Euler(0, PlayerRotation.y, 0);
+        FirstPersonController.Instance.m_MouseLook.m_CameraTargetRot = Quaternion.Euler(PlayerRotation.x, 0, 0);
 
+        FirstPersonController.Instance.Flying = ES3.Load("Flying", PlayersPath + "/player", false);
+    }
 }

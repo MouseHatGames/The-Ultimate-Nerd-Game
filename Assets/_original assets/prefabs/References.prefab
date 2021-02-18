@@ -1,0 +1,163 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 1033343619649944}
+  m_IsPrefabParent: 1
+--- !u!1 &1033343619649944
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4805261776533802}
+  - component: {fileID: 114917763327065552}
+  - component: {fileID: 114890340729233104}
+  - component: {fileID: 114638189864086874}
+  - component: {fileID: 114927748067575584}
+  m_Layer: 0
+  m_Name: References
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4805261776533802
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1033343619649944}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114638189864086874
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1033343619649944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54a93b3277472e44a9bf346022a02a85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CircuitBoardMaterial: {fileID: 2100000, guid: cc9bab0f1d286594a912d5c09d1f48d1,
+    type: 2}
+  DefaultMaterial: {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+--- !u!114 &114890340729233104
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1033343619649944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5df980e27cd079b498d9a56e07a34923, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MegaMeshParentTransform: {fileID: 0}
+--- !u!114 &114917763327065552
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1033343619649944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 577f32943af55d048a647563401bfb18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ThinWirePrefab: {fileID: 1758372943521822, guid: f24b44021f638ed4db48e8fb2abb43b6,
+    type: 2}
+  ClusterPrefab: {fileID: 1238459021834210, guid: ea9c6979a6ca0e34c8b3f0c200079def,
+    type: 2}
+  CombinedMeshGroupPrefab: {fileID: 1238459021834210, guid: 1ae4ca0d853d754498a8da9bb722bab3,
+    type: 2}
+  CircuitBoardPrefab: {fileID: 1982425621483814, guid: 193a877df3debda4597460aed672c876,
+    type: 2}
+  WirePrefab: {fileID: 1758372943521822, guid: 1ac2aeec8582009488292aa1d6cbe08c, type: 2}
+  OutputPrefab: {fileID: 1105001780603420, guid: a1a713f3a0975d047aa4bcd1508edf10,
+    type: 2}
+  WhiteCubePrefab: {fileID: 1292145056816470, guid: 97da9fa0e89e5ec48af8e7cfe96196b4,
+    type: 2}
+  InverterPrefab: {fileID: 1361106188989404, guid: f10e0e422acb1124ba728be45fb5c3af,
+    type: 2}
+  PegPrefab: {fileID: 1807305093001920, guid: 15dcbb8d7099fbf44b5901258fa8e628, type: 2}
+  DelayerPrefab: {fileID: 1685148283107400, guid: 601594b4c960d6c4796146d033d8c93b,
+    type: 2}
+  ThroughPegPrefab: {fileID: 1992942722016406, guid: 3ce1c503501b09b48a40f3d8c579500f,
+    type: 2}
+  SwitchPrefab: {fileID: 1523513819992958, guid: de39177b6a3167047a12754ab78e1dfe,
+    type: 2}
+  ButtonPrefab: {fileID: 1642107477284964, guid: 0009c7737023f66498c2d93fddb7945f,
+    type: 2}
+  DisplayPrefab: {fileID: 1029526408691058, guid: a66915f6ea1225f4eb787b97d07faaa9,
+    type: 2}
+  LabelPrefab: {fileID: 1518879957287220, guid: fc82c6996d8d674409fe58c48e4f6d3a,
+    type: 2}
+  PanelSwitchPrefab: {fileID: 1181744028476868, guid: f7eefb225d58ca5488b8f18cff50ad36,
+    type: 2}
+  PanelButtonPrefab: {fileID: 1946973224436082, guid: 470d792a0f59adc4596cd9706d5adde9,
+    type: 2}
+  PanelDisplayPrefab: {fileID: 1206293224817786, guid: b200084bb30cc044fb812156097bbe88,
+    type: 2}
+  PanelLabelPrefab: {fileID: 1504970937414086, guid: e1afcfc4aac99b54c9eecc2ab0641f0f,
+    type: 2}
+  BlotterPrefab: {fileID: 1931961523691502, guid: f574864bef31c164bbb486f25ed44cb9,
+    type: 2}
+  ThroughBlotterPrefab: {fileID: 1951221834558512, guid: be328b781449fca4883c2b60a25a4fdf,
+    type: 2}
+  ColorDisplayPrefab: {fileID: 1029526408691058, guid: c47dbac0446ddb34ba7c6f89532499e1,
+    type: 2}
+  PanelColorDisplayPrefab: {fileID: 1206293224817786, guid: 64c0672d5f878344784a99a05c6cb414,
+    type: 2}
+  NoisemakerPrefab: {fileID: 1202619258428742, guid: f51efb653bc726c4c81026577c3a5de9,
+    type: 2}
+  SnappingPegPrefab: {fileID: 1747973255004000, guid: a39054d503822a94282bf9c60975ae95,
+    type: 2}
+  MountPrefab: {fileID: 1366494415108508, guid: 479292292a28a0942a7e419a237f21e1,
+    type: 2}
+--- !u!114 &114927748067575584
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1033343619649944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70377ff0f1e2d17448ab03e437e67414, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlaceOnBoardSound:
+  - {fileID: 8300000, guid: 4038ce84e086a8e4996779c1dc2235e9, type: 3}
+  - {fileID: 8300000, guid: 45b3f44d5caa8c64aac7d3830fcda941, type: 3}
+  PlaceOnTerrainSound: {fileID: 8300000, guid: 397a5cc4fd86d8c4cb10d5f6f3335988, type: 3}
+  FailDoSomethingSound: {fileID: 8300000, guid: c2c6cc92d62e1d644a2f5d9b03303a0e,
+    type: 3}
+  RotateSomethingSound: {fileID: 8300000, guid: 3b716c29c669ec94799bfe83158dd38e,
+    type: 3}
+  DeleteSomethingSound: {fileID: 8300000, guid: d3b609c410509b64791ce647544ba6eb,
+    type: 3}
+  ConnectionInitialSound: {fileID: 8300000, guid: 3b5861e8c54140d4e84494762e79754c,
+    type: 3}
+  ConnectionFinalSound: {fileID: 8300000, guid: 83eda49e136259244afc338c213d9492,
+    type: 3}
+  ButtonDownSound: {fileID: 8300000, guid: b03d894629d8b824d83fcbd1f290b1bc, type: 3}
+  ButtonUpSound: {fileID: 8300000, guid: 79d02ce42724caf4e86e75d5e52e3693, type: 3}
+  SwitchOnSound: {fileID: 8300000, guid: 1ef7529907e31c34ea42361deccea0ef, type: 3}
+  SwitchOffSound: {fileID: 8300000, guid: 9d32d1220d505e048a4246cad1b16e0e, type: 3}
+  UIButtonSound: {fileID: 8300000, guid: bd69f34bb5aac0e4f9ccc02d70b59994, type: 3}
+  ScreenshotSound: {fileID: 8300000, guid: f6f468ff429b05946bd1a5c73094a802, type: 3}

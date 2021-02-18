@@ -24,11 +24,11 @@ public class CleanUpShit : Editor
             {
                 Component currentComponent = components[i];
 
-                if (currentComponent is CircuitBoard) // replace the type here with whatever you want to SMASH
+                if (currentComponent is Renderer) // replace the type here with whatever you want to SMASH
                 {
-                    Debug.Log("SMASHED " + currentComponent + "!");
-                    FindObjectOfType<RunMainMenu>().BoardColor.Add((Color)currentComponent.GetComponent<CircuitBoard>().BoardColor);
-                    
+                    currentComponent.GetComponent<Renderer>().enabled = true;
+                 //   FindObjectOfType<RunMainMenu>().BoardColor.Add((Color)currentComponent.GetComponent<CircuitBoard>().GetBoardColor);
+
                 }
             }
         }

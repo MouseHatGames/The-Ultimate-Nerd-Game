@@ -3,5 +3,3 @@ button: https://freesound.org/people/7778/sounds/202309/
 switch on: https://freesound.org/people/JarredGibb/sounds/219472/
 
 switch off is a lower pitched version of the preceding
-
-https://freesound.org/people/worthahep88/sounds/319225/

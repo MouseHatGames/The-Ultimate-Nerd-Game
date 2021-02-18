@@ -1,0 +1,1 @@
+{"Flying":{"__type":"System.Boolean,mscorlib","value":false},"PlayerRotation":{"__type":"UnityEngine.Vector2,UnityEngine.CoreModule","value":{"x":0.001772281,"y":216.5002}},"PlayerPosition":{"__type":"UnityEngine.Vector3,UnityEngine.CoreModule","value":{"x":49.7537,"y":0.98,"z":-64.3129}}}

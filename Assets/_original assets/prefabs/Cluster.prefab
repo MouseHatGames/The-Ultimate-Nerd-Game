@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4599222148019834}
   - component: {fileID: 114870825473492964}
+  - component: {fileID: 114329041285090492}
   - component: {fileID: 33148870121178724}
   - component: {fileID: 23094952007071642}
   m_Layer: 0
@@ -83,6 +84,21 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1238459021834210}
   m_Mesh: {fileID: 0}
+--- !u!114 &114329041285090492
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1238459021834210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87cb0a6f22176be48923274ee1e7e790, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Renderer: {fileID: 0}
+  MeshFilter: {fileID: 0}
+  Group: {fileID: 0}
+  MaterialType: 12
 --- !u!114 &114870825473492964
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -94,8 +110,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e967da9cfd933043bcf3147b8494f2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ConnectedInputs: []
-  ConnectedOutputs: []
   On: 0
-  Mesh: {fileID: 0}
-  Renderer: {fileID: 0}
+  PartOfMegaCircuitMesh: 0
+  AutoCombineOnStableAllowed: 1

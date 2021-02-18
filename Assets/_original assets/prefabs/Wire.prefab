@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33104988109453880}
   - component: {fileID: 23415301683604604}
   - component: {fileID: 65655970493564820}
+  - component: {fileID: 114119992950240232}
   m_Layer: 8
   m_Name: Wire
   m_TagString: Wire
@@ -36,7 +37,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1758372943521822}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.6783876, y: 0.83, z: 1.2287812}
+  m_LocalPosition: {x: 1, y: 1, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -82,7 +83,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1758372943521822}
-  m_Mesh: {fileID: 4300002, guid: e2bd1363815fb9e4a8be9669b8084f95, type: 3}
+  m_Mesh: {fileID: 4300004, guid: f24ef9cc566cc0b4a8ec16710b7378a6, type: 3}
 --- !u!65 &65655970493564820
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -93,5 +94,16 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.05, z: 1}
+  m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114119992950240232
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1758372943521822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f92ba4e3a71deff4ebc8e41239568972, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

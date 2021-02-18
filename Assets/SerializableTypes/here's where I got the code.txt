@@ -1,0 +1,1 @@
+https://answers.unity.com/questions/956047/serialize-quaternion-or-vector3.html

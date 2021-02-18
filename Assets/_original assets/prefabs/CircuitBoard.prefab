@@ -23,7 +23,8 @@ GameObject:
   - component: {fileID: 65704131847415158}
   - component: {fileID: 23868878367889264}
   - component: {fileID: 114268893938380168}
-  - component: {fileID: 114182714600960452}
+  - component: {fileID: 114270310124184872}
+  - component: {fileID: 114049868620335768}
   m_Layer: 0
   m_Name: CircuitBoard
   m_TagString: CircuitBoard
@@ -97,21 +98,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &114182714600960452
+--- !u!114 &114049868620335768
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1982425621483814}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbf3575480402db40813e763382412fb, type: 3}
+  m_Script: {fileID: 11500000, guid: f92ba4e3a71deff4ebc8e41239568972, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: 1
-  eraseRenderer: 1
-  originalLayer: 0
-  originalMaterials: []
 --- !u!114 &114268893938380168
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -126,5 +123,20 @@ MonoBehaviour:
   x: 1
   z: 1
   ThisCollider: {fileID: 0}
-  ThisRenderer: {fileID: 0}
-  ThisMesh: {fileID: 0}
+  Renderer: {fileID: 0}
+  Mesh: {fileID: 0}
+--- !u!114 &114270310124184872
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1982425621483814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87cb0a6f22176be48923274ee1e7e790, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Renderer: {fileID: 0}
+  MeshFilter: {fileID: 0}
+  Group: {fileID: 0}
+  MaterialType: 1

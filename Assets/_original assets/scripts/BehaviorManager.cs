@@ -1,84 +1,240 @@
-﻿using System.Collections;
+﻿// My replacement for Unity's update loop. Allows for much better managing of what happens in what order every frame,
+// and also allows circuit updates to be independant from the physics loop.
+
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BehaviorManager : MonoBehaviour {
+public class BehaviorManager : MonoBehaviour
+{
+    public static string Greetings = "Hello, modder. I hope you're having a nice day :)";
 
     private CustomFixedUpdate CircuitLogicUpdate;
+    private CustomFixedUpdate MeshQueueing;
 
     private void Awake()
     {
-        // set these values if they don't exist in files
-        // TODO: unify this code that's repeated a hundred fucking times god dammit
-        if (!ES3.KeyExists("CircuitUpdatesPerSecond", "settings.txt"))
-        {
-            ES3.Save<float>("CircuitUpdatesPerSecond", (float)100, "settings.txt"); // it is VERY IMPORTANT that the number here be cast as a float!
-        }
-        float CircuitUpdatesPerSecond = ES3.Load<float>("CircuitUpdatesPerSecond", "settings.txt", 100);
-
-        //ClearLists();
+        float CircuitUpdatesPerSecond = Settings.Get("CircuitUpdatesPerSecond", 100f);
         CircuitLogicUpdate = new CustomFixedUpdate(OnCircuitLogicUpdate, CircuitUpdatesPerSecond);
+
+        float MeshGroupRecalculationsPerSecond = Settings.Get("MaxMeshGroupRecalculationsPerSecond", 20f);
+        MeshQueueing = new CustomFixedUpdate(QueueRecalculationForAppropriateDynamicMegaMeshGroups, MeshGroupRecalculationsPerSecond);
     }
 
+    public static bool AllowedToUpdate = true; // set to false and then back to true by SaveManager.LoadAll to make sure circuitry doesn't run before it's finished loading.
 
-    public static bool AllowedToUpdate = true; // set to false and then back to true by SaveManager.LoadAll
+    private void Update ()
+    {
+        ScreenshotTaker.RunScreenshotTaking();
 
-    void Update () {
         if (!AllowedToUpdate) { return; }
 
-        CircuitLogicUpdate.Update();
+        GameplayUIManager.RunGameplayUI();
 
-        VisualStuffUpdate();
+        CircuitLogicUpdate.Update(); // might affect VisualStuffUpdate
+        VisualStuffUpdate(); // might affect mega mesh stuff
+
+        MeshQueueing.Update();
+        RecalculateQueuedMegaMeshGroups();
 	}
 
-    void OnCircuitLogicUpdate(float dt)
+    private static void QueueRecalculationForAppropriateDynamicMegaMeshGroups(float dt)
     {
-        // update order here is important!!
-        foreach (Button button in UpdatedButtons) { button.CircuitLogicUpdate(); } // first, poll for inputs. (this being at the beginning instead of the end isn't really important at the default 100 ticks/second, but at lower values it's noticable. (Probably. Haven't tested it))
-        foreach (Switch circuitswitch in UpdatedSwitches) { circuitswitch.CircuitLogicUpdate(); }
-        foreach (WireCluster cluster in UpdatedClusters) { cluster.CircuitLogicUpdate(); } // then, clusters determine their state based on output states
-        foreach (CircuitInput input in UpdatedInputs) { input.CircuitLogicUpdate(); } // next, inputs set their states to that of their clusters
-        foreach (Blotter blotter in UpdatedBlotters) { blotter.CircuitLogicUpdate(); } // finally, the logic components calculate output states.
-        foreach (NotGate notgate in UpdatedNotGates) { notgate.CircuitLogicUpdate(); }
-        foreach (Delayer delayer in UpdatedDelayers) { delayer.CircuitLogicUpdate(); }
+        if (DynamicMegaMeshesThatNeedRecalculating.Count < 1) { return; }
+        DynamicMegaMeshesThatNeedRecalculating[0].RecalculateNextFrame();
+        DynamicMegaMeshesThatNeedRecalculating.RemoveAt(0);
     }
 
-    void VisualStuffUpdate()
+    private static void OnCircuitLogicUpdate(float dt)
     {
-        foreach (WireCluster cluster in UpdatedClusters) { cluster.VisualUpdate(); }
-        foreach (Output output in UpdatedOutputs) { output.VisualUpdate(); }
-        foreach (Display display in UpdatedDisplays) { display.VisualUpdate(); }
+        //DebugNumerOfDuplicates(UpdatingCircuitLogicComponents, "UpdatingCircuitLogicComponents");
+        //DebugNumerOfDuplicates(UpdatingClusters, "UpdatingClusters");
 
-        MegaCircuitMesh.Instance.VisualUpdate();
+        // for loops are much faster than foreach loops!
+
+        for (int i = 0; i < UpdatingClusters.Count; i++) { UpdatingClusters[i].CircuitLogicUpdate(); } // clusters determine their state based on output states
+        UpdatingClusters.Clear(); // each cluster updates only once so they are cleared immediately
+
+        for (int i = 0; i < UpdatingCircuitLogicComponents.Count; i++) { UpdatingCircuitLogicComponents[i].DoCircuitLogicUpdate(); } // then, the logic components calculate output states.
+        UpdatingCircuitLogicComponents.Clear();
+
+        // deal with components that update over multiple ticks. At the time of this comment, only Delayers do this
+        UpdatingCircuitLogicComponents.AddRange(ContinuousUpdatingCircuitLogicComponents);
+        ContinuousUpdatingCircuitLogicComponents.Clear();
+
+
+        //System.Threading.Tasks.Parallel.ForEach(UpdatingCircuitLogicComponents, component => { component.CircuitLogicUpdate(); }); // never mind turns out multithreading is really hard lol
     }
 
-    // everything that gets updated
-    // these things all add and remove themselves in their Awake and OnDestroy functions
-    public static List<WireCluster> UpdatedClusters = new List<WireCluster>();
-    public static List<Output> UpdatedOutputs = new List<Output>();
-    public static List<CircuitInput> UpdatedInputs = new List<CircuitInput>();
-    public static List<Blotter> UpdatedBlotters = new List<Blotter>();
-    public static List<Button> UpdatedButtons = new List<Button>();
-    public static List<Delayer> UpdatedDelayers = new List<Delayer>();
-    public static List<Display> UpdatedDisplays = new List<Display>();
-    public static List<NotGate> UpdatedNotGates = new List<NotGate>();
-    public static List<Switch> UpdatedSwitches = new List<Switch>();
-
-    public static void ClearLists()
+    private static void VisualStuffUpdate()
     {
-        UpdatedClusters.Clear();
-        UpdatedOutputs.Clear();
-        UpdatedInputs.Clear();
-        UpdatedBlotters.Clear();
-        UpdatedButtons.Clear();
-        UpdatedDelayers.Clear();
-        UpdatedDisplays.Clear();
-        UpdatedNotGates.Clear();
-        UpdatedSwitches.Clear();
+        int i = 0;
+        while (i < CurrentlyUpdatingVisually.Count)
+        {
+            VisualUpdaterWithMeshCombining visualboi = CurrentlyUpdatingVisually[i];
+
+            if (visualboi.FinishedUpdating || visualboi == null)
+            {
+                // remove from the list in O(1) time by sending the last thing in the list to this position in the list and then removing the last thing in the list
+                int LastInList = CurrentlyUpdatingVisually.Count - 1;
+                CurrentlyUpdatingVisually[i] = CurrentlyUpdatingVisually[LastInList];
+                CurrentlyUpdatingVisually.RemoveAt(LastInList);
+            }
+            else
+            {
+                // if we have not done the fancy removal thing, we need to move on to the next item
+                visualboi.VisualUpdate();
+                i++;
+            }
+        }
     }
+
+    private static void RecalculateQueuedMegaMeshGroups()
+    {
+        for (int i = 0; i < ClustersQueuedForMeshRecalculation.Count; i++) { ClustersQueuedForMeshRecalculation[i].RecalculateCombinedMesh(); }
+        for (int i = 0; i < OutputsQueuedForMeshRecalculation.Count; i++) { OutputsQueuedForMeshRecalculation[i].RecalculateCombinedMesh(); }
+        for (int i = 0; i < MegaMeshGroupsQueuedForRecalculation.Count; i++) { MegaMeshGroupsQueuedForRecalculation[i].RecalculateMesh(); }
+
+        ClearMeshRecalculationLists(); // since everything above should only be run once until it's queued again
+    }
+
+    // code managing these lists must be VERY CAREFUL to never have duplicates in the lists. We use lits over a hash IEnumerable because of the iteration performance
+
+    // stuff that needs to be updated in the circuit logic code
+    public static List<WireCluster> UpdatingClusters = new List<WireCluster>();
+    public static List<CircuitLogicComponent> UpdatingCircuitLogicComponents = new List<CircuitLogicComponent>();
+    public static List<CircuitLogicComponent> ContinuousUpdatingCircuitLogicComponents = new List<CircuitLogicComponent>(); // components that update for more than one tick
+
+    // visually updating stuff
+    public static List<VisualUpdaterWithMeshCombining> CurrentlyUpdatingVisually = new List<VisualUpdaterWithMeshCombining>();
+
+    // meshes to be recalculated
+    public static List<MegaMeshGroup> MegaMeshGroupsQueuedForRecalculation = new List<MegaMeshGroup>();
+    public static List<WireCluster> ClustersQueuedForMeshRecalculation = new List<WireCluster>();
+    public static List<CircuitOutput> OutputsQueuedForMeshRecalculation = new List<CircuitOutput>();
+
+    public static List<MegaMeshGroup> DynamicMegaMeshesThatNeedRecalculating = new List<MegaMeshGroup>();
+
+    public static void ClearAllLists()
+    {
+        UpdatingClusters.Clear();
+        UpdatingCircuitLogicComponents.Clear();
+        CurrentlyUpdatingVisually.Clear();
+        MegaMeshGroupsQueuedForRecalculation.Clear();
+        ClustersQueuedForMeshRecalculation.Clear();
+        OutputsQueuedForMeshRecalculation.Clear();
+        DynamicMegaMeshesThatNeedRecalculating.Clear();
+    }
+
+    private static void ClearMeshRecalculationLists()
+    {
+        MegaMeshGroupsQueuedForRecalculation.Clear();
+        ClustersQueuedForMeshRecalculation.Clear();
+        OutputsQueuedForMeshRecalculation.Clear();
+    }
+
 
     private void OnDestroy() // hopefully called during scene changes too
     {
-        ClearLists();
+        ClearAllLists();
     }
+
+
+
+#if UNITY_EDITOR
+
+    [NaughtyAttributes.Button]
+    private void DebugCounts()
+    {
+        Debug.Log("updating: clusters - " + UpdatingClusters.Count + ". CLCs - " + UpdatingCircuitLogicComponents.Count + ". Continuous CLCs - " + ContinuousUpdatingCircuitLogicComponents.Count + ". Visuals - " + CurrentlyUpdatingVisually.Count + ".");
+    }
+
+    private static void DebugNumerOfDuplicates(List<CircuitLogicComponent> ass, string listname)
+    {
+        Dictionary<CircuitLogicComponent, int> breasts = new Dictionary<CircuitLogicComponent, int>();
+
+        foreach (CircuitLogicComponent dick in ass)
+        {
+            if (breasts.ContainsKey(dick))
+            {
+                breasts[dick]++;
+            }
+            else
+            {
+                breasts.Add(dick, 1);
+            }
+        }
+
+        foreach (KeyValuePair<CircuitLogicComponent, int> pussy in breasts)
+        {
+            if (pussy.Value > 1) { Debug.LogFormat(pussy.Value + " duplicates of object named " + pussy.Key.name + " in " + listname); }
+        }
+    }
+
+    private static void DebugNumerOfDuplicates(List<WireCluster> ass, string listname)
+    {
+        Dictionary<WireCluster, int> breasts = new Dictionary<WireCluster, int>();
+
+        foreach (WireCluster dick in ass)
+        {
+            if (breasts.ContainsKey(dick))
+            {
+                breasts[dick]++;
+            }
+            else
+            {
+                breasts.Add(dick, 1);
+            }
+        }
+
+        foreach (KeyValuePair<WireCluster, int> pussy in breasts)
+        {
+            if (pussy.Value > 1) { Debug.LogFormat(pussy.Value + " duplicates of object named " + pussy.Key.name + " in " + listname); }
+        }
+    }
+
+    private static void DebugNumerOfDuplicates(List<MegaMeshGroup> ass, string listname)
+    {
+        Dictionary<MegaMeshGroup, int> breasts = new Dictionary<MegaMeshGroup, int>();
+
+        foreach (MegaMeshGroup dick in ass)
+        {
+            if (breasts.ContainsKey(dick))
+            {
+                breasts[dick]++;
+            }
+            else
+            {
+                breasts.Add(dick, 1);
+            }
+        }
+
+        foreach (KeyValuePair<MegaMeshGroup, int> pussy in breasts)
+        {
+            if (pussy.Value > 1) { Debug.LogFormat(pussy.Value + " duplicates of object named " + pussy.Key.name + " in " + listname); }
+        }
+    }
+
+    private static void DebugNumerOfDuplicates(List<CircuitOutput> ass, string listname)
+    {
+        Dictionary<CircuitOutput, int> breasts = new Dictionary<CircuitOutput, int>();
+
+        foreach (CircuitOutput dick in ass)
+        {
+            if (breasts.ContainsKey(dick))
+            {
+                breasts[dick]++;
+            }
+            else
+            {
+                breasts.Add(dick, 1);
+            }
+        }
+
+        foreach (KeyValuePair<CircuitOutput, int> pussy in breasts)
+        {
+            if (pussy.Value > 1) { Debug.LogFormat(pussy.Value + " duplicates of object named " + pussy.Key.name + " in " + listname); }
+        }
+    }
+
+#endif
 }

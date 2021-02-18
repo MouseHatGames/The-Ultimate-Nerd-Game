@@ -87,7 +87,7 @@ InputManager:
     joyNum: 0
   - serializedVersion: 3
     m_Name: Jump
-    descriptiveName: 
+    descriptiveName: Jump
     descriptiveNegativeName: 
     negativeButton: 
     positiveButton: space
@@ -188,7 +188,7 @@ InputManager:
     negativeButton: 
     positiveButton: c
     altNegativeButton: 
-    altPositiveButton: joystick button 1
+    altPositiveButton: 
     gravity: 1000
     dead: 0.001
     sensitivity: 1000
@@ -474,7 +474,7 @@ InputManager:
     descriptiveName: Look Through Board
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: f
+    positiveButton: g
     altNegativeButton: 
     altPositiveButton: 
     gravity: 1000
@@ -566,6 +566,22 @@ InputManager:
     axis: 0
     joyNum: 0
   - serializedVersion: 3
+    m_Name: PickComponent
+    descriptiveName: Pick Component
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: mouse 2
+    altNegativeButton: 
+    altPositiveButton: i
+    gravity: 1000
+    dead: 0.001
+    sensitivity: 1000
+    snap: 0
+    invert: 0
+    type: 0
+    axis: 0
+    joyNum: 0
+  - serializedVersion: 3
     m_Name: Scroll
     descriptiveName: Keyboard Scroll Up
     descriptiveNegativeName: Keyboard Scroll Down
@@ -575,7 +591,167 @@ InputManager:
     altPositiveButton: '[+]'
     gravity: 1000
     dead: 0.001
-    sensitivity: 1
+    sensitivity: 1000
+    snap: 1
+    invert: 1
+    type: 0
+    axis: 0
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: TogglePlacingGhost
+    descriptiveName: Toggle Placing Ghost
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: caps lock
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1000
+    dead: 0.001
+    sensitivity: 1000
+    snap: 1
+    invert: 1
+    type: 0
+    axis: 0
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Interact
+    descriptiveName: Interact
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: mouse 0
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1000
+    dead: 0.001
+    sensitivity: 1000
+    snap: 1
+    invert: 1
+    type: 0
+    axis: 0
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: RotateThroughBoard
+    descriptiveName: Rotate Through Board
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: f
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1000
+    dead: 0.001
+    sensitivity: 1000
+    snap: 1
+    invert: 1
+    type: 0
+    axis: 0
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: MirrorBoard
+    descriptiveName: Mirror Board X
+    descriptiveNegativeName: Mirror Board Y
+    negativeButton: m
+    positiveButton: n
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1000
+    dead: 0.001
+    sensitivity: 1000
+    snap: 1
+    invert: 1
+    type: 0
+    axis: 0
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: ToggleFlight
+    descriptiveName: Toggle Flight
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: b
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1000
+    dead: 0.001
+    sensitivity: 1000
+    snap: 1
+    invert: 1
+    type: 0
+    axis: 0
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: ToggleFlightMode
+    descriptiveName: Toggle Flight Mode
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: tab
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1000
+    dead: 0.001
+    sensitivity: 1000
+    snap: 1
+    invert: 1
+    type: 0
+    axis: 0
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Run
+    descriptiveName: Run
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: left shift
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1000
+    dead: 0.001
+    sensitivity: 1000
+    snap: 1
+    invert: 1
+    type: 0
+    axis: 0
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Fly
+    descriptiveName: Fly Up
+    descriptiveNegativeName: Fly Down
+    negativeButton: left shift
+    positiveButton: space
+    altNegativeButton: right shift
+    altPositiveButton: 
+    gravity: 1000
+    dead: 0.001
+    sensitivity: 1000
+    snap: 1
+    invert: 1
+    type: 0
+    axis: 0
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Zoom
+    descriptiveName: Zoom
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: y
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1000
+    dead: 0.001
+    sensitivity: 1000
+    snap: 1
+    invert: 1
+    type: 0
+    axis: 0
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: ToggleConnectionMode
+    descriptiveName: Toggle Connecting Mode
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: f8
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1000
+    dead: 0.001
+    sensitivity: 1000
     snap: 1
     invert: 1
     type: 0

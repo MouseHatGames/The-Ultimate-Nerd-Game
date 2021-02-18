@@ -6,8 +6,8 @@ using UnityEngine.Audio;
 using TMPro;
 using UnityEngine.PostProcessing;
 
-public class OptionsMenu : MonoBehaviour {
-
+public class OptionsMenu : MonoBehaviour
+{
     public AudioMixer GlobalMixer;
     public PostProcessingProfile Profile;
 
@@ -27,6 +27,7 @@ public class OptionsMenu : MonoBehaviour {
     public Toggle InvertMouseXToggle;
     public Toggle InvertMouseYToggle;
     public TMP_Dropdown ConnectionModeDropdown;
+    public TMP_Dropdown BoardMenuDropdown;
 
     // graphics
     public TextMeshProUGUI MaxFPSLabel;
@@ -76,6 +77,7 @@ public class OptionsMenu : MonoBehaviour {
         ApplyInvertMouseX();
         ApplyInvertMouseY();
         ApplyConnectionMode();
+        ApplyBoardMenuMode();
 
         ApplyMaxFPS();
         ApplyShowFPS();
@@ -143,12 +145,12 @@ public class OptionsMenu : MonoBehaviour {
     public void OnGlobalVolumeSliderChange()
     {
         float value = GlobalVolumeSlider.value;
-        ES3.Save<float>("GlobalVolume", value, "settings.txt");
+        Settings.Save("GlobalVolume", value);
         ApplyGlobalVolume();
     }
     private void ApplyGlobalVolume()
     {
-        float value = ES3.Load<float>("GlobalVolume", "settings.txt", 100);
+        float value = Settings.Get("GlobalVolume", 100f);
         GlobalVolumeLabel.text = "Global Volume: " + value;
         GlobalVolumeSlider.value = value;
 
@@ -163,12 +165,12 @@ public class OptionsMenu : MonoBehaviour {
     public void OnMusicVolumeSliderChange()
     {
         float value = MusicVolumeSlider.value;
-        ES3.Save<float>("MusicVolume", value, "settings.txt");
+        Settings.Save("MusicVolume", value);
         ApplyMusicVolume();
     }
     private void ApplyMusicVolume()
     {
-        float value = ES3.Load<float>("MusicVolume", "settings.txt", 100);
+        float value = Settings.Get("MusicVolume", 100f);
         MusicVolumeLabel.text = "Music Volume: " + value;
         MusicVolumeSlider.value = value;
 
@@ -183,12 +185,12 @@ public class OptionsMenu : MonoBehaviour {
     public void OnSFXVolumeSliderChange()
     {
         float value = SFXVolumeSlider.value;
-        ES3.Save<float>("SFXVolume", value, "settings.txt");
+        Settings.Save("SFXVolume", value);
         ApplySFXVolume();
     }
     private void ApplySFXVolume()
     {
-        float value = ES3.Load<float>("SFXVolume", "settings.txt", 100);
+        float value = Settings.Get("SFXVolume", 100f);
         SFXVolumeLabel.text = "SFX Volume: " + value;
         SFXVolumeSlider.value = value;
 
@@ -205,12 +207,14 @@ public class OptionsMenu : MonoBehaviour {
     public void OnXSensitivitySliderChange()
     {
         float value = XSensitivitySlider.value;
-        ES3.Save<float>("XSensitivity", value, "settings.txt");
+        Settings.Save("XSensitivity", value);
         ApplyXSensitivity();
+
+        if (Input.GetButton("Mod")) { YSensitivitySlider.value = value; }
     }
     private void ApplyXSensitivity()
     {
-        float value = ES3.Load<float>("XSensitivity", "settings.txt", 20);
+        float value = Settings.Get("XSensitivity", 20f);
         XSensitivityLabel.text = "X Sensitivity: " + value;
         XSensitivitySlider.value = value;
 
@@ -221,12 +225,14 @@ public class OptionsMenu : MonoBehaviour {
     public void OnYSensitivitySliderChange()
     {
         float value = YSensitivitySlider.value;
-        ES3.Save<float>("YSensitivity", value, "settings.txt");
+        Settings.Save("YSensitivity", value);
         ApplyYSensitivity();
+
+        if (Input.GetButton("Mod")) { XSensitivitySlider.value = value; }
     }
     private void ApplyYSensitivity()
     {
-        float value = ES3.Load<float>("YSensitivity", "settings.txt", 20);
+        float value = Settings.Get("YSensitivity", 20f);
         YSensitivityLabel.text = "Y Sensitivity: " + value;
         YSensitivitySlider.value = value;
 
@@ -237,12 +243,12 @@ public class OptionsMenu : MonoBehaviour {
     public void OnInvertMouseXToggle()
     {
         bool value = InvertMouseXToggle.isOn;
-        ES3.Save<bool>("InvertMouseX", value, "settings.txt");
+        Settings.Save("InvertMouseX", value);
         ApplyInvertMouseX();
     }
     private void ApplyInvertMouseX()
     {
-        bool value = ES3.Load<bool>("InvertMouseX", "settings.txt", false);
+        bool value = Settings.Get("InvertMouseX", false);
         InvertMouseXToggle.isOn = value;
 
         if (SettingsApplier.Instance != null) { SettingsApplier.Instance.LoadXSensitivity(); }
@@ -252,12 +258,12 @@ public class OptionsMenu : MonoBehaviour {
     public void OnInvertMouseYToggle()
     {
         bool value = InvertMouseYToggle.isOn;
-        ES3.Save<bool>("InvertMouseY", value, "settings.txt");
+        Settings.Save("InvertMouseY", value);
         ApplyInvertMouseY();
     }
     private void ApplyInvertMouseY()
     {
-        bool value = ES3.Load<bool>("InvertMouseY", "settings.txt", false);
+        bool value = Settings.Get("InvertMouseY", false);
         InvertMouseYToggle.isOn = value;
 
         if (SettingsApplier.Instance != null) { SettingsApplier.Instance.LoadYSensitivity(); }
@@ -267,15 +273,31 @@ public class OptionsMenu : MonoBehaviour {
     public void OnConnectionModeChange()
     {
         int value = ConnectionModeDropdown.value;
-        ES3.Save<int>("ConnectionMode", value, "settings.txt");
+        Settings.Save("ConnectionMode", value);
         ApplyConnectionMode();
     }
     private void ApplyConnectionMode()
     {
-        int value = ES3.Load<int>("ConnectionMode", "settings.txt", 0);
+        int value = Settings.Get("ConnectionMode", 0);
         ConnectionModeDropdown.value = value;
-        if (value == 0) { FirstPersonInteraction.ConnectionMode = ConnectionMode.HoldDown; }
-        else if (value == 1) { FirstPersonInteraction.ConnectionMode = ConnectionMode.MultiPhase; }
+        if (value == 0) { WirePlacer.ConnectionMode = ConnectionMode.HoldDown; }
+        else if (value == 1) { WirePlacer.ConnectionMode = ConnectionMode.MultiPhase; }
+        else if (value == 2) { WirePlacer.ConnectionMode = ConnectionMode.Chained; }
+    }
+
+    // board menu mod
+    public void OnBoardMenuModeChange()
+    {
+        int value = BoardMenuDropdown.value;
+        Settings.Save("BoardMenuMode", value);
+        ApplyBoardMenuMode();
+    }
+    private void ApplyBoardMenuMode()
+    {
+        int value = Settings.Get("BoardMenuMode", 0);
+        BoardMenuDropdown.value = value;
+        if (value == 0) { BoardMenu.MenuMode = BoardMenuMode.TapTwice; }
+        else if (value == 1) { BoardMenu.MenuMode = BoardMenuMode.HoldThenRelease; }
     }
 
 
@@ -284,12 +306,12 @@ public class OptionsMenu : MonoBehaviour {
     public void OnMaxFPSSliderChange()
     {
         int value = (int)MaxFPSSlider.value;
-        ES3.Save<int>("MaxFPS", value, "settings.txt");
+        Settings.Save("MaxFPS", value);
         ApplyMaxFPS();
     }
     private void ApplyMaxFPS()
     {
-        int value = ES3.Load<int>("MaxFPS", "settings.txt", 60);
+        int value = Settings.Get("MaxFPS", 60);
         MaxFPSLabel.text = "Max FPS: " + value;
         MaxFPSSlider.value = value;
 
@@ -300,12 +322,12 @@ public class OptionsMenu : MonoBehaviour {
     public void OnShowFPSToggle()
     {
         bool value = ShowFPSToggle.isOn;
-        ES3.Save<bool>("ShowFPS", value, "settings.txt");
+        Settings.Save("ShowFPS", value);
         ApplyShowFPS();
     }
     private void ApplyShowFPS()
     {
-        bool value = ES3.Load<bool>("ShowFPS", "settings.txt", false);
+        bool value = Settings.Get("ShowFPS", false);
         ShowFPSToggle.isOn = value;
         if (SettingsApplier.Instance != null) { SettingsApplier.Instance.LoadShowFPS(); }
     }
@@ -314,12 +336,12 @@ public class OptionsMenu : MonoBehaviour {
     public void OnVSyncChange()
     {
         int value = VSyncDropdown.value;
-        ES3.Save<int>("VSyncType", value, "settings.txt");
+        Settings.Save("VSyncType", value);
         ApplyVSync();
     }
     private void ApplyVSync()
     {
-        int value = ES3.Load<int>("VSyncType", "settings.txt", 1);
+        int value = Settings.Get("VSyncType", 1);
         VSyncDropdown.value = value;
         QualitySettings.vSyncCount = value;
     }
@@ -328,12 +350,12 @@ public class OptionsMenu : MonoBehaviour {
     public void OnAAChange()
     {
         int value = AADropdown.value;
-        ES3.Save<int>("AntiAliasingLevel", value, "settings.txt");
+        Settings.Save("AntiAliasingLevel", value);
         ApplyAA();
     }
     private void ApplyAA()
     {
-        int value = ES3.Load<int>("AntiAliasingLevel", "settings.txt", 1);
+        int value = Settings.Get("AntiAliasingLevel", 1);
         AADropdown.value = value;
 
         // get the proper AA level as it corresponds to the dropdown value
@@ -350,12 +372,12 @@ public class OptionsMenu : MonoBehaviour {
     public void OnAnisotropicToggle()
     {
         bool value = AnisotropicFilteringToggle.isOn;
-        ES3.Save<bool>("AnisotropicFiltering", value, "settings.txt");
+        Settings.Save("AnisotropicFiltering", value);
         ApplyAnisotropic();
     }
     private void ApplyAnisotropic()
     {
-        bool value = ES3.Load<bool>("AnisotropicFiltering", "settings.txt", true);
+        bool value = Settings.Get("AnisotropicFiltering", true);
         AnisotropicFilteringToggle.isOn = value;
         AnisotropicFiltering af = AnisotropicFiltering.Disable; if (value) { af = AnisotropicFiltering.Enable; }
         QualitySettings.anisotropicFiltering = af;
@@ -365,12 +387,12 @@ public class OptionsMenu : MonoBehaviour {
     public void OnShadowsToggle()
     {
         bool value = EnableShadowsToggle.isOn;
-        ES3.Save<bool>("EnableShadows", value, "settings.txt");
+        Settings.Save("EnableShadows", value);
         ApplyShadowToggle();
     }
     private void ApplyShadowToggle()
     {
-        bool value = ES3.Load<bool>("EnableShadows", "settings.txt", true);
+        bool value = Settings.Get("EnableShadows", true);
         EnableShadowsToggle.isOn = value;
         ShadowQuality sq = ShadowQuality.Disable; if (value) { sq = ShadowQuality.All; }
         QualitySettings.shadows = sq;
@@ -382,12 +404,12 @@ public class OptionsMenu : MonoBehaviour {
     public void OnShadowDistanceSliderChange()
     {
         float value = ShadowDistanceSlider.value;
-        ES3.Save<float>("ShadowDistance", value, "settings.txt");
+        Settings.Save("ShadowDistance", value);
         ApplyShadowDistance();
     }
     private void ApplyShadowDistance()
     {
-        float value = ES3.Load<float>("ShadowDistance", "settings.txt", 60);
+        float value = Settings.Get("ShadowDistance", 60f);
         ShadowDistanceLabel.text = "Shadow Distance: " + value;
         ShadowDistanceSlider.value = value;
 
@@ -398,12 +420,12 @@ public class OptionsMenu : MonoBehaviour {
     public void OnHeadBobToggle()
     {
         bool value = HeadBobToggle.isOn;
-        ES3.Save<bool>("HeadBob", value, "settings.txt");
+        Settings.Save("HeadBob", value);
         ApplyHeadBob();
     }
     private void ApplyHeadBob()
     {
-        bool value = ES3.Load<bool>("HeadBob", "settings.txt", true);
+        bool value = Settings.Get("HeadBob", true);
         HeadBobToggle.isOn = value;
 
         if (SettingsApplier.Instance != null) { SettingsApplier.Instance.LoadHeadBob(); }
@@ -413,12 +435,12 @@ public class OptionsMenu : MonoBehaviour {
     public void OnFOVSliderChange()
     {
         float value = FOVSlider.value;
-        ES3.Save<float>("FOV", value, "settings.txt");
+        Settings.Save("FOV", value);
         ApplyFOV();
     }
     private void ApplyFOV()
     {
-        float value = ES3.Load<float>("FOV", "settings.txt", 70);
+        float value = Settings.Get("FOV", 70f);
         FOVLabel.text = "Field of View: " + value;
         FOVSlider.value = value;
 
@@ -429,12 +451,12 @@ public class OptionsMenu : MonoBehaviour {
     public void OnMotionBlurToggle()
     {
         bool value = MotionBlurToggle.isOn;
-        ES3.Save<bool>("MotionBlur", value, "settings.txt");
+        Settings.Save("MotionBlur", value);
         ApplyMotionBlur();
     }
     private void ApplyMotionBlur()
     {
-        bool value = ES3.Load<bool>("MotionBlur", "settings.txt", false);
+        bool value = Settings.Get("MotionBlur", false);
         MotionBlurToggle.isOn = value;
         Profile.motionBlur.enabled = value;
     }
@@ -443,12 +465,12 @@ public class OptionsMenu : MonoBehaviour {
     public void OnDitheringToggle()
     {
         bool value = DitheringToggle.isOn;
-        ES3.Save<bool>("Dithering", value, "settings.txt");
+        Settings.Save("Dithering", value);
         ApplyDithering();
     }
     private void ApplyDithering()
     {
-        bool value = ES3.Load<bool>("Dithering", "settings.txt", false);
+        bool value = Settings.Get("Dithering", false);
         DitheringToggle.isOn = value;
         Profile.dithering.enabled = value;
     }
@@ -457,12 +479,12 @@ public class OptionsMenu : MonoBehaviour {
     public void OnBloomToggle()
     {
         bool value = BloomToggle.isOn;
-        ES3.Save<bool>("Bloom", value, "settings.txt");
+        Settings.Save("Bloom", value);
         ApplyBloom();
     }
     private void ApplyBloom()
     {
-        bool value = ES3.Load<bool>("Bloom", "settings.txt", false);
+        bool value = Settings.Get("Bloom", false);
         BloomToggle.isOn = value;
         Profile.bloom.enabled = value;
 
@@ -473,12 +495,12 @@ public class OptionsMenu : MonoBehaviour {
     public void OnBloomIntensitySliderChange()
     {
         float value = BloomIntensitySlider.value;
-        ES3.Save<float>("BloomIntensity", value, "settings.txt");
+        Settings.Save("BloomIntensity", value);
         ApplyBloomIntensity();
     }
     private void ApplyBloomIntensity()
     {
-        float value = ES3.Load<float>("BloomIntensity", "settings.txt", 0.4f);
+        float value = Settings.Get("BloomIntensity", 0.4f);
         value = Mathf.Round(value / 0.1f) * 0.1f; // round to 0.1
         BloomIntensityLabel.text = "Bloom Intensity: " + value;
         BloomIntensitySlider.value = value;
@@ -493,12 +515,12 @@ public class OptionsMenu : MonoBehaviour {
     public void OnAmbientOcclusionToggle()
     {
         bool value = AOToggle.isOn;
-        ES3.Save<bool>("AmbientOcclusion", value, "settings.txt");
+        Settings.Save("AmbientOcclusion", value);
         ApplyAmbientOcclusion();
     }
     private void ApplyAmbientOcclusion()
     {
-        bool value = ES3.Load<bool>("AmbientOcclusion", "settings.txt", false);
+        bool value = Settings.Get("AmbientOcclusion", true);
         AOToggle.isOn = value;
         Profile.ambientOcclusion.enabled = value;
 
@@ -513,12 +535,12 @@ public class OptionsMenu : MonoBehaviour {
     public void OnAOIntensitySliderChange()
     {
         float value = AOIntensitySlider.value;
-        ES3.Save<float>("AOIntensity", value, "settings.txt");
+        Settings.Save("AOIntensity", value);
         ApplyAOIntensity();
     }
     private void ApplyAOIntensity()
     {
-        float value = ES3.Load<float>("AOIntensity", "settings.txt", 1f);
+        float value = Settings.Get("AOIntensity", 0.3f);
         value = Mathf.Round(value / 0.1f) * 0.1f; // round to 0.1
         AOIntensityLabel.text = "AO Intensity: " + value;
         AOIntensitySlider.value = value;
@@ -533,12 +555,12 @@ public class OptionsMenu : MonoBehaviour {
     public void OnAORadiusSliderChange()
     {
         float value = AORadiusSlider.value;
-        ES3.Save<float>("AORadius", value, "settings.txt");
+        Settings.Save("AORadius", value);
         ApplyAORadius();
     }
     private void ApplyAORadius()
     {
-        float value = ES3.Load<float>("AORadius", "settings.txt", 1f);
+        float value = Settings.Get("AORadius", 0.3f);
         value = Mathf.Round(value / 0.1f) * 0.1f; // round to 0.1
         AORadiusLabel.text = "AO Radius: " + value;
         AORadiusSlider.value = value;
@@ -553,12 +575,12 @@ public class OptionsMenu : MonoBehaviour {
     public void OnAOSamplesChange()
     {
         int value = AOSampleCountDropdown.value;
-        ES3.Save<int>("AOSamples", value, "settings.txt");
+        Settings.Save("AOSamples", value);
         ApplyAOSamples();
     }
     private void ApplyAOSamples()
     {
-        int value = ES3.Load<int>("AOSamples", "settings.txt", 1);
+        int value = Settings.Get("AOSamples", 1);
         AOSampleCountDropdown.value = value;
 
         var ao = Profile.ambientOcclusion.settings;
@@ -574,12 +596,12 @@ public class OptionsMenu : MonoBehaviour {
     public void OnAODownsamplingToggle()
     {
         bool value = AODownsamplingToggle.isOn;
-        ES3.Save<bool>("AODownsampling", value, "settings.txt");
+        Settings.Save("AODownsampling", value);
         ApplyAODownsampling();
     }
     private void ApplyAODownsampling()
     {
-        bool value = ES3.Load<bool>("AODownsampling", "settings.txt", false);
+        bool value = Settings.Get("AODownsampling", false);
         AODownsamplingToggle.isOn = value;
 
         var ao = Profile.ambientOcclusion.settings;
@@ -591,12 +613,12 @@ public class OptionsMenu : MonoBehaviour {
     public void OnAOHighPrecisionToggle()
     {
         bool value = HighPrecisionAOToggle.isOn;
-        ES3.Save<bool>("AOHighPrecision", value, "settings.txt");
+        Settings.Save("AOHighPrecision", value);
         ApplyAOHighPrecision();
     }
     private void ApplyAOHighPrecision()
     {
-        bool value = ES3.Load<bool>("AOHighPrecision", "settings.txt", false);
+        bool value = Settings.Get("AOHighPrecision", false);
         HighPrecisionAOToggle.isOn = value;
 
         var ao = Profile.ambientOcclusion.settings;
@@ -608,15 +630,16 @@ public class OptionsMenu : MonoBehaviour {
     public void OnFullscreenToggle()
     {
         bool value = FullscreenToggle.isOn;
-        ES3.Save<bool>("Fullscreen", value, "settings.txt");
+        Settings.Save("Fullscreen", value);
         ApplyFullscreen();
     }
     private void ApplyFullscreen()
     {
-        bool value = ES3.Load<bool>("Fullscreen", "settings.txt", true);
+        bool value = Settings.Get("Fullscreen", true);
         FullscreenToggle.isOn = value;
         Screen.fullScreen = value;
     }
 }
 
 // 604 lines without this comment, holy cow. I think this might be the longest class I have ever written.
+// to the jimmy who wrote that comment ~3 months before this one... oh you sweet sweet summer child.
