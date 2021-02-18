@@ -25,7 +25,7 @@ public static class FirstPersonInteraction
         if (Input.GetButtonDown("Interact"))
         {
             RaycastHit hit;
-            if (Physics.Raycast(Ray(), out hit, Settings.ReachDistance))
+            if (Physics.Raycast(Ray(), out hit, Settings.ReachDistance, IgnorePlayerLayermask))
             {
                 if (hit.collider.tag == "Interactable") // if the cast hits an interactable such as a button or lever, interact with it
                 {
@@ -90,4 +90,7 @@ public static class FirstPersonInteraction
     {
         return new Ray(FirstPersonCamera.transform.position, FirstPersonCamera.transform.forward);
     }
+
+    // only hit world, wire, and default. God this is awful
+    public static readonly LayerMask IgnorePlayerLayermask = (1 << 0) | (1 << 8) | (1 << 9);
 }

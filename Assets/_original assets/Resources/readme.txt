@@ -58,6 +58,15 @@ Third party assets used:
 
 Changelog:
 
+v0.2.6 | 2018-04-09
+
+* fixed the game using waaaaay more threads than it has any right to
+* fixed the player being able to delete themself when in noclip mode
+* fixed placing and rotating not working properly in noclip mode
+* fixed being unable to interact with objects in noclip mode if looking at them from a high angle
+
+
+
 v0.2.5 | 2018-04-07
 
 * pressing the jump key at any point mid-jump will no longer make you jump as soon as you land. You now have to press it within 0.2 seconds of when you land, though this value can be changed in settings.txt under "JumpTiming"

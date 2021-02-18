@@ -16,7 +16,7 @@ public static class StuffRotater
         if (Input.GetButtonDown("Rotate"))
         {
             RaycastHit hit;
-            if(Physics.Raycast(FirstPersonInteraction.Ray(), out hit, Settings.ReachDistance))
+            if(Physics.Raycast(FirstPersonInteraction.Ray(), out hit, Settings.ReachDistance, FirstPersonInteraction.IgnorePlayerLayermask))
             {
                 RotateThing(hit.collider.gameObject);
             }

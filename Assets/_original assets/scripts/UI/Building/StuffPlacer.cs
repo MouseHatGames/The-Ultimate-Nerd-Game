@@ -114,7 +114,7 @@ public static class StuffPlacer
         PollRotationInput(AllowFineRotation);
 
         RaycastHit hit;
-        if (Physics.Raycast(FirstPersonInteraction.Ray(), out hit, Settings.ReachDistance))
+        if (Physics.Raycast(FirstPersonInteraction.Ray(), out hit, Settings.ReachDistance, FirstPersonInteraction.IgnorePlayerLayermask))
         {
             DisableRotation = false;
             MoveThingBeingPlaced(hit, HideWhenInvalidPlacement, AllowEdgePlacement);
@@ -327,7 +327,7 @@ public static class StuffPlacer
             Vector3 direction = box.transform.up;
             Quaternion orientation = box.transform.rotation;
 
-            RaycastHit[] hits = Physics.BoxCastAll(center, halfextents, direction, orientation, 0); // maxdistance is 0 so that the box doesn't move!
+            RaycastHit[] hits = Physics.BoxCastAll(center, halfextents, direction, orientation, 0, FirstPersonInteraction.IgnorePlayerLayermask); // maxdistance is 0 so that the box doesn't move!
             foreach (RaycastHit hit in hits)
             {
                 if (hit.collider.tag == "World")

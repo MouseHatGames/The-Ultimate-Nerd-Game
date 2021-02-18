@@ -85,5 +85,28 @@ namespace References
             NoisemakerOnAlwaysOnTop= new Material(NoisemakerOn) { renderQueue = 2500 };
             NoisemakerOffAlwaysOnTop= new Material(NoisemakerOff) { renderQueue = 2500 };
         }
+
+        private static Dictionary<Color, Material> BoardMaterials = new Dictionary<Color, Material>();
+        private static Dictionary<Color, Material> SolidColorMaterials = new Dictionary<Color, Material>();
+
+        public static Material BoardOfColor(Color color)
+        {
+            if (!BoardMaterials.ContainsKey(color))
+            {
+                BoardMaterials.Add(color, new Material(CircuitBoard) { color = color });
+            }
+
+            return BoardMaterials[color];
+        }
+
+        public static Material SolidColor(Color color)
+        {
+            if (!SolidColorMaterials.ContainsKey(color))
+            {
+                SolidColorMaterials.Add(color, new Material(Default) { color = color });
+            }
+
+            return SolidColorMaterials[color];
+        }
     }
 }

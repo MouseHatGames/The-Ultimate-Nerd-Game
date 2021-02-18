@@ -13,7 +13,7 @@ public static class StuffDeleter
         if (Input.GetButtonDown("Delete"))
         {
             RaycastHit hit;
-            if(Physics.Raycast(FirstPersonInteraction.Ray(), out hit, Settings.ReachDistance) && AllowedToDoDeleting)
+            if (Physics.Raycast(FirstPersonInteraction.Ray(), out hit, Settings.ReachDistance, FirstPersonInteraction.IgnorePlayerLayermask) && AllowedToDoDeleting)
             {
                 DeleteThing(hit.collider.gameObject);
             }

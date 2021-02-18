@@ -14,6 +14,7 @@ public static class MegaMeshManager
         // hopefully the actual thingies are destroyed during scene change or something
         StandardizedMegaMeshGroups.Clear();
         BoardMegaMeshGroups.Clear();
+        SolidColorMegaMeshGroups.Clear();
     }
 
     public static int MaxVerticesPerStaticMesh = Settings.Get("MaxVerticesPerStaticMegaMesh", 60000); // static meshes are ones that don't change while circuitry is running; circuit boards, white component bits
@@ -67,7 +68,6 @@ public static class MegaMeshManager
     {
         MegaMeshGroup newgroup = Object.Instantiate(Prefabs.CombinedMeshGroup, Transforms.MegaMeshParent).AddComponent<MegaMeshGroup>();
         newgroup.MaterialType = component.MaterialType;
-        SetGroupMaterial(newgroup);
 
         // add newgroup to the appropriate list inside the appropriate dictionary. If the appropriate list doesn't exist, create it
         if (component.MaterialType == MaterialType.CircuitBoard)
@@ -78,7 +78,7 @@ public static class MegaMeshManager
             }
             BoardMegaMeshGroups[component.Color].Add(newgroup);
 
-            newgroup.Renderer.material.color = component.Color;
+            newgroup.Renderer.material = Materials.BoardOfColor(component.Color);
         }
         else if (component.MaterialType == MaterialType.SolidColor)
         {
@@ -88,10 +88,11 @@ public static class MegaMeshManager
             }
             SolidColorMegaMeshGroups[component.Color].Add(newgroup);
 
-            newgroup.Renderer.material.color = component.Color;
+            newgroup.Renderer.material = Materials.SolidColor(component.Color);
         }
         else
         {
+            SetNonColorableGroupMaterial(newgroup);
             if (!StandardizedMegaMeshGroups.ContainsKey(component.MaterialType))
             {
                 StandardizedMegaMeshGroups.Add(component.MaterialType, new HashSet<MegaMeshGroup>());
@@ -190,15 +191,8 @@ public static class MegaMeshManager
     }
 
 
-    public static void SetGroupMaterial(MegaMeshGroup group)
+    public static void SetNonColorableGroupMaterial(MegaMeshGroup group)
     {
-        if(group.MaterialType == MaterialType.CircuitBoard)
-        {
-            group.Renderer.material = Materials.CircuitBoard;
-            // color must be set elsewhere
-            return;
-        }
-
         switch (group.MaterialType)
         {
             case MaterialType.CircuitOn:
@@ -207,10 +201,6 @@ public static class MegaMeshManager
 
             case MaterialType.CircuitOff:
                 group.Renderer.material = Materials.CircuitOff;
-                break;
-
-            case MaterialType.SolidColor:
-                group.Renderer.material = Materials.Default;
                 break;
 
             case MaterialType.DisplayOff:
