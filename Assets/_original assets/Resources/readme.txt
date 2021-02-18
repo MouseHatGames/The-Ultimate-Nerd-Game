@@ -58,6 +58,20 @@ Third party assets used:
 
 Changelog:
 
+v0.2.2 | 2018-03-23
+
+* button and lever hitboxes are slightly bigger; you no longer need to look exactly at them to interact with them
+* player movement is much smoother; the player's position is now updated every frame instead of at a fixed rate of 50 times per second
+* the fullscreen checkboxes in the options menu and the game launcher are now synchronized
+* added a hotkey to toggle fullscreen, default binding F11
+* you can no longer create a new board if you're not looking at a valid location to start placing one
+* rotation lock no longer resets to off when you place a board
+* further reduced visual errors on displays and color displays
+* fixed sometimes placing a component when flipping a switch
+* fixed snapping pegs sometimes snapping when they shouldn't
+
+
+
 v0.2.1 | 2018-03-20 (but later!)
 
 * pressing the non-numpad enter in the New Board menu now places the board you're creating

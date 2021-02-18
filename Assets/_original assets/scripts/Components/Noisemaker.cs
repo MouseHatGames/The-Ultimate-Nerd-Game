@@ -27,7 +27,7 @@ public class Noisemaker : VisualUpdaterWithMeshCombining
 
     protected override void AfterAwake()
     {
-        Renderer.material.color = Settings.NoisemakerOffColor;
+        Renderer.material = Materials.NoisemakerOffAlwaysOnTop;
         MegaMeshComponent.MaterialType = MaterialType.NoisemakerOff;
 
         if (ToneFrequency == 0) { ToneFrequency = NoisemakerMenu.FrequencyForNewNoisemakers; }
@@ -61,14 +61,14 @@ public class Noisemaker : VisualUpdaterWithMeshCombining
     {
         if (Input.On)
         {
-            Renderer.material = Materials.NoisemakerOn;
+            Renderer.material = Materials.NoisemakerOnAlwaysOnTop;
             MegaMeshComponent.MaterialType = MaterialType.NoisemakerOn;
 
             StartPlaying();
         }
         else if (!Input.On)
         {
-            Renderer.material = Materials.NoisemakerOff;
+            Renderer.material = Materials.NoisemakerOffAlwaysOnTop;
             MegaMeshComponent.MaterialType = MaterialType.NoisemakerOff;
 
             StopPlaying();

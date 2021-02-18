@@ -148,7 +148,7 @@ public static class StuffPlacer
     }
     public static bool RotationLocked;
     private static float TerrainRotationLockAngle = 0; // in degrees
-    private static float BoardRotationLockAngle = 0; // in degrees
+    public static float BoardRotationLockAngle = 0; // in degrees. Public so BoardPlacer can access
 
     public static void SetRotationLockAngles (float RotationValueBeingLockedTo)
     {

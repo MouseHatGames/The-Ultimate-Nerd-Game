@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using References;
 
-public class Button : Interactable {
-    
+public class Button : Interactable
+{
     public GameObject visualbutton; // the visual representation of the button. It is different from the gameobject this is attached to so we can have the collider not move; if it moved, you could press the button in places where it would immediately unpress
     public CircuitOutput output; // the output of the button. Must be assigned in inspector
     private Vector3 DefaultPosition; // grab the default position of the button so different designs of buttons will all work

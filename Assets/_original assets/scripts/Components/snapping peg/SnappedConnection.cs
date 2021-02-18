@@ -7,7 +7,8 @@ public class SnappedConnection : InputInputConnection
 	public void Initialize()
     {
         transform.parent = StuffConnector.AppropriateConnectionParent(this);
-        Renderer.material.color = Settings.SnappingPegColor;
+        Renderer.material = References.Materials.SnappingPeg;
+
         MegaMeshComponent MMC = gameObject.AddComponent<MegaMeshComponent>();
         MMC.MaterialType = MaterialType.SnappingPeg;
         MegaMeshManager.AddComponent(MMC);

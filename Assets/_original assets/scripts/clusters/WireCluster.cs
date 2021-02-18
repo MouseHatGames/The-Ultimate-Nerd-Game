@@ -42,8 +42,8 @@ public class WireCluster : VisualUpdaterWithMeshCombining
 
     protected override void SetProperMaterialAndMegaMeshComponentMaterialType()
     {
-        if (On) { MegaMeshComponent.MaterialType = MaterialType.CircuitOn; Renderer.material = Materials.CircuitOn; }
-        else { MegaMeshComponent.MaterialType = MaterialType.CircuitOff; Renderer.material = Materials.CircuitOff; }
+        if (On) { MegaMeshComponent.MaterialType = MaterialType.CircuitOn; Renderer.material = Materials.CircuitOnAlwaysOnTop; }
+        else { MegaMeshComponent.MaterialType = MaterialType.CircuitOff; Renderer.material = Materials.CircuitOffAlwaysOnTop; }
     }
 
     // if any connected output is on, every input in the whole cluster should turn on as well

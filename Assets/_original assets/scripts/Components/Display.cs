@@ -54,47 +54,47 @@ public class Display : VisualUpdaterWithMeshCombining
         switch (DisplayColor)
         {
             case DisplayColor.Off:
-                Renderer.material = Materials.DisplayOff;
+                Renderer.material = Materials.DisplayOffAlwaysOnTop;
                 MegaMeshComponent.MaterialType = MaterialType.DisplayOff;
                 break;
 
             case DisplayColor.Red:
-                Renderer.material = Materials.DisplayRed;
+                Renderer.material = Materials.DisplayRedAlwaysOnTop;
                 MegaMeshComponent.MaterialType = MaterialType.DisplayRed;
                 break;
 
             case DisplayColor.Green:
-                Renderer.material = Materials.DisplayGreen;
+                Renderer.material = Materials.DisplayGreenAlwaysOnTop;
                 MegaMeshComponent.MaterialType = MaterialType.DisplayGreen;
                 break;
 
             case DisplayColor.Blue:
-                Renderer.material = Materials.DisplayBlue;
+                Renderer.material = Materials.DisplayBlueAlwaysOnTop;
                 MegaMeshComponent.MaterialType = MaterialType.DisplayBlue;
                 break;
 
             case DisplayColor.Yellow:
-                Renderer.material = Materials.DisplayYellow;
+                Renderer.material = Materials.DisplayYellowAlwaysOnTop;
                 MegaMeshComponent.MaterialType = MaterialType.DisplayYellow;
                 break;
 
             case DisplayColor.Orange:
-                Renderer.material = Materials.DisplayOrange;
+                Renderer.material = Materials.DisplayOrangeAlwaysOnTop;
                 MegaMeshComponent.MaterialType = MaterialType.DisplayOrange;
                 break;
 
             case DisplayColor.Purple:
-                Renderer.material = Materials.DisplayPurple;
+                Renderer.material = Materials.DisplayPurpleAlwaysOnTop;
                 MegaMeshComponent.MaterialType = MaterialType.DisplayPurple;
                 break;
 
             case DisplayColor.White:
-                Renderer.material = Materials.DisplayWhite;
+                Renderer.material = Materials.DisplayWhiteAlwaysOnTop;
                 MegaMeshComponent.MaterialType = MaterialType.DisplayWhite;
                 break;
 
             case DisplayColor.Cyan:
-                Renderer.material = Materials.DisplayCyan;
+                Renderer.material = Materials.DisplayCyanAlwaysOnTop;
                 MegaMeshComponent.MaterialType = MaterialType.DisplayCyan;
                 break;
         }

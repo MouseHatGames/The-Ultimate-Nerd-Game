@@ -30,6 +30,7 @@ public static class FirstPersonInteraction
                 if (hit.collider.tag == "Interactable") // if the cast hits an interactable such as a button or lever, interact with it
                 {
                     hit.collider.GetComponent<Interactable>().Interact();
+                    return; // so we can't place stuff too, as they are bound to the same key
                 }
             }
         }

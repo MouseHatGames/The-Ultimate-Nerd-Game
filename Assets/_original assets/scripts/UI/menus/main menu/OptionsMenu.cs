@@ -58,12 +58,13 @@ public class OptionsMenu : MonoBehaviour
     public Toggle FullscreenToggle;
     public TMP_Dropdown ResolutionDropdown;
 
-
+    public static OptionsMenu Instance;
 
     // Use this for initialization
     void Start () {
         // load settings from settings.txt and make the menu reflect them
         ApplyAllSettings();
+        Instance = this;
 	}
 
     public void ApplyAllSettings()
@@ -627,17 +628,14 @@ public class OptionsMenu : MonoBehaviour
     }
 
     // fullscreen
+    // synchronized with launcher
     public void OnFullscreenToggle()
     {
-        bool value = FullscreenToggle.isOn;
-        Settings.Save("Fullscreen", value);
-        ApplyFullscreen();
+        Screen.fullScreen = FullscreenToggle.isOn;
     }
     private void ApplyFullscreen()
     {
-        bool value = Settings.Get("Fullscreen", true);
-        FullscreenToggle.isOn = value;
-        Screen.fullScreen = value;
+        FullscreenToggle.isOn = Screen.fullScreen;
     }
 }
 

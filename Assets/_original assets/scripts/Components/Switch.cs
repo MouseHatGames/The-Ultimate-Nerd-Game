@@ -5,21 +5,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using References;
 
-public class Switch : Interactable {
-
-    // the lever itself, to make it rotate. This script should be attached to it
-    public GameObject lever;
+public class Switch : Interactable
+{
+    // the switch itself, to make it rotate
+    public GameObject VisualSwitch;
 
     // the output of the lever. Must be assigned in inspector
     public CircuitOutput output;
 
 	// Use this for initialization
-	void Awake () {
-        // assing all those variables
-        lever = gameObject;
-
+	void Awake ()
+    {
         // set switch colour
-        lever.GetComponent<Renderer>().material.color = Settings.InteractableColor;
+        VisualSwitch.GetComponent<Renderer>().material.color = Settings.InteractableColor;
     }
 
     public override void Interact()
@@ -35,13 +33,15 @@ public class Switch : Interactable {
         if (On)
         {
             output.On = true;
-            lever.transform.localRotation = Quaternion.Euler(-40, 0, 0);
+           // VisualSwitch.transform.localPosition = new Vector3(0, 0.865f, 0.114f);
+            VisualSwitch.transform.localEulerAngles = new Vector3(-40, 0, 0);
             if (usesound) { SoundPlayer.PlaySoundAt(Sounds.SwitchOn, transform); }
         }
         else
         {
             output.On = false;
-            lever.transform.localRotation = Quaternion.Euler(40, 0, 0);
+           // VisualSwitch.transform.localPosition = new Vector3(0, 0.865f, -0.114f);
+            VisualSwitch.transform.localEulerAngles = new Vector3(40, 0, 0);
             if (usesound) { SoundPlayer.PlaySoundAt(Sounds.SwitchOff, transform); }
         }
     }

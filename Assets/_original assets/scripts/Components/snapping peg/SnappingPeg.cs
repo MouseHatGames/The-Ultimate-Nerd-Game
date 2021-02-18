@@ -14,40 +14,45 @@ public class SnappingPeg : CircuitInput
     [NaughtyAttributes.Button]
     public void TryToConnect()
     {
+        DestroySnappedConnection();
+        SnappingPeg OtherSnappyPeg = GetPegToSnapTo(); // I quite like the prefix "snappy"
+
+        if (OtherSnappyPeg != null && OtherSnappyPeg.GetPegToSnapTo() == this) // make sure the snapping can occur both ways
+        {
+            SnappedConnection SnappyConnection = Instantiate(References.Prefabs.Wire).AddComponent<SnappedConnection>();
+            SnappyConnection.Input1 = this;
+            SnappyConnection.Input2 = OtherSnappyPeg;
+            SnappyConnection.DrawWire();
+            SnappyConnection.Initialize();
+
+            StuffConnector.LinkInputs(SnappyConnection);
+
+            if (BehaviorManager.AllowedToUpdate) { SoundPlayer.PlaySoundAt(References.Sounds.ConnectionFinal, transform); } // the check is so it doesn't play on loaded pegs
+        }
+    }
+
+    public SnappingPeg GetPegToSnapTo()
+    {
         Vector3 origin = Wire.GetWireReference(gameObject).position;
         RaycastHit hit;
         if (Physics.Raycast(origin, -transform.forward, out hit, 0.20f, Wire.IgnoreWiresLayermask)) // snapped connections will be about 18cm long; we cast for 20, just to be safe
         {
-            if(hit.collider.tag == "Input")
+            if (hit.collider.tag == "Input")
             {
-                SnappingPeg OtherSnappyPeg = hit.collider.GetComponent<SnappingPeg>(); // I quite like the prefix "Snappy"
-                if (OtherSnappyPeg != null)
+                SnappingPeg OtherSnappyPeg = hit.collider.GetComponent<SnappingPeg>();
+                if (WirePlacer.CanConnect(gameObject, OtherSnappyPeg.gameObject) && !WirePlacer.ConnectionExists(gameObject, OtherSnappyPeg.gameObject)
+                && hit.transform.InverseTransformPoint(hit.point).z < -0.49f // make sure it hits the right face of the other peg
+                &&
+                // make sure it's rotated approximately correctly
+                ((hit.transform.eulerAngles.y + 180 > transform.eulerAngles.y - 2 && hit.transform.eulerAngles.y + 180 < transform.eulerAngles.y + 2)
+                || (hit.transform.eulerAngles.y - 180 > transform.eulerAngles.y - 2 && hit.transform.eulerAngles.y - 180 < transform.eulerAngles.y + 2)))
                 {
-                    if (WirePlacer.CanConnect(gameObject, OtherSnappyPeg.gameObject) && !WirePlacer.ConnectionExists(gameObject, OtherSnappyPeg.gameObject)
-                        && hit.transform.InverseTransformPoint(hit.point).z < -0.49f // make sure it hits the right face of the other peg
-                        &&
-                        // make sure it's rotated approximately correctly
-                        ((hit.transform.eulerAngles.y + 180 > transform.eulerAngles.y - 2 && hit.transform.eulerAngles.y + 180 < transform.eulerAngles.y + 2)
-                        || (hit.transform.eulerAngles.y - 180 > transform.eulerAngles.y - 2 && hit.transform.eulerAngles.y - 180 < transform.eulerAngles.y + 2)))
-                    {
-                        DestroySnappedConnection();
-
-                        SnappedConnection SnappyConnection = Instantiate(References.Prefabs.Wire).AddComponent<SnappedConnection>();
-                        SnappyConnection.Input1 = this;
-                        SnappyConnection.Input2 = OtherSnappyPeg;
-                        SnappyConnection.DrawWire();
-                        SnappyConnection.Initialize();
-
-                        StuffConnector.LinkInputs(SnappyConnection);
-
-                        if (BehaviorManager.AllowedToUpdate) { SoundPlayer.PlaySoundAt(References.Sounds.ConnectionFinal, transform); } // the check is so it doesn't play on loaded pegs
-                    }
-                    return; // all other paths lead to DestroySnappedConnection
+                    return OtherSnappyPeg;
                 }
             }
         }
 
-        DestroySnappedConnection();
+        return null;
     }
 
     // must be non-serialized to prevent bugs. Sorry, I'd describe them, but 0.2 comes out in 38 minutes HOLY SHIT

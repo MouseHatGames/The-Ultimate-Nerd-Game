@@ -41,6 +41,7 @@ public static class GameplayUIManager
     public static void RunGameplayUI()
     {
         if (Input.GetButtonDown("ToggleHelp")) { HelpMenu.ToggleHelp(); }
+        if (Input.GetButtonDown("ToggleFullscreen")) { OptionsMenu.Instance.FullscreenToggle.isOn = !OptionsMenu.Instance.FullscreenToggle.isOn; }
 
         switch (UIState)
         {

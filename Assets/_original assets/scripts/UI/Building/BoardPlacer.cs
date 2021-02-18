@@ -45,7 +45,7 @@ public static class BoardPlacer
         SetRotationState();
         CapPlacingOffset();
 
-        StuffPlacer.RotationLocked = false; // fixes being able to place boards at non-right angles by locking rotation beforehand
+        StuffPlacer.BoardRotationLockAngle = Mathf.Round(StuffPlacer.BoardRotationLockAngle / 90f) * 90; // fixes being able to place boards at non-right angles by locking rotation beforehand
         StuffPlacer.RotationAboutUpVector = Mathf.RoundToInt(StuffPlacer.RotationAboutUpVector / 90) * 90f;
 
         if (!BoardBeingPlaced.GetComponent<ObjectInfo>())

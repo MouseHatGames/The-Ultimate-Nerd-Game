@@ -82,8 +82,8 @@ public class CircuitOutput : VisualUpdaterWithMeshCombining
 
     protected override void SetProperMaterialAndMegaMeshComponentMaterialType()
     {
-        if (On) { MegaMeshComponent.MaterialType = MaterialType.CircuitOn; Renderer.material = Materials.CircuitOn; }
-        else { MegaMeshComponent.MaterialType = MaterialType.CircuitOff; Renderer.material = Materials.CircuitOff; }
+        if (On) { MegaMeshComponent.MaterialType = MaterialType.CircuitOn; Renderer.material = Materials.CircuitOnAlwaysOnTop; }
+        else { MegaMeshComponent.MaterialType = MaterialType.CircuitOff; Renderer.material = Materials.CircuitOffAlwaysOnTop; }
     }
 
     public GameObject CombinedMeshObject;
@@ -128,12 +128,12 @@ public class CircuitOutput : VisualUpdaterWithMeshCombining
 
         if (On)
         {
-            Renderer.material.color = Settings.CircuitOnColor;
+            Renderer.material = Materials.CircuitOnAlwaysOnTop;
             PreviouslyOnVisual = true;
         }
         else
         {
-            Renderer.material.color = Settings.CircuitOffColor;
+            Renderer.material = Materials.CircuitOffAlwaysOnTop;
             PreviouslyOnVisual = false;
         }
 

@@ -42,6 +42,15 @@ public class NewBoardMenu : MonoBehaviour
 
     public void Initialize()
     {
+        RaycastHit hit;
+        Physics.Raycast(FirstPersonInteraction.Ray(), out hit, Settings.ReachDistance, Wire.IgnoreWiresLayermask);
+        if(hit.collider == null || (hit.collider.tag != "CircuitBoard" && hit.collider.tag != "World" && hit.collider.tag != "PlaceOnlyBoard"))
+        {
+            SoundPlayer.PlaySoundGlobal(References.Sounds.FailDoSomething);
+            GameplayUIManager.UIState = UIState.None;
+            return;
+        }
+
         GameplayUIManager.UIState = UIState.NewBoardMenu;
 
         // to make sure there's no disconnect between the UI and the what it represents
