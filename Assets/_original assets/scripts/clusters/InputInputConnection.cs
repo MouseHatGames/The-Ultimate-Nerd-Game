@@ -12,6 +12,7 @@ public class InputInputConnection : Wire
         get { return RealInput1; }
         set
         {
+            if (value == null) { Debug.LogError("Tried to set input of II connection to null. Destroying wire"); Destroy(gameObject); return; }
             RealInput1 = value;
             Point1 = GetWireReference(value.transform);
             value.IIConnections.Add(this);
@@ -22,6 +23,7 @@ public class InputInputConnection : Wire
         get { return RealInput2; }
         set
         {
+            if (value == null) { Debug.LogError("Tried to set input of II connection to null. Destroying wire"); Destroy(gameObject); return; }
             RealInput2 = value;
             Point2 = GetWireReference(value.transform);
             value.IIConnections.Add(this);

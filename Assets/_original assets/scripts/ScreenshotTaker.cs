@@ -12,6 +12,12 @@ public static class ScreenshotTaker
     {
         if (Input.GetButtonDown("Screenshot"))
         {
+            if (Input.GetButton("Mod"))
+            {
+                System.Diagnostics.Process.Start(@Application.persistentDataPath + "/screenshots");
+                return;
+            }
+
             string FileName = FileUtilities.CurrentTimestamp + ".png";
             string FolderPath = Application.persistentDataPath + "/screenshots/";
 
@@ -21,7 +27,14 @@ public static class ScreenshotTaker
 
             ScreenCapture.CaptureScreenshot(FolderPath + FileName, SuperSize);
 
-            SoundPlayer.PlaySoundAt(Sounds.Screenshot, FirstPersonController.Instance.transform);
+            if (FirstPersonController.Instance != null)
+            {
+                SoundPlayer.PlaySoundAt(Sounds.Screenshot, FirstPersonController.Instance.transform);
+            }
+            else
+            {
+                SoundPlayer.PlaySoundGlobal(Sounds.Screenshot);
+            }
         }
 	}
 }

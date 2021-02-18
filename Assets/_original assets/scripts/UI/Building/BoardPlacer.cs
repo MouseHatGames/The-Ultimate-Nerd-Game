@@ -143,7 +143,7 @@ public static class BoardPlacer
         int MaxX, MaxY;
 
         MaxX = Mathf.CeilToInt(CircuitBoardBeingPlaced.x / 2);
-        if (BoardIsFlat) // I don't understand... shouldn't this be !BoardIsFlat?? Fuck, this shouldn't work right, but it does
+        if (BoardIsFlat)
         {
             MaxY = Mathf.FloorToInt(CircuitBoardBeingPlaced.z / 2);
 
@@ -174,7 +174,8 @@ public static class BoardPlacer
         if (PlacingOffset.x > MaxX) { PlacingOffset.x = MaxX; }
         if (PlacingOffset.x <= -MaxX)
         {
-            if (BoxesAlongDownFaceOfStandingBoard() % 2 == 0) { PlacingOffset.x = 1 - MaxX; }
+            if (BoxesAlongDownFaceOfStandingBoard() % 2 == 0 && !BoardIsFlat) { PlacingOffset.x = 1 - MaxX; }
+            else if (CircuitBoardBeingPlaced.x % 2 == 0 && BoardIsFlat) { PlacingOffset.x = 1 - MaxX; }
             else { PlacingOffset.x = -MaxX; }
         }
 
@@ -189,7 +190,7 @@ public static class BoardPlacer
     private static int BoxesAlongDownFaceOfStandingBoard()
     {
         if (RotationStateEven) { return CircuitBoardBeingPlaced.z; }
-        else { return CircuitBoardBeingPlaced.x; }
+        return CircuitBoardBeingPlaced.x;
     }
     
     private static void ApplyPlacingOffset()

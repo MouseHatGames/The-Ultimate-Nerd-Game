@@ -17,6 +17,7 @@ public class SettingsApplier : MonoBehaviour
         LoadHeadBob();
         LoadFOV();
 
+        // TODO: move firstpersoncontroller out of its namespace so these can be directly on it
         FirstPersonController.Instance.m_WalkSpeed = Settings.Get("WalkSpeed", 5f);
         FirstPersonController.Instance.m_RunSpeed = Settings.Get("RunSpeed", 10f);
         FirstPersonController.Instance.m_JumpSpeed = Settings.Get("JumpPower", 10f);
@@ -24,6 +25,7 @@ public class SettingsApplier : MonoBehaviour
         FirstPersonController.Instance.FlyingVerticalSpeed = Settings.Get("FlyingVerticalSpeed", 5f);
         FirstPersonController.Instance.FastFlyingSpeed = Settings.Get("FastFlyingSpeed", 15f);
         FirstPersonController.Instance.FastFlyingVerticalSpeed = Settings.Get("FastFlyingVerticalSpeed", 8f);
+        FirstPersonController.Instance.JumpTiming = Settings.Get("JumpTiming", 0.2f);
 
         FirstPersonController.Instance.GetComponentInChildren<cakeslice.OutlineEffect>().cornerOutlines = Settings.Get("CornerOutlines", true);
     }

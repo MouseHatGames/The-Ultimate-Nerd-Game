@@ -4,8 +4,8 @@ using UnityEngine;
 using NaughtyAttributes;
 using System;
 
-public class InputOutputConnection : Wire {
-
+public class InputOutputConnection : Wire
+{
     private CircuitInput RealInput;
     private CircuitOutput RealOutput;
     public CircuitInput Input
@@ -13,6 +13,7 @@ public class InputOutputConnection : Wire {
         get { return RealInput; }
         set
         {
+            if (value == null) { Debug.LogError("Tried to set input of IO connection to null. Destroying wire"); Destroy(gameObject); return; }
             RealInput = value;
             Point1 = GetWireReference(value.transform);
             value.IOConnections.Add(this);
@@ -23,7 +24,7 @@ public class InputOutputConnection : Wire {
         get { return RealOutput; }
         set
         {
-            if(value == null) { Debug.LogError("Tried to set output to null"); Destroy(gameObject); return; }
+            if(value == null) { Debug.LogError("Tried to set output of IO connection to null. Destroying wire"); Destroy(gameObject); return; }
             RealOutput = value;
             Point2 = GetWireReference(value.transform);
             value.AddIOConnection(this);

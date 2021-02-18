@@ -36,9 +36,11 @@ GameObject:
   - component: {fileID: 4570299305938798}
   - component: {fileID: 33396088961212470}
   - component: {fileID: 23066367810333106}
+  - component: {fileID: 65360134226183908}
+  - component: {fileID: 114798805971243960}
   m_Layer: 0
   m_Name: MovingBit
-  m_TagString: Untagged
+  m_TagString: Interactable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -122,8 +124,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1791043595251180}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.184, z: 0}
-  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4177722487605970}
   m_RootOrder: 0
@@ -291,6 +293,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1523513819992958}
   m_Mesh: {fileID: 4300002, guid: e64bf70b44694244c86a52d9842fe4ff, type: 3}
+--- !u!65 &65360134226183908
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1361260890250494}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 0.6, z: 1}
+  m_Center: {x: 0, y: 0.2, z: 0}
 --- !u!65 &65398169972025396
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -313,8 +327,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 0.02, z: 1}
+  m_Center: {x: 0, y: 1.01, z: 0}
 --- !u!65 &65841095329092278
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -367,6 +381,18 @@ MonoBehaviour:
   VisualSwitch: {fileID: 1361260890250494}
   output: {fileID: 114830516306870312}
   On: 0
+--- !u!114 &114798805971243960
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1361260890250494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 775487d213f585745a501babf18328f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TargetInteractable: {fileID: 114504123140158262}
 --- !u!114 &114830516306870312
 MonoBehaviour:
   m_ObjectHideFlags: 1

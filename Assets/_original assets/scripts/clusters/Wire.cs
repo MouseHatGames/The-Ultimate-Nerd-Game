@@ -15,11 +15,13 @@ abstract public class Wire : MonoBehaviour
     public Renderer Renderer;
     public MeshFilter MeshFilter;
 
+    public virtual Material DefaultMaterial { get { return References.Materials.CircuitOff; } }
+
     private void Awake()
     {
         MeshFilter = GetComponent<MeshFilter>();
         Renderer = GetComponent<Renderer>();
-        Renderer.material.color = Settings.CircuitOffColor; // so that when not connected to a cluster, it's off
+        Renderer.material = DefaultMaterial;
     }
 
     public bool unbreakable = false; // this is how through pegs work

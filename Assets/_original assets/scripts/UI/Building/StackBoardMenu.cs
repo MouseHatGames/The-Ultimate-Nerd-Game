@@ -248,7 +248,7 @@ public class StackBoardMenu : MonoBehaviour
         StuffPlacer.RemoveOutlineFromObject(BoardBeingStacked);
         StuffPlacer.SetStateOfAllBoxCollidersIn(BoardBeingStacked, true);
 
-        FloatingPointRounder.RoundIn(BoardBeingStacked);
+        FloatingPointRounder.RoundIn(BoardBeingStacked, true);
         SnappingPeg.TryToSnapIn(BoardBeingStacked);
 
         MegaMeshManager.AddComponentsIn(StackedBoard);

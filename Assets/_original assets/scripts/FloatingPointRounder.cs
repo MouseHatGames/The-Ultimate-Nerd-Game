@@ -4,8 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FloatingPointRounder : MonoBehaviour {
-
+public class FloatingPointRounder : MonoBehaviour
+{
 	public void RoundPositionAndRotation()
     {
         // round position to nearest thousandth of a unit, or millimeter
@@ -36,10 +36,10 @@ public class FloatingPointRounder : MonoBehaviour {
     {
         FloatingPointRounder[] boizzz = bigboi.GetComponentsInChildren<FloatingPointRounder>();
 
-        foreach(FloatingPointRounder boi in boizzz)
+        foreach (FloatingPointRounder boi in boizzz)
         {
-            boi.RoundPositionAndRotation();
             if (RoundScale) { boi.RoundScale(); }
+            boi.RoundPositionAndRotation();
         }
     }
 }

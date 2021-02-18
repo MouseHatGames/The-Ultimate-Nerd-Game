@@ -19,6 +19,8 @@ public class RunMainMenu : MonoBehaviour
         {
             if (Input.GetButtonDown("Cancel")) { ShowMainMenu(); }
         }
+
+        RunKonamiCodeDetection();
     }
 
     public Canvas MainMenuCanvas;
@@ -89,19 +91,6 @@ public class RunMainMenu : MonoBehaviour
         Application.Quit();
     }
 
-    // some shitty hacks to fix boards on the main menu
-    //public List<CircuitBoard> Boards = new List<CircuitBoard>();
-    public CircuitBoard[] Boards;
-    [NaughtyAttributes.ReorderableList] public List<Color> BoardColor = new List<Color>();
-    [NaughtyAttributes.Button]
-    public void DoBoards()
-    {
-        for(int i = 0; i < Boards.Length; i++)
-        {
-            Boards[i].CreateCuboid();
-            Boards[i].Renderer.material.color = BoardColor[i];
-        }
-    }
     private void Awake()
     {
         GameplayUIManager.UIState = UIState.MainMenu;
@@ -155,4 +144,49 @@ public class RunMainMenu : MonoBehaviour
         EverythingHider.UnHideEverything(); // the purpose of this is to hide the background during the first frame, before most meshes exist
         if(Settings.Get("SeenEpilepsyWarning", false)) MainMenuMusic.Play(); // don't play the music until the visuals have loaded
     }
+
+    // konami code easter egg stuff
+
+    [SerializeField] private Image CompanyLogo;
+    [SerializeField] private Sprite OldCompanyLogo;
+    [SerializeField] private Image GameLogo;
+    [SerializeField] private Sprite OldGameLogo;
+
+    private int ID = 0;
+    private void RunKonamiCodeDetection()
+    {
+        if (Input.anyKeyDown)
+        {
+            if (Input.GetKeyDown(KonamiCode[ID]))
+            {
+                ID++;
+                if(ID == KonamiCode.Length)
+                {
+                    CompanyLogo.sprite = OldCompanyLogo;
+                    GameLogo.sprite = OldGameLogo;
+                    GameLogo.preserveAspect = true;
+                    GameLogo.GetComponent<RectTransform>().sizeDelta = new Vector2(1200, 1200);
+                    GameLogo.GetComponent<RectTransform>().anchoredPosition = new Vector2(625, 375);
+                }
+            }
+            else
+            {
+                ID = 0;
+            }
+        }
+    }
+
+    private KeyCode[] KonamiCode =
+    {
+        KeyCode.UpArrow,
+        KeyCode.UpArrow,
+        KeyCode.DownArrow,
+        KeyCode.DownArrow,
+        KeyCode.LeftArrow,
+        KeyCode.RightArrow,
+        KeyCode.LeftArrow,
+        KeyCode.RightArrow,
+        KeyCode.B,
+        KeyCode.A
+    };
 }

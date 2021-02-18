@@ -152,6 +152,13 @@ public static class BoardFunctions
             wire.FindPoints();
         }
 
+        // this needs to be done because SnappingPeg.SnappedConnection is not serialized, and cloning it can cause bugs because of this.
+        SnappedConnection[] SnappedConnections = board.GetComponentsInChildren<SnappedConnection>();
+        foreach (SnappedConnection connection in SnappedConnections)
+        {
+            connection.SetThisAsSnappedConnectionOfPegs();
+        }
+
         StuffDeleter.RecalculateClustersFromInputs(inputs); // todo: since we've already gotten the lists of wires, it would be more efficient to pass them to this function instead of letting it re-find them
     }
 

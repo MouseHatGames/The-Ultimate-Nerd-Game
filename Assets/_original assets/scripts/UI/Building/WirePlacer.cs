@@ -14,7 +14,7 @@ public static class WirePlacer
     public static ConnectionMode ConnectionMode = ConnectionMode.HoldDown;
 
     private static bool AutoHidePlacingGhostWhileConnecting = Settings.Get("AutoHidePlacingGhostWhileConnecting", true);
-    private static bool PlacingGhostWasHiddenBeforeConnecting;
+    private static bool PlacingGhostWasHiddenBeforeConnecting = ComponentPlacer.ShowPlacingGhost; // necessary to avoid BUGS!
 
     private static void ConnectionInitial()
     {
@@ -372,7 +372,7 @@ public static class WirePlacer
     {
         // below: some invalid placement conditions. We must do CanConnect as well as CanFindPoints because each can sometimes return true while the other returns false; sorry, future me, but I'm too lazy to type out exactly what those scenarios are. Figure it out yourself you ungrateful piece of shit
         if (ConnectionExists(SelectedPeg, PegBeingLookedAt) || !CanConnect(SelectedPeg, PegBeingLookedAt) || !WireBeingPlaced.GetComponent<Wire>().CanFindPoints()
-            || (SelectedPeg.GetComponent<SnappingPeg>() && PegBeingLookedAt.GetComponent<SnappingPeg>())) // you can't connect two snapping pegs
+            )//|| (SelectedPeg.GetComponent<SnappingPeg>() && PegBeingLookedAt.GetComponent<SnappingPeg>())) // you can't connect two snapping pegs
         {
             return false;
         }

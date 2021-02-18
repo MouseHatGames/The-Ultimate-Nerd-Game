@@ -157,6 +157,17 @@ public class WireCluster : VisualUpdaterWithMeshCombining
                     IIConnection.Renderer.enabled = false;
                 }
             }
+            else
+            {
+                foreach(InputInputConnection MaybeNotSnappy in input.IIConnections)
+                {
+                    if(MaybeNotSnappy.GetType() != typeof(SnappedConnection) && !MeshFilters.Contains(MaybeNotSnappy.MeshFilter))
+                    {
+                        MeshFilters.Add(MaybeNotSnappy.MeshFilter);
+                        MaybeNotSnappy.Renderer.enabled = false;
+                    }
+                }
+            }
         }
 
         transform.parent = null;

@@ -58,6 +58,27 @@ Third party assets used:
 
 Changelog:
 
+v0.2.5 | 2018-04-07
+
+* pressing the jump key at any point mid-jump will no longer make you jump as soon as you land. You now have to press it within 0.2 seconds of when you land, though this value can be changed in settings.txt under "JumpTiming"
+* snapping pegs can now connect directly to other snapping pegs
+* added a system that allows structural pieces of components to be a color other than white. This is not used by anything in the game yet, but it can be taken advantage of by mods.
+* added a pretty banner to the launcher
+* improved switch and button hitboxes
+* pressing the mod key and the screenshot key at the same time will now open the screenshots folder
+* fixed being able to offset boards onto thin air under specific circumstances
+* fixed right clicking with the placing ghost enabled locking the position of the placing ghost
+* fixed wires with positions that were invalid in a specific way corrupting the save
+* fixed cloned snapping pegs refusing all new connections
+* fixed cloned snapping pegs not de-snapping when rotated
+* fixed cloned snapped connections appearing black instead of turquoise until placed
+* fixed the screenshot sound not playing if the screenshot was taken on the main menu
+* fixed boards being misaligned after many adjacent uses of Stack Board
+* some error messages are now more descriptive
+* minor graphical optimizations
+
+
+
 v0.2.4 | 2018-03-28
 
 * added a hotkey to undo deleting a board. Default binding is backspace
@@ -309,6 +330,7 @@ v0.1.2 | 2018-01-08
 
 v0.1.1 | 2018-01-07 (but later)
 Thanks to everybody who's played the game and left feedback!
+
 * fixed a bug that let you place wires in places where they would be deleted when the save was loaded
 * the player no longer collides with wires; makes it easier to navigate (messy) circuits
 * doubled the reach distance of the player to 20 meters. This will be customizable in the future

@@ -5,13 +5,14 @@ using References;
 
 public static class MegaMeshManager
 {
-    public static Dictionary<MaterialType, HashSet<MegaMeshGroup>> NonBoardMegaMeshGroups = new Dictionary<MaterialType, HashSet<MegaMeshGroup>>();
+    public static Dictionary<MaterialType, HashSet<MegaMeshGroup>> StandardizedMegaMeshGroups = new Dictionary<MaterialType, HashSet<MegaMeshGroup>>();
     public static Dictionary<Color, HashSet<MegaMeshGroup>> BoardMegaMeshGroups = new Dictionary<Color, HashSet<MegaMeshGroup>>();
+    public static Dictionary<Color, HashSet<MegaMeshGroup>> SolidColorMegaMeshGroups = new Dictionary<Color, HashSet<MegaMeshGroup>>();
 
     public static void ClearReferences()
     {
         // hopefully the actual thingies are destroyed during scene change or something
-        NonBoardMegaMeshGroups.Clear();
+        StandardizedMegaMeshGroups.Clear();
         BoardMegaMeshGroups.Clear();
     }
 
@@ -28,16 +29,20 @@ public static class MegaMeshManager
         if (component.MaterialType == MaterialType.CircuitBoard) // the enum check is faster than doing if(component is BoardMegaMeshComponent) according to Stack Overflow
         {
             BoardMegaMeshGroups.TryGetValue(component.Color, out grouplist); // my first time using TryGetValue! grouplist will be set to null if the key doesn't exist
-            AddComponentTo(component, grouplist);
+        }
+        else if (component.MaterialType == MaterialType.SolidColor)
+        {
+            SolidColorMegaMeshGroups.TryGetValue(component.Color, out grouplist);
         }
         else // boards are a special case, since we don't know what colors they'll be. Everything else can be handled generically
         {
             if (component.Mesh == null) { return; }
             if (component.Mesh.vertexCount > MaxVerticesPerDynamicMesh) { return; } // if a cluster or output has exceeded the complexity allowed for a mega mesh group, not much point adding it to the group...
 
-            NonBoardMegaMeshGroups.TryGetValue(component.MaterialType, out grouplist);
-            AddComponentTo(component, grouplist);
+            StandardizedMegaMeshGroups.TryGetValue(component.MaterialType, out grouplist);
         }
+
+        AddComponentTo(component, grouplist);
     }
 
     private static void AddComponentTo(MegaMeshComponent component, HashSet<MegaMeshGroup> GroupList, bool AddAllImmediate = false)
@@ -73,15 +78,25 @@ public static class MegaMeshManager
             }
             BoardMegaMeshGroups[component.Color].Add(newgroup);
 
-            newgroup.Renderer.material.color = component.Renderer.material.color;
+            newgroup.Renderer.material.color = component.Color;
+        }
+        else if (component.MaterialType == MaterialType.SolidColor)
+        {
+            if (!SolidColorMegaMeshGroups.ContainsKey(component.Color))
+            {
+                SolidColorMegaMeshGroups.Add(component.Color, new HashSet<MegaMeshGroup>());
+            }
+            SolidColorMegaMeshGroups[component.Color].Add(newgroup);
+
+            newgroup.Renderer.material.color = component.Color;
         }
         else
         {
-            if (!NonBoardMegaMeshGroups.ContainsKey(component.MaterialType))
+            if (!StandardizedMegaMeshGroups.ContainsKey(component.MaterialType))
             {
-                NonBoardMegaMeshGroups.Add(component.MaterialType, new HashSet<MegaMeshGroup>());
+                StandardizedMegaMeshGroups.Add(component.MaterialType, new HashSet<MegaMeshGroup>());
             }
-            NonBoardMegaMeshGroups[component.MaterialType].Add(newgroup);
+            StandardizedMegaMeshGroups[component.MaterialType].Add(newgroup);
         }
 
         newgroup.AddComponent(component, AddImmediate); // add the component to the new group
@@ -194,7 +209,7 @@ public static class MegaMeshManager
                 group.Renderer.material = Materials.CircuitOff;
                 break;
 
-            case MaterialType.GenericComponent:
+            case MaterialType.SolidColor:
                 group.Renderer.material = Materials.Default;
                 break;
 
@@ -250,7 +265,7 @@ public static class MegaMeshManager
 
     public static bool IsDynamicMaterialType(MaterialType type)
     {
-        if (type == MaterialType.CircuitBoard || type == MaterialType.GenericComponent || type == MaterialType.SnappingPeg)
+        if (type == MaterialType.CircuitBoard || type == MaterialType.SolidColor || type == MaterialType.SnappingPeg)
         {
             return false;
         }
@@ -354,7 +369,7 @@ public static class MegaMeshManager
 
 public enum MaterialType
 {
-    GenericComponent,
+    SolidColor,
     CircuitBoard,
 
     CircuitOn,
